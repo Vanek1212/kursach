@@ -1,0 +1,10 @@
+/* Планшет 768px */
+@media (max-width: 768px) {
+  .menu-desktop { display: none; }
+  .burger-menu { display: block; }
+}
+
+/* Мобильный 320px */
+@media (max-width: 320px) {
+  body { font-size: 14px; }
+}
