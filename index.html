@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- Шрифты -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Иконки -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Наши стили -->
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/responsive.css">
+    <link rel="stylesheet" href="css/accessibility.css">
+    <title>Everist - Waterless Haircare</title>
+    <link rel="icon" type="image/png" href="img/logo1.png">
+    <script src="script.js"></script>
+    <script src="js/banner.js" defer></script>
+    
+</head>
+<body>
+    <!-- Прелоадер -->
+<div class="preloader" id="preloader">
+    <div class="preloader-container">
+        <div class="preloader-logo">EVERIST</div>
+        
+        <!-- Анимированный спиннер -->
+        <div class="spinner">
+            <div class="spinner-circle"></div>
+            <div class="spinner-circle"></div>
+            <div class="spinner-circle"></div>
+            <div class="spinner-circle"></div>
+        </div>
+        
+        <!-- Прогресс бар -->
+        <div class="progress-container">
+            <div class="progress-bar" id="progressBar"></div>
+        </div>
+        
+        <!-- Сообщение о загрузке -->
+        <div class="loading-text" id="loadingText">
+            Загрузка экологичных решений...
+        </div>
+        
+        <!-- Счетчик прогресса -->
+        <div class="progress-counter" id="progressCounter">0%</div>
+    </div>
+    
+    <!-- Фон прелоадера -->
+    <div class="preloader-background"></div>
+</div>
+   <!-- Accessibility Panel -->
+<div class="accessibility-panel">
+    <div class="accessibility-controls">
+        <button class="accessibility-btn" data-size="small" title="Уменьшить шрифт">
+            <span class="icon">A-</span>
+        </button>
+        <button class="accessibility-btn active" data-size="medium" title="Стандартный шрифт">
+            <span class="icon">A</span>
+        </button>
+        <button class="accessibility-btn" data-size="large" title="Увеличить шрифт">
+            <span class="icon">A+</span>
+        </button>
+        <button class="accessibility-btn" data-size="xlarge" title="Сильно увеличить шрифт">
+            <span class="icon">A++</span>
+        </button>
+        <button class="lang-toggle" id="langToggle" title="Переключить язык">
+            <span class="lang-icon">EN</span>
+        </button>
+        <button class="theme-toggle" id="themeToggle" title="Переключить тему">
+            <span class="theme-icon sun">☀️</span>
+            <span class="theme-icon moon">🌙</span>
+        </button>
+        <button class="reset-btn" id="resetSettings" title="Сбросить настройки">↻</button>
+    </div>
+</div>
+    <!-- Top Banner -->
+    <div class="top-banner">
+        <div class="banner-container">
+            <p class="banner-text">Our holiday kits are up to 20% off - get them while you can!</p>
+            <button class="banner-close">✕</button>
+        </div>
+    </div>
+
+    <!-- Header -->
+     <header class="main-header">
+            <!-- Логотип -->
+            <a href="#" class="logo">EVERIST</a>
+
+            <!-- Навигационные ссылки -->
+            <nav class="nav-links">
+                <a href="/pages/shop.html">SHOP</a>
+                <a href="/pages/">LEARN</a>
+                <a href="#">SUSTAINABILITY</a>
+                <a href="#">OUR STORY</a>
+                <a href="#">PRESS</a>
+                <a href="#" class="quiz-link">QUIZ</a>
+            </nav>
+<div class="burger-menu" id="burgerMenu">
+            <span class="burger-line"></span>
+            <span class="burger-line"></span>
+            <span class="burger-line"></span>
+        </div>
+            <div class="header-right"> 
+                <div class="search-icon">🔍</div>
+                <a href="/pages/login.html" class="user-icon">👤</a>
+                <a href="/pages/cart.html" class="cart-icon">
+                    🛒
+                    <span class="cart-badge" id="cartBadge">0</span>
+                </a>
+            </div>
+        </header>
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <h1 class="hero-title">
+                    Find Your Shower<br>
+                    Routine (& Receive<br>
+                    a Free Gift!)
+                </h1>
+                <p class="hero-subtitle">Discover waterless haircare that works</p>
+                <a href="#products" class="btn btn-primary">SHOP NOW</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Awards Section -->
+<section class="awards">
+    <div class="container">
+        <div class="awards-slider">
+            <div class="awards-grid">
+                <div class="award-item">
+                    <img src="img/icon1.png" alt="FAST COMPANY">
+                    <p>2021 Award Winner: Best Gym-Bag Shampoo</p>
+                </div>
+                <div class="award-item">
+                    <img src="img/icon2.png" alt="BYRDIE">
+                    <p>World-Changing Idea 2022 "On the Rise"</p>
+                </div>
+                <div class="award-item">
+                    <img src="img/icon3.png" alt="Press">
+                    <p>"The Zero-Waste Brand Making Waterless Haircare a Thing"</p>
+                </div>
+                <div class="award-item">
+                    <img src="img/icon4.png" alt="Award">
+                    <p>2021 Award: Best Conscious Beauty</p>
+                </div>
+            </div>
+            
+            <div class="slider-controls">
+                <button class="slider-btn prev"><i class="fas fa-chevron-left"></i></button>
+                <button class="slider-btn next"><i class="fas fa-chevron-right"></i></button>
+            </div>
+        </div>
+    </div>
+</section>
+
+    <!-- Reviews & Products Section -->
+    <section class="reviews-products" id="products">
+        <div class="container">
+            <div class="section-header">
+                <h2>Loved by thousands of eco-optimists</h2>
+            </div>
+            
+            <div class="products-grid">
+                <!-- Product 1 -->
+                <div class="product-card">
+                    <div class="product-badge">BESTSELLER</div>
+                    <div class="product-image">
+                        <img src="img/shampoo.png" alt="Waterless Shampoo">
+                    </div>
+                    <div class="product-info">
+                        <div class="reviews">
+                            <div class="stars">★★★★★</div>
+                            <span>85 Reviews</span>
+                        </div>
+                        <h3 class="product-title">Waterless Shampoo Concentrate</h3>
+                        <p class="product-price">
+                            <span class="current-price">$24.00</span>
+                        </p>
+                        <button class="btn btn-outline">ADD TO CART</button>
+                    </div>
+                </div>
+                
+                <!-- Product 2 -->
+                <div class="product-card">
+                    <div class="product-badge">NEW</div>
+                    <div class="product-image">
+                        <img src="img/conditioner.png" alt="Waterless Conditioner">
+                    </div>
+                    <div class="product-info">
+                        <div class="reviews">
+                            <div class="stars">★★★★★</div>
+                            <span>10 Reviews</span>
+                        </div>
+                        <h3 class="product-title">Waterless Conditioner Concentrate</h3>
+                        <p class="product-price">
+                            <span class="current-price">$24.00</span>
+                        </p>
+                        <button class="btn btn-outline">ADD TO CART</button>
+                    </div>
+                </div>
+                
+                <!-- Product 3 -->
+                <div class="product-card">
+                    <div class="product-image">
+                        <img src="img/kit.png" alt="Holiday Kit">
+                    </div>
+                    <div class="product-info">
+                        <h3 class="product-title">Holiday Wellness Kit</h3>
+                        <p class="product-price">
+                            <span class="old-price">$48.00</span>
+                            <span class="current-price">$46.00</span>
+                        </p>
+                        <button class="btn btn-outline">ADD TO CART</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Testimonial -->
+            <div class="testimonial">
+                <div class="testimonial-content">
+                    <p class="quote">"I wasn't prepared for how much healthier my hair is. I get compliments all the time now!"</p>
+                    <p class="author">- Maria</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Water Info Section -->
+    <section class="water-info">
+        <div class="container">
+            <div class="water-info-content">
+                <div class="water-info-text">
+                    <h2>THOSE PLASTIC BOTTLES IN YOUR SHOWER?</h2>
+                    <div class="water-percentage">
+                        <div class="percentage">70%</div>
+                        <div class="percentage-label">water</div>
+                    </div>
+                    <p class="water-description">
+                        Introducing the first, patent-pending waterless concentrates for hair and body. 
+                        3x concentrated pastes that are packed with good for hair and skin ingredients 
+                        and activated by the water in your shower. We fit a whole bottle into a 100ml, 
+                        travel-friendly, aluminum tube.
+                    </p>
+                    <div class="water-features">
+                        <span class="feature">Water-activated pastes</span>
+                        <span class="feature">Plastic free</span>
+                        <span class="feature">Vegan</span>
+                        <span class="feature">Cruelty-free</span>
+                        <span class="feature">Silicone-free</span>
+                        <a href="pages/shop.html" class="btn"><button class="button-shop">SHOP HAIR+BODY</button></a>
+                        
+                        
+                    </div>
+                </div>
+                <div class="water-info-image">
+                    <img src="img/water-bottle.png" alt="Plastic bottle composition">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features">
+        <div class="container">
+            <div class="features-grid">
+                <!-- Feature 1 -->
+                <div class="feature-card">
+                    <div class="feature-icon"><img src="/img/icon7.png" alt="High Performance"></div>
+                    <p class="feature-desc">
+                        High Performance
+                        <p>There's a reason people say it's the best shampoo they've ever used.</p>
+                    </p>
+                </div>
+                
+                <!-- Feature 2 -->
+                <div class="feature-card">
+                    <div class="feature-icon"><img src="/img/icon5.png" alt="High Performance"></div>
+                    <p class="feature-desc">
+                        Super Clean
+                        <p>Ingredients matter. Here's what you will (and won't) find in Everist products.</p>
+                    </p>
+                </div>
+                
+                <!-- Feature 3 -->
+                <div class="feature-card">
+                    <div class="feature-icon"><img src="/img/icon6.png" alt="High Performance"></div>
+                    <p class="feature-desc">
+                       Made for Eco-Optimists
+                        <p>We make choices with the planet in mind. Here's how we've approached it.</p>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Big Idea Sections -->
+    <section class="big-idea" id="waterless">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">THE BIG IDEA</h2>
+                <h3 class="section-subtitle">Waterless</h3>
+            </div>
+            
+            <div class="idea-content">
+                <div class="idea-text">
+                    <p class="idea-question">
+                        We asked ourselves, why are we paying to ship heavy, plastic bottles of 
+                        (mostly) water around the world, when we are already showering in water?
+                    </p>
+                    <p class="idea-answer">
+                        By removing added water from our formulas, we can create cutting edge formulas 
+                        that are ultra clean, plant-based and leave your hair and skin happy and healthy.
+                    </p>
+                    <p class="idea-conclusion">One of the many reasons to go waterless.</p>
+                </div>
+                <div class="idea-image">
+                    <img src="img/waterless-concept.png" alt="Waterless concept">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Performance Section -->
+    <section class="performance">
+        <div class="container">
+            <div class="performance-content">
+                <div class="performance-image">
+                    <img src="img/performance.png" alt="High performance">
+                </div>
+                <div class="performance-text">
+                    <h2 class="section-title">HIGH PERFORMANCE</h2>
+                    <h3 class="section-subtitle">It works, we pinky promise.</h3>
+                    <p>
+                        We know that if your personal care products don't make your hair and skin feel amazing, 
+                        nothing else matters. We have high expectations of our hair and body care and our 
+                        formulas won't disappoint. From a deep cleansing lather to our signature fresh scent, 
+                        we've captured the sensorial shower experience you love.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Super Clean Section -->
+    <section class="super-clean">
+        <div class="container">
+            <div class="clean-content">
+                <div class="clean-text">
+                    <h2 class="section-title">SUPER CLEAN</h2>
+                    <h3 class="section-subtitle">Always clean, as it should be.</h3>
+                    <p>
+                        By removing the water from our formulas, Everist products can be formulated to a new 
+                        standard of clean. Everist products are plant-based, vegan and cruelty-free as well 
+                        as being free-from sulfates, silicones, dyes and synthetic fragrances. No small feat.
+                    </p>
+                </div>
+               
+            </div>
+        </div>
+    </section>
+
+    <!-- Eco Optimists Section -->
+    <section class="eco-optimists">
+        <div class="container">
+            <div class="eco-content">
+                <div class="eco-image">
+                    <img src="img/eco-optimists.png" alt="Eco optimists">
+                </div>
+                <div class="eco-text">
+                    <h2 class="section-title">MADE FOR ECO-OPTIMISTS</h2>
+                    <h3 class="section-subtitle">It's the future of beauty.</h3>
+                    <p>
+                        Our products are thoughtfully designed, inside and out, as is the way we do business. 
+                        Everist products are single-use plastic free (our tubes are pure 100% recycled aluminum) 
+                        and we take our caps back through our CapBack program. We also use biodegradable ingredients 
+                        for our formulas and produce with the smallest carbon footprint possible (which is then 
+                        offset, to be certified carbon neutral).
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- User Testimonials -->
+<section class="user-testimonials">
+    <div class="container">
+        <h2 class="section-title">What Our Community Says</h2>
+        <div class="testimonials-slider">
+            <div class="testimonials-grid">
+                <!-- Testimonial 1 -->
+                <div class="testimonial-item">
+                    <img src="img/icon8.png" alt="icon8">
+                </div>
+                
+                <!-- Testimonial 2 -->
+                <div class="testimonial-item">
+                    <img src="img/icon9.png" alt="icon9">
+                </div>
+                
+                <!-- Testimonial 3 -->
+                <div class="testimonial-item">
+                    <img src="img/icon10.png" alt="icon10">
+                </div>
+            </div>
+            
+            <div class="slider-controls">
+                <button class="slider-btn prev"><i class="fas fa-chevron-left"></i></button>
+                <button class="slider-btn next"><i class="fas fa-chevron-right"></i></button>
+            </div>
+        </div>
+    </div>
+</section>
+
+    <!-- Vision Section -->
+    <section class="vision">
+        <div class="container">
+            <div class="vision-content">
+                <div class="vision-text">
+                    <h2 class="section-title">OUR VISION</h2>
+                    <h3 class="section-subtitle">Eco for Everyone</h3>
+                    <p>
+                        We all want to live more sustainably. We're here to make it easier.
+                    </p>
+                    <p>
+                        We believe that big change happens when small changes become easy and better 
+                        (in every way) than the status quo. Eco can be for everyone and we're here 
+                        to prove it. Imperfect environmentalists welcome.
+                    </p>
+                    <a href="#" class="btn btn-secondary">JOIN THE MOVEMENT</a>
+                </div>
+                <div class="vision-image">
+                    <img src="img/vision.jpg" alt="Eco for everyone">
+                </div>
+            </div>
+        </div>
+    </section>
+
+<!-- Certificates Section (добавьте этот блок перед футером) -->
+<section class="certificates">
+    <div class="container">
+        <div class="certificates-slider">
+            <div class="certificates-grid">
+                <div class="certificate-item">
+                    <img src="img/cert1.png" alt="PETA Cruelty-Free and Vegan">
+                    <p>PETA Cruelty-Free and Vegan</p>
+                </div>
+                <div class="certificate-item">
+                    <img src="img/cert2.png" alt="Leaping Bunny Certified">
+                    <p>Leaping Bunny Certified Cruelty-Free</p>
+                </div>
+                <div class="certificate-item">
+                    <img src="img/cert3.jpg" alt="EWG Verified">
+                    <p>EWG Verified™ Skin Deep®</p>
+                </div>
+                <div class="certificate-item">
+                    <img src="img/cert4.png" alt="Climate Neutral">
+                    <p>Climate Neutral Certified Brand 2022 & 2023</p>
+                </div>
+                <div class="certificate-item">
+                    <img src="img/cert5.png" alt="Made in Canada">
+                    <p>Made in Canada</p>
+                </div>
+            </div>
+            
+            
+        </div>
+    </div>
+</section>
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>Helpful Links</h4>
+                    <ul>
+                        <li><a href="pages/faq.html">FAQ</a></li>
+                        <li><a href="pages/help-center.html">HELP CENTER</a></li>
+                        <li><a href="pages/cap-back.html">CAP BACK</a></li>
+                        <li><a href="pages/shipping.html">SHIPPING POLICY</a></li>
+                        <li><a href="pages/returns.html">RETURN POLICY</a></li>
+                        <li><a href="pages/privacy.html">PRIVACY POLICY</a></li>
+                        <li><a href="pages/terms.html">TERMS</a></li>
+                        <li><a href="#">SEARCH</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Community</h4>
+                    <ul>
+                        <li><a href="pages/reviews.html">REVIEWS</a></li>
+                        <li><a href="pages/press.html">PRESS</a></li>
+                        <li><a href="#"><i class="fab fa-instagram"></i> INSTAGRAM</a></li>
+                        <li><a href="#"><i class="fab fa-tiktok"></i> TIKTOK</a></li>
+                        <li><a href="#"><i class="fab fa-facebook"></i> FACEBOOK</a></li>
+                        <li><a href="pages/partners.html">BECOME A RETAIL PARTNER</a></li>
+                        <li><a href="pages/affiliate.html">BECOME AN AFFILIATE</a></li>
+                        <li><a href="pages/ambassador.html">BECOME AN AMBASSADOR</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Contact Us</h4>
+                    <p>Ask us anything.</p>
+                    <p><a href="mailto:info@helloeverist.com">info@helloeverist.com</a></p>
+                    <a href="pages/contact.html" class="btn btn-outline">CONTACT FORM</a>
+                </div>
+                
+                <div class="footer-section newsletter">
+                    <h4>Join our eco-optimist community</h4>
+                    <p>Get secret deals, new arrivals and occasionally we'll send you cat jokes.</p>
+                    <form class="newsletter-form">
+                        <input type="email" placeholder="Your email address" required>
+                        <button type="submit" class="btn btn-primary">SUBSCRIBE</button>
+                    </form>
+                    <div class="social-icons">
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-tiktok"></i></a>
+                        <a href="#"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2023, Everist. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Модальное окно корзины -->
+    <div class="modal cart-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Your Cart</h3>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <!-- Содержимое корзины -->
+            </div>
+        </div>
+    </div>
+</body>
+</html>
