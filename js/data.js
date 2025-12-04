@@ -387,3 +387,13 @@ document.addEventListener('DOMContentLoaded', async () => {
         console.error('❌ Не удалось инициализировать DataService:', error);
     }
 });
+// Создаем Promise для контроля готовности
+window.dataServiceReady = window.dataService.initialize()
+    .then(() => {
+        console.log('✅ DataService полностью инициализирован');
+        return window.dataService;
+    })
+    .catch(error => {
+        console.error('❌ Ошибка инициализации DataService:', error);
+        throw error;
+    });
