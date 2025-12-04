@@ -1361,3 +1361,58 @@ window.addToCartMain = function(productId) {
         alert('Ошибка при добавлении в корзину');
     }
 };
+// ===== ОБНОВЛЕНИЕ КНОПОК КОРЗИНЫ =====
+
+// Функция обновления всех кнопок корзины на странице
+function updateAllCartButtons() {
+    if (!window.dataService) {
+        console.log('⚠️ DataService не доступен для обновления кнопок');
+        return;
+    }
+    
+    const currentUser = window.dataService.getCurrentUser();
+    if (!currentUser) {
+        console.log('⚠️ Нет авторизованного пользователя');
+        return;
+    }
+    
+    const buttons = document.querySelectorAll('.add-to-cart-btn');
+    console.log(`🔄 Обновление ${buttons.length} кнопок корзины`);
+    
+    buttons.forEach(button => {
+        const productId = button.getAttribute('data-product-id');
+        if (productId) {
+            const isInCart = window.dataService.isProductInCart ?
+                window.dataService.isProductInCart(currentUser.id, parseInt(productId)) :
+                false;
+            
+            if (isInCart) {
+                button.innerHTML = '<i class="fas fa-check"></i> В корзине';
+                button.classList.add('added');
+                button.title = 'Нажмите, чтобы удалить из корзины';
+            } else {
+                button.innerHTML = '<i class="fas fa-shopping-cart"></i> В корзину';
+                button.classList.remove('added');
+                button.title = '';
+            }
+        }
+    });
+}
+
+// Слушаем событие обновления корзины
+window.addEventListener('cartUpdated', () => {
+    console.log('🛒 Событие cartUpdated получено, обновляем кнопки...');
+    updateAllCartButtons();
+});
+
+// Вызываем обновление кнопок при загрузке страницы
+document.addEventListener('DOMContentLoaded', () => {
+    setTimeout(() => {
+        if (window.dataService && window.dataService.isReady()) {
+            updateAllCartButtons();
+        }
+    }, 500);
+});
+
+// Добавляем глобальную функцию
+window.updateAllCartButtons = updateAllCartButtons;

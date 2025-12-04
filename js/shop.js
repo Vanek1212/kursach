@@ -1,4 +1,4 @@
-// js/shop.js - Исправленная версия для скрытия прелоадера
+// js/shop.js - Исправленная версия с переключаемой корзиной
 
 let allProducts = [];
 let filteredProducts = [];
@@ -9,13 +9,11 @@ const productsPerPage = 9;
 async function waitForDataService() {
     console.log('⏳ Ожидание DataService...');
     
-    // Если dataService уже готов
     if (window.dataService && window.dataService.isDataLoaded) {
         console.log('✅ DataService уже загружен');
         return window.dataService;
     }
     
-    // Ждем события готовности
     return new Promise((resolve) => {
         const eventHandler = (e) => {
             console.log('✅ Событие dataServiceReady получено');
@@ -26,19 +24,18 @@ async function waitForDataService() {
         
         window.addEventListener('dataServiceReady', eventHandler);
         
-        // Таймаут на случай если событие не придет
         const timeout = setTimeout(() => {
             console.log('⚠️ Таймаут ожидания DataService, продолжаем...');
             window.removeEventListener('dataServiceReady', eventHandler);
             if (window.dataService) {
                 resolve(window.dataService);
             } else {
-                // Создаем пустой dataService для продолжения работы
                 window.dataService = {
                     getAllProducts: () => [],
                     getCurrentUser: () => null,
                     getCartItems: () => [],
-                    getCartItemCount: () => 0
+                    getCartItemCount: () => 0,
+                    isProductInCart: () => false
                 };
                 resolve(window.dataService);
             }
@@ -51,26 +48,22 @@ async function initializeShop() {
     console.log('🛍️ Инициализация магазина...');
     
     try {
-        // Сразу показываем прелоадер
         showPreloader();
         
-        // Ждем готовности dataService
         const dataService = await waitForDataService();
         
         console.log('✅ DataService готов, загружаем товары...');
         
-        // Получаем товары
         allProducts = dataService.getAllProducts();
         console.log('📦 Получено товаров:', allProducts.length);
         
         if (allProducts.length === 0) {
             console.warn('⚠️ Нет товаров для отображения');
             showEmptyState();
-            hidePreloader(); // Скрываем прелоадер
+            hidePreloader();
             return;
         }
         
-        // Преобразуем данные
         allProducts = allProducts.map(product => ({
             ...product,
             price: parseFloat(product.price) || 0,
@@ -83,7 +76,6 @@ async function initializeShop() {
         
         filteredProducts = [...allProducts];
         
-        // Обновляем интерфейс
         updateHeader(dataService);
         renderProducts();
         renderPagination();
@@ -91,7 +83,6 @@ async function initializeShop() {
         setupSearch();
         setupCategories();
         
-        // Скрываем прелоадер
         hidePreloader();
         
         console.log('✅ Магазин успешно инициализирован');
@@ -111,7 +102,6 @@ function showPreloader() {
         preloader.style.opacity = '1';
         preloader.style.visibility = 'visible';
         
-        // Анимация загрузки
         let progress = 0;
         const progressBar = document.getElementById('progressBar');
         const progressCounter = document.getElementById('progressCounter');
@@ -136,11 +126,9 @@ function hidePreloader() {
     if (preloader) {
         console.log('👋 Скрытие прелоадера...');
         
-        // Сначала анимация исчезновения
         preloader.style.opacity = '0';
         preloader.style.visibility = 'hidden';
         
-        // Затем скрываем полностью
         setTimeout(() => {
             preloader.style.display = 'none';
             console.log('✅ Прелоадер скрыт');
@@ -211,10 +199,14 @@ function renderProducts() {
     
     const dataService = window.dataService || {};
     const currentUser = dataService.getCurrentUser ? dataService.getCurrentUser() : null;
-    const cartItems = currentUser ? dataService.getCartItems ? dataService.getCartItems(currentUser.id) : [] : [];
     
     productsGrid.innerHTML = productsToShow.map(product => {
-        const isInCart = cartItems.some(item => item.productId === product.id);
+        const isInCart = currentUser ? 
+            (dataService.isProductInCart ? 
+                dataService.isProductInCart(currentUser.id, product.id) : 
+                false) : 
+            false;
+        
         const hasDiscount = product.oldPrice && product.oldPrice > product.price;
         const discountPercent = hasDiscount 
             ? Math.round((product.oldPrice - product.price) / product.oldPrice * 100)
@@ -229,7 +221,6 @@ function renderProducts() {
             badge = `<div class="product-badge">BESTSELLER</div>`;
         }
         
-        // Используем изображение из данных или заглушку
         const imageUrl = product.image || 'https://images.unsplash.com/photo-1556228578-9c360e2d0b4a?w=400&auto=format&fit=crop';
         
         return `
@@ -270,9 +261,12 @@ function renderProducts() {
                     
                     <div class="product-actions">
                         <button class="add-to-cart-btn ${isInCart ? 'added' : ''}" 
-                                onclick="addToCart(${product.id})"
-                                ${!currentUser ? 'disabled title="Войдите, чтобы добавить в корзину"' : ''}>
-                            ${isInCart ? '<i class="fas fa-check"></i> В корзине' : '<i class="fas fa-shopping-cart"></i> В корзину'}
+                                onclick="toggleCart(${product.id}, this)"
+                                ${!currentUser ? 'disabled title="Войдите, чтобы добавить в корзину"' : ''}
+                                data-product-id="${product.id}">
+                            ${isInCart ? 
+                                '<i class="fas fa-check"></i> В корзине' : 
+                                '<i class="fas fa-shopping-cart"></i> В корзину'}
                         </button>
                         <button class="wishlist-btn" onclick="toggleWishlist(${product.id})" title="Добавить в избранное">
                             <i class="far fa-heart"></i>
@@ -284,8 +278,8 @@ function renderProducts() {
     }).join('');
 }
 
-// Добавление в корзину
-async function addToCart(productId) {
+// Переключение состояния корзины (добавить/удалить)
+async function toggleCart(productId, button) {
     const dataService = window.dataService;
     if (!dataService || !dataService.addToCart) {
         alert('Сервис корзины не доступен');
@@ -295,33 +289,52 @@ async function addToCart(productId) {
     const currentUser = dataService.getCurrentUser ? dataService.getCurrentUser() : null;
     
     if (!currentUser) {
-        alert('Пожалуйста, войдите в систему, чтобы добавить товары в корзину');
+        alert('Пожалуйста, войдите в систему, чтобы управлять корзиной');
         window.location.href = 'login.html';
         return;
     }
     
     try {
-        await dataService.addToCart(currentUser.id, productId, 1);
-        updateHeader(dataService);
+        const isInCart = dataService.isProductInCart ? 
+            dataService.isProductInCart(currentUser.id, productId) : 
+            false;
         
-        // Обновляем кнопку
-        const button = document.querySelector(`[onclick="addToCart(${productId})"]`);
-        if (button) {
-            button.innerHTML = '<i class="fas fa-check"></i> В корзине';
-            button.classList.add('added');
-            button.disabled = true;
-            
-            // Через 3 секунды возвращаем возможность добавить еще
-            setTimeout(() => {
-                button.disabled = false;
-            }, 3000);
+        if (isInCart) {
+            // Удаляем из корзины
+            await dataService.removeFromCart(currentUser.id, productId);
+            updateCartButton(button, false);
+            showNotification('Товар удален из корзины', 'info');
+        } else {
+            // Добавляем в корзину
+            await dataService.addToCart(currentUser.id, productId, 1);
+            updateCartButton(button, true);
+            showNotification('Товар добавлен в корзину!', 'success');
         }
         
-        showNotification('Товар добавлен в корзину!');
+        // Обновляем заголовок (бейдж корзины)
+        updateHeader(dataService);
         
     } catch (error) {
-        console.error('❌ Ошибка при добавлении в корзину:', error);
-        alert('Не удалось добавить товар в корзину');
+        console.error('❌ Ошибка при работе с корзиной:', error);
+        showNotification('Не удалось обновить корзину', 'error');
+    }
+}
+
+// Обновление кнопки корзины
+function updateCartButton(button, isInCart) {
+    if (!button) return;
+    
+    const icon = button.querySelector('i');
+    if (isInCart) {
+        icon.className = 'fas fa-check';
+        button.innerHTML = '<i class="fas fa-check"></i> В корзине';
+        button.classList.add('added');
+        button.title = 'Нажмите, чтобы удалить из корзины';
+    } else {
+        icon.className = 'fas fa-shopping-cart';
+        button.innerHTML = '<i class="fas fa-shopping-cart"></i> В корзину';
+        button.classList.remove('added');
+        button.title = '';
     }
 }
 
@@ -351,19 +364,24 @@ function getStarRating(rating) {
     return stars;
 }
 
-function showNotification(message) {
-    // Удаляем старые уведомления
+function showNotification(message, type = 'success') {
     const oldNotifications = document.querySelectorAll('.notification');
     oldNotifications.forEach(n => n.remove());
     
     const notification = document.createElement('div');
-    notification.className = 'notification';
+    notification.className = `notification notification-${type}`;
+    
+    let icon = 'fa-check-circle';
+    if (type === 'info') icon = 'fa-info-circle';
+    if (type === 'error') icon = 'fa-exclamation-circle';
+    
     notification.innerHTML = `
         <div class="notification-content">
-            <i class="fas fa-check-circle"></i>
+            <i class="fas ${icon}"></i>
             <span>${message}</span>
         </div>
     `;
+    
     document.body.appendChild(notification);
     
     setTimeout(() => {
@@ -431,7 +449,6 @@ function setupSearch() {
             }
         });
         
-        // Дебаунс для поиска при вводе
         let searchTimeout;
         searchInput.addEventListener('input', function() {
             clearTimeout(searchTimeout);
@@ -445,9 +462,7 @@ function setupCategories() {
     
     categoryButtons.forEach(button => {
         button.addEventListener('click', function() {
-            // Убираем активный класс у всех кнопок
             categoryButtons.forEach(btn => btn.classList.remove('active'));
-            // Добавляем активный класс текущей кнопке
             this.classList.add('active');
             
             applyFilters();
@@ -462,7 +477,6 @@ function applyFilters() {
     
     console.log('🔧 Применение фильтров:', { selectedCategory, sortValue, priceValue });
     
-    // Фильтрация по категории
     if (selectedCategory === 'all') {
         filteredProducts = [...allProducts];
     } else {
@@ -471,7 +485,6 @@ function applyFilters() {
         );
     }
     
-    // Фильтрация по цене
     if (priceValue) {
         const [min, max] = priceValue.split('-').map(Number);
         filteredProducts = filteredProducts.filter(product => {
@@ -484,7 +497,6 @@ function applyFilters() {
         });
     }
     
-    // Сортировка
     switch (sortValue) {
         case 'price-low':
             filteredProducts.sort((a, b) => a.price - b.price);
@@ -503,10 +515,7 @@ function applyFilters() {
             break;
     }
     
-    // Сбрасываем на первую страницу
     currentPage = 1;
-    
-    // Рендерим товары и пагинацию
     renderProducts();
     renderPagination();
 }
@@ -569,20 +578,16 @@ function renderPagination() {
     
     let pages = [];
     
-    // Всегда показываем первую страницу
     pages.push(1);
     
-    // Показываем страницы вокруг текущей
     for (let i = Math.max(2, currentPage - 1); i <= Math.min(totalPages - 1, currentPage + 1); i++) {
         if (!pages.includes(i)) pages.push(i);
     }
     
-    // Всегда показываем последнюю страницу
     if (totalPages > 1 && !pages.includes(totalPages)) {
         pages.push(totalPages);
     }
     
-    // Создаем HTML для пагинации
     let paginationHTML = '';
     
     if (currentPage > 1) {
@@ -631,7 +636,6 @@ function goToPage(page) {
     renderProducts();
     renderPagination();
     
-    // Плавная прокрутка к началу товаров
     const productsGrid = document.getElementById('productsGrid');
     if (productsGrid) {
         productsGrid.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -640,7 +644,6 @@ function goToPage(page) {
 
 // Просмотр деталей товара
 function showProductDetail(productId) {
-    // В реальном приложении здесь будет переход на страницу товара
     alert('Функция быстрого просмотра в разработке. ID товара: ' + productId);
 }
 
@@ -654,26 +657,46 @@ function toggleWishlist(productId) {
     if (button.classList.contains('active')) {
         button.classList.remove('active');
         icon.className = 'far fa-heart';
-        showNotification('Удалено из избранного');
+        showNotification('Удалено из избранного', 'info');
     } else {
         button.classList.add('active');
         icon.className = 'fas fa-heart';
-        showNotification('Добавлено в избранное');
+        showNotification('Добавлено в избранное', 'success');
     }
 }
 
+// Функция для обновления всех кнопок корзины на странице
+function updateAllCartButtons() {
+    if (!window.dataService) return;
+    
+    const currentUser = window.dataService.getCurrentUser();
+    if (!currentUser) return;
+    
+    const buttons = document.querySelectorAll('.add-to-cart-btn');
+    buttons.forEach(button => {
+        const productId = button.getAttribute('data-product-id');
+        if (productId) {
+            const isInCart = window.dataService.isProductInCart ?
+                window.dataService.isProductInCart(currentUser.id, parseInt(productId)) :
+                false;
+            
+            updateCartButton(button, isInCart);
+        }
+    });
+}
+
 // Экспортируем функции для глобального использования
-window.addToCart = addToCart;
+window.toggleCart = toggleCart;
 window.toggleWishlist = toggleWishlist;
 window.showProductDetail = showProductDetail;
 window.goToPage = goToPage;
 window.resetFilters = resetFilters;
+window.updateAllCartButtons = updateAllCartButtons;
 
 // Запускаем при загрузке DOM
 document.addEventListener('DOMContentLoaded', () => {
     console.log('📄 DOM загружен, запускаем магазин...');
     
-    // Даем время на загрузку других скриптов
     setTimeout(() => {
         initializeShop();
     }, 100);

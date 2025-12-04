@@ -16,20 +16,18 @@ class DataService {
     async loadData() {
         console.log('📥 Загрузка данных...');
         
-        // Список возможных путей к data.json
         const possiblePaths = [
-            '/data/data.json',    // если сервер запущен из корня проекта
-            'data/data.json',     // относительный путь
-            '/data.json',         // если data.json в корне
-            'data.json',          // относительный путь из корня
-            '../data/data.json',  // из папки js
-            '../data.json'        // из папки js
+            '/data/data.json',
+            'data/data.json',
+            '/data.json',
+            'data.json',
+            '../data/data.json',
+            '../data.json'
         ];
         
         let loadedData = null;
         let lastError = null;
         
-        // Пробуем все пути по очереди
         for (const path of possiblePaths) {
             try {
                 console.log(`🔄 Пробуем путь: ${path}`);
@@ -38,7 +36,6 @@ class DataService {
                 if (response.ok) {
                     loadedData = await response.json();
                     console.log(`✅ Данные успешно загружены с пути: ${path}`);
-                    console.log(`📊 Данные: ${JSON.stringify(loadedData, null, 2).substring(0, 200)}...`);
                     break;
                 } else {
                     console.log(`❌ Путь ${path}: статус ${response.status}`);
@@ -52,7 +49,6 @@ class DataService {
         if (!loadedData) {
             console.error('❌ Не удалось загрузить данные ни с одного пути');
             
-            // Пробуем загрузить из localStorage
             const localStorageData = this.loadFromLocalStorage();
             if (localStorageData) {
                 console.log('🔄 Используем данные из localStorage');
@@ -76,7 +72,6 @@ class DataService {
         console.log(`   🛒 Корзины: ${this.cart.length}`);
         console.log(`   📦 Заказов: ${this.orders.length}`);
         
-        // Сохраняем в localStorage для будущего использования
         this.saveToLocalStorage();
         
         return this.data;
@@ -86,7 +81,6 @@ class DataService {
     loadDemoProducts() {
         console.log('🛠️ Создание демо-данных...');
         
-        // Основные демо-товары
         this.products = [
             {
                 id: 1,
@@ -147,10 +141,57 @@ class DataService {
                 category: "face",
                 features: ["Для лица", "Очищение пор", "Антибактериальный"],
                 rating: 4.6
+            },
+            {
+                id: 6,
+                name: "Toothpaste Tablets",
+                price: 18.00,
+                oldPrice: 20.00,
+                image: "https://images.unsplash.com/photo-1583947215259-38e31be8751f?w=400",
+                reviews: 52,
+                description: "Таблетки для чистки зубов без пластиковой упаковки",
+                category: "oral",
+                features: ["Без пластика", "Эко-упаковка", "Натуральный состав"],
+                rating: 4.4
+            },
+            {
+                id: 7,
+                name: "Home Cleaning Concentrate",
+                price: 20.00,
+                oldPrice: 22.00,
+                image: "https://images.unsplash.com/photo-1583947581924-860bda6a26df?w=400",
+                reviews: 38,
+                description: "Концентрат для уборки дома с эфирными маслами",
+                category: "home",
+                features: ["Многоразовый", "Эко-состав", "Экономичный"],
+                rating: 4.3
+            },
+            {
+                id: 8,
+                name: "Perfume Oil",
+                price: 35.00,
+                oldPrice: 38.00,
+                image: "https://images.unsplash.com/photo-1541643600914-78b084683601?w=400",
+                reviews: 72,
+                description: "Концентрированное парфюмерное масло без спирта",
+                category: "perfume",
+                features: ["Без спирта", "Долгий шлейф", "Натуральные масла"],
+                rating: 4.7
+            },
+            {
+                id: 9,
+                name: "Complete Care Set",
+                price: 85.00,
+                oldPrice: 95.00,
+                image: "https://images.unsplash.com/photo-1556228579-4ac32ac7a737?w=400",
+                reviews: 28,
+                description: "Полный набор для ухода за телом и волосами",
+                category: "kit",
+                features: ["Полный набор", "Экономия 15%", "Идеально для подарка"],
+                rating: 4.9
             }
         ];
         
-        // Демо-пользователи
         if (this.users.length === 0) {
             this.users = [
                 {
@@ -267,16 +308,14 @@ class DataService {
     registerUser(email, password, name, phone = '', address = '') {
         console.log(`📝 Регистрация пользователя: ${email}`);
         
-        // Проверяем, нет ли уже пользователя с таким email
         if (this.isEmailRegistered(email)) {
             throw new Error('Пользователь с таким email уже существует');
         }
 
-        // Создаем нового пользователя
         const newUser = {
             id: this.users.length > 0 ? Math.max(...this.users.map(u => u.id)) + 1 : 1,
             email,
-            password, // В реальном приложении нужно хэшировать пароль!
+            password,
             name,
             avatar: `https://i.pravatar.cc/150?img=${this.users.length + 1}`,
             phone,
@@ -325,7 +364,6 @@ class DataService {
 
         this.users[userIndex] = { ...this.users[userIndex], ...updates };
         
-        // Обновляем текущего пользователя, если это он
         if (this.currentUser && this.currentUser.id === userId) {
             this.currentUser = { ...this.currentUser, ...updates };
             localStorage.setItem('everist_current_user', JSON.stringify(this.currentUser));
@@ -395,7 +433,6 @@ class DataService {
         
         const userCart = this.cart.filter(item => item.userId === userId);
         
-        // Добавляем информацию о товарах
         return userCart.map(item => {
             const product = this.getProductById(item.productId);
             return {
@@ -406,10 +443,19 @@ class DataService {
         });
     }
 
+    // Проверка, есть ли товар в корзине
+    isProductInCart(userId, productId) {
+        return this.cart.some(item => item.userId === userId && item.productId === productId);
+    }
+
+    // Получение элемента корзины
+    getCartItem(userId, productId) {
+        return this.cart.find(item => item.userId === userId && item.productId === productId);
+    }
+
     addToCart(userId, productId, quantity = 1) {
         console.log(`➕ Добавление в корзину: пользователь ${userId}, товар ${productId}, количество ${quantity}`);
         
-        // Проверяем, есть ли уже этот товар в корзине
         const existingItem = this.cart.find(
             item => item.userId === userId && item.productId === productId
         );
@@ -447,7 +493,6 @@ class DataService {
         }
 
         if (quantity <= 0) {
-            // Удаляем товар из корзины
             this.cart = this.cart.filter(
                 item => !(item.userId === userId && item.productId === productId)
             );
@@ -548,7 +593,6 @@ class DataService {
 
         const total = this.getCartTotal(userId);
         
-        // Создаем заказ
         const order = {
             id: this.orders.length > 0 
                 ? Math.max(...this.orders.map(o => o.id)) + 1 
@@ -567,7 +611,6 @@ class DataService {
         this.orders.push(order);
         this.saveToLocalStorage();
         
-        // Очищаем корзину пользователя
         this.clearCart(userId);
         
         console.log(`✅ Заказ создан: ID ${order.id}, сумма: $${total.toFixed(2)}`);
@@ -577,12 +620,10 @@ class DataService {
 
     // ===== ИНИЦИАЛИЗАЦИЯ =====
     async initialize() {
-        // Если уже инициализирован, возвращаем Promise
         if (this.isInitialized) {
             return Promise.resolve(this);
         }
         
-        // Если уже идет инициализация, возвращаем существующий Promise
         if (this.initializationPromise) {
             return this.initializationPromise;
         }
@@ -591,13 +632,10 @@ class DataService {
         
         this.initializationPromise = new Promise(async (resolve, reject) => {
             try {
-                // 1. Загружаем из localStorage
                 this.loadFromLocalStorage();
                 
-                // 2. Загружаем из файла
                 await this.loadData();
                 
-                // 3. Загружаем текущего пользователя
                 this.loadCurrentUser();
                 
                 this.isInitialized = true;
@@ -609,7 +647,6 @@ class DataService {
                 console.log(`   🛒 Записей в корзине: ${this.cart.length}`);
                 console.log(`   📦 Заказов: ${this.orders.length}`);
                 
-                // Отправляем событие о готовности
                 this.emitReadyEvent();
                 
                 resolve(this);
@@ -617,7 +654,7 @@ class DataService {
             } catch (error) {
                 console.error('❌ Ошибка инициализации DataService:', error);
                 this.isInitialized = true;
-                resolve(this); // Все равно разрешаем, чтобы приложение работало
+                resolve(this);
             }
         });
         
@@ -634,10 +671,7 @@ class DataService {
             }
         });
         
-        // Отправляем на window
         window.dispatchEvent(event);
-        
-        // Отправляем на document (для обратной совместимости)
         document.dispatchEvent(new Event('dataServiceReady'));
         
         console.log('📢 Событие dataServiceReady отправлено');
@@ -686,7 +720,6 @@ window.initializeDataService = async function() {
 document.addEventListener('DOMContentLoaded', async () => {
     console.log('📄 DOM загружен, начинаем инициализацию DataService...');
     
-    // Даем время другим скриптам загрузиться
     setTimeout(async () => {
         try {
             await window.dataService.initialize();
