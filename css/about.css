@@ -1,0 +1,413 @@
+/* ===== ABOUT PAGE STYLES ===== */
+
+/* About Hero Section */
+.about-hero {
+    padding: 120px 0 80px;
+    background: linear-gradient(135deg, #f9f9f9 0%, #ffffff 100%);
+    text-align: center;
+}
+
+.about-hero h1 {
+    font-size: 48px;
+    margin-bottom: 20px;
+    color: #000;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700;
+}
+
+.about-hero p {
+    font-size: 18px;
+    color: #666;
+    max-width: 700px;
+    margin: 0 auto;
+    line-height: 1.6;
+}
+
+/* Mission Section */
+.mission-section {
+    padding: 80px 0;
+    background-color: #fff;
+}
+
+.mission-content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    align-items: center;
+}
+
+.mission-text h2 {
+    font-size: 36px;
+    margin-bottom: 30px;
+    color: #000;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700;
+}
+
+.mission-text p {
+    font-size: 16px;
+    line-height: 1.7;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+.mission-image img {
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+}
+
+/* Values Section */
+.values-section {
+    padding: 80px 0;
+    background-color: #f9f9f9;
+}
+
+.values-section .section-header {
+    text-align: center;
+    margin-bottom: 50px;
+}
+
+.values-section .section-header h2 {
+    font-size: 36px;
+    margin-bottom: 15px;
+    color: #000;
+}
+
+.values-section .section-header p {
+    font-size: 18px;
+    color: #666;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.values-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 30px;
+    margin-top: 30px;
+}
+
+.value-card {
+    background: white;
+    padding: 40px 30px;
+    border-radius: 12px;
+    text-align: center;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.value-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+}
+
+.value-icon {
+    font-size: 40px;
+    margin-bottom: 20px;
+    display: block;
+}
+
+.value-card h3 {
+    font-size: 20px;
+    margin-bottom: 15px;
+    color: #000;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 600;
+}
+
+.value-card p {
+    font-size: 15px;
+    color: #666;
+    line-height: 1.6;
+}
+
+/* Team Section */
+.team-section {
+    padding: 80px 0;
+    background-color: #fff;
+}
+
+.team-section .section-header {
+    text-align: center;
+    margin-bottom: 50px;
+}
+
+.team-section .section-header h2 {
+    font-size: 36px;
+    margin-bottom: 15px;
+    color: #000;
+}
+
+.team-section .section-header p {
+    font-size: 18px;
+    color: #666;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.team-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 40px;
+    margin-top: 30px;
+}
+
+.team-member {
+    text-align: center;
+}
+
+.member-photo {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    margin: 0 auto 20px;
+    background-color: #f0f0f0;
+    overflow: hidden;
+    border: 5px solid #f9f9f9;
+}
+
+.member-photo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s;
+}
+
+.team-member:hover .member-photo img {
+    transform: scale(1.05);
+}
+
+.team-member h4 {
+    font-size: 18px;
+    margin-bottom: 5px;
+    color: #000;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 600;
+}
+
+.team-member .position {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 15px;
+    font-weight: 500;
+}
+
+.team-member .bio {
+    font-size: 14px;
+    color: #333;
+    line-height: 1.6;
+    max-width: 250px;
+    margin: 0 auto;
+}
+
+/* Timeline Section */
+.timeline-section {
+    padding: 80px 0;
+    background-color: #f9f9f9;
+}
+
+.timeline-section .section-header {
+    text-align: center;
+    margin-bottom: 50px;
+}
+
+.timeline-section .section-header h2 {
+    font-size: 36px;
+    margin-bottom: 15px;
+    color: #000;
+}
+
+.timeline-section .section-header p {
+    font-size: 18px;
+    color: #666;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.timeline {
+    max-width: 800px;
+    margin: 50px auto 0;
+    position: relative;
+    padding: 20px 0;
+}
+
+.timeline::before {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background-color: #1a5d4f;
+    transform: translateX(-50%);
+}
+
+.timeline-item {
+    margin-bottom: 40px;
+    position: relative;
+    width: 50%;
+    padding: 0 40px;
+    box-sizing: border-box;
+}
+
+.timeline-item.left {
+    left: 0;
+    text-align: right;
+}
+
+.timeline-item.right {
+    left: 50%;
+    text-align: left;
+}
+
+.timeline-item::before {
+    content: '';
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    background-color: #1a5d4f;
+    border-radius: 50%;
+    top: 0;
+    border: 3px solid white;
+    box-shadow: 0 0 0 3px #1a5d4f;
+}
+
+.timeline-item.left::before {
+    right: -8px;
+}
+
+.timeline-item.right::before {
+    left: -8px;
+}
+
+.timeline-content {
+    background: white;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+}
+
+.timeline-content h3 {
+    font-size: 24px;
+    margin-bottom: 10px;
+    color: #1a5d4f;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 600;
+}
+
+.timeline-content p {
+    font-size: 15px;
+    color: #333;
+    line-height: 1.6;
+}
+
+/* Active link in navigation */
+.nav-links a.active {
+    color: #1a5d4f;
+    font-weight: 600;
+}
+
+.nav-links a.active::after {
+    background-color: #1a5d4f;
+    width: 100%;
+}
+
+/* ===== RESPONSIVE STYLES ===== */
+@media (max-width: 992px) {
+    .mission-content {
+        grid-template-columns: 1fr;
+        gap: 40px;
+    }
+    
+    .values-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .team-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 30px;
+    }
+    
+    .timeline::before {
+        left: 30px;
+    }
+    
+    .timeline-item {
+        width: 100%;
+        left: 0 !important;
+        padding-left: 70px;
+        padding-right: 0;
+        text-align: left;
+    }
+    
+    .timeline-item.left::before,
+    .timeline-item.right::before {
+        left: 22px;
+        right: auto;
+    }
+    
+    .timeline-item.left {
+        text-align: left;
+    }
+}
+
+@media (max-width: 768px) {
+    .about-hero {
+        padding: 100px 0 60px;
+    }
+    
+    .about-hero h1 {
+        font-size: 36px;
+    }
+    
+    .mission-text h2,
+    .values-section .section-header h2,
+    .team-section .section-header h2,
+    .timeline-section .section-header h2 {
+        font-size: 30px;
+    }
+    
+    .values-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+    
+    .team-grid {
+        grid-template-columns: 1fr;
+        gap: 30px;
+    }
+    
+    .member-photo {
+        width: 120px;
+        height: 120px;
+    }
+}
+
+@media (max-width: 480px) {
+    .about-hero h1 {
+        font-size: 28px;
+    }
+    
+    .about-hero p {
+        font-size: 16px;
+    }
+    
+    .mission-text h2,
+    .values-section .section-header h2,
+    .team-section .section-header h2,
+    .timeline-section .section-header h2 {
+        font-size: 24px;
+    }
+    
+    .value-card,
+    .timeline-content {
+        padding: 20px;
+    }
+    
+    .team-member .bio {
+        font-size: 13px;
+    }
+}
