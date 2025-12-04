@@ -15,71 +15,10 @@
     <!-- Наши стили -->
     <link rel="stylesheet" href="../css/style.css">
     <link rel="stylesheet" href="../css/responsive.css">
+    <link rel="stylesheet" href="../css/auth.css">
+    
     <title>Everist - Регистрация</title>
     <link rel="icon" type="image/png" href="../img/logo1.png">
-    
-    <style>
-        /* Стили из login.html, плюс дополнительные */
-        .auth-container {
-            max-width: 450px;
-            margin: 80px auto;
-            padding: 40px;
-            background: white;
-            border-radius: 16px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-        }
-        
-        .form-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-        }
-        
-        .password-strength {
-            height: 4px;
-            background: #eee;
-            border-radius: 2px;
-            margin-top: 5px;
-            overflow: hidden;
-        }
-        
-        .strength-meter {
-            height: 100%;
-            width: 0;
-            transition: width 0.3s, background-color 0.3s;
-        }
-        
-        .strength-weak { width: 33%; background-color: #f44336; }
-        .strength-medium { width: 66%; background-color: #ff9800; }
-        .strength-strong { width: 100%; background-color: #4caf50; }
-        
-        .password-hint {
-            font-size: 12px;
-            color: #666;
-            margin-top: 4px;
-        }
-        
-        .terms-checkbox {
-            display: flex;
-            align-items: flex-start;
-            gap: 10px;
-            margin: 20px 0;
-        }
-        
-        .terms-checkbox input {
-            margin-top: 3px;
-        }
-        
-        .terms-checkbox label {
-            font-size: 14px;
-            line-height: 1.4;
-        }
-        
-        .terms-checkbox a {
-            color: #000;
-            text-decoration: underline;
-        }
-    </style>
 </head>
 <body>
     <!-- Header -->
@@ -92,7 +31,7 @@
             <a href="#">OUR STORY</a>
             <a href="#">PRESS</a>
         </nav>
-        <div class="header-right">
+        <div class="header-right" id="headerRight">
             <a href="#" class="search-icon">🔍</a>
             <a href="login.html" class="user-icon">👤</a>
             <a href="cart.html" class="cart-icon">
@@ -208,138 +147,6 @@
 
     <!-- Подключаем скрипты -->
     <script src="../js/data.js"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const registerForm = document.getElementById('registerForm');
-            const firstNameInput = document.getElementById('firstName');
-            const lastNameInput = document.getElementById('lastName');
-            const emailInput = document.getElementById('email');
-            const passwordInput = document.getElementById('password');
-            const confirmPasswordInput = document.getElementById('confirmPassword');
-            const phoneInput = document.getElementById('phone');
-            const termsCheckbox = document.getElementById('terms');
-            const registerButton = document.getElementById('registerButton');
-            const errorMessage = document.getElementById('errorMessage');
-            const successMessage = document.getElementById('successMessage');
-            const passwordStrength = document.getElementById('passwordStrength');
-            const passwordHint = document.getElementById('passwordHint');
-            
-            // Проверка сложности пароля
-            passwordInput.addEventListener('input', function() {
-                const password = passwordInput.value;
-                let strength = 0;
-                let hint = '';
-                
-                if (password.length >= 6) strength += 1;
-                if (password.length >= 8) strength += 1;
-                if (/[A-Z]/.test(password)) strength += 1;
-                if (/[0-9]/.test(password)) strength += 1;
-                if (/[^A-Za-z0-9]/.test(password)) strength += 1;
-                
-                // Обновляем индикатор
-                passwordStrength.className = 'strength-meter';
-                if (password.length === 0) {
-                    passwordHint.textContent = 'Пароль должен содержать не менее 6 символов';
-                } else if (strength <= 2) {
-                    passwordStrength.classList.add('strength-weak');
-                    passwordHint.textContent = 'Слабый пароль. Добавьте цифры и заглавные буквы.';
-                } else if (strength <= 4) {
-                    passwordStrength.classList.add('strength-medium');
-                    passwordHint.textContent = 'Средний пароль. Можно добавить специальные символы.';
-                } else {
-                    passwordStrength.classList.add('strength-strong');
-                    passwordHint.textContent = 'Сильный пароль';
-                }
-            });
-            
-            // Обработка отправки формы
-            registerForm.addEventListener('submit', async function(e) {
-                e.preventDefault();
-                
-                const firstName = firstNameInput.value.trim();
-                const lastName = lastNameInput.value.trim();
-                const email = emailInput.value.trim();
-                const password = passwordInput.value;
-                const confirmPassword = confirmPasswordInput.value;
-                const phone = phoneInput.value.trim();
-                
-                // Валидация
-                const errors = [];
-                
-                if (!firstName) errors.push('Введите имя');
-                if (!email) errors.push('Введите email');
-                if (!isValidEmail(email)) errors.push('Введите корректный email');
-                if (password.length < 6) errors.push('Пароль должен быть не менее 6 символов');
-                if (password !== confirmPassword) errors.push('Пароли не совпадают');
-                if (!termsCheckbox.checked) errors.push('Примите условия использования');
-                
-                if (errors.length > 0) {
-                    showError(errors.join('<br>'));
-                    return;
-                }
-                
-                // Формируем полное имя
-                const fullName = lastName ? `${firstName} ${lastName}` : firstName;
-                
-                // Показываем индикатор загрузки
-                registerButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Регистрация...';
-                registerButton.disabled = true;
-                
-                try {
-                    // Регистрируем пользователя
-                    const user = await window.dataService.registerUser(
-                        email,
-                        password,
-                        fullName,
-                        phone
-                    );
-                    
-                    // Авторизуем пользователя
-                    await window.dataService.loginUser(email, password);
-                    
-                    // Показываем сообщение об успехе
-                    showSuccess('Регистрация успешна! Добро пожаловать в Everist.');
-                    
-                    // Обновляем бейдж корзины
-                    window.dataService.updateCartBadge();
-                    
-                    // Перенаправляем в профиль через 1.5 секунды
-                    setTimeout(() => {
-                        window.location.href = 'profile.html';
-                    }, 1500);
-                    
-                } catch (error) {
-                    showError(error.message || 'Ошибка регистрации. Попробуйте еще раз.');
-                } finally {
-                    // Возвращаем кнопку в исходное состояние
-                    registerButton.innerHTML = 'Создать аккаунт';
-                    registerButton.disabled = false;
-                }
-            });
-            
-            // Вспомогательные функции
-            function isValidEmail(email) {
-                const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-                return re.test(email);
-            }
-            
-            function showError(message) {
-                errorMessage.innerHTML = message;
-                errorMessage.classList.add('show');
-                successMessage.classList.remove('show');
-                
-                // Автоматически скрываем через 5 секунд
-                setTimeout(() => {
-                    errorMessage.classList.remove('show');
-                }, 5000);
-            }
-            
-            function showSuccess(message) {
-                successMessage.textContent = message;
-                successMessage.classList.add('show');
-                errorMessage.classList.remove('show');
-            }
-        });
-    </script>
+    <script src="../js/registr.js"></script>
 </body>
 </html>
