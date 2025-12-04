@@ -15,386 +15,60 @@
     <!-- Наши стили -->
     <link rel="stylesheet" href="../css/style.css">
     <link rel="stylesheet" href="../css/responsive.css">
+    <link rel="stylesheet" href="../css/accessibility.css">
+    <link rel="stylesheet" href="../css/cart.css">
+    
     <title>Everist - Корзина</title>
     <link rel="icon" type="image/png" href="../img/logo1.png">
-    
-    <style>
-        /* Стили для корзины */
-        .cart-container {
-            max-width: 1200px;
-            margin: 40px auto;
-            padding: 0 20px;
-        }
-        
-        .cart-header {
-            margin-bottom: 40px;
-        }
-        
-        .cart-title {
-            font-size: 36px;
-            font-weight: 700;
-            margin-bottom: 10px;
-            color: #000;
-        }
-        
-        .cart-subtitle {
-            font-size: 16px;
-            color: #666;
-        }
-        
-        .cart-content {
-            display: grid;
-            grid-template-columns: 2fr 1fr;
-            gap: 40px;
-        }
-        
-        @media (max-width: 992px) {
-            .cart-content {
-                grid-template-columns: 1fr;
-            }
-        }
-        
-        /* Стили для списка товаров */
-        .cart-items {
-            background: white;
-            border: 1px solid #eee;
-            border-radius: 12px;
-            overflow: hidden;
-        }
-        
-        .cart-item {
-            display: grid;
-            grid-template-columns: 120px 2fr 1fr 1fr auto;
-            gap: 20px;
-            padding: 25px;
-            border-bottom: 1px solid #eee;
-            align-items: center;
-        }
-        
-        .cart-item:last-child {
-            border-bottom: none;
-        }
-        
-        .cart-item-image {
-            width: 120px;
-            height: 120px;
-            border-radius: 8px;
-            overflow: hidden;
-        }
-        
-        .cart-item-image img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-        
-        .cart-item-info {
-            padding-right: 20px;
-        }
-        
-        .cart-item-name {
-            font-size: 18px;
-            font-weight: 600;
-            margin-bottom: 10px;
-            color: #000;
-        }
-        
-        .cart-item-category {
-            font-size: 14px;
-            color: #666;
-            margin-bottom: 8px;
-        }
-        
-        .cart-item-features {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 5px;
-            margin-top: 10px;
-        }
-        
-        .feature-tag {
-            background: #f5f5f5;
-            padding: 4px 8px;
-            border-radius: 4px;
-            font-size: 11px;
-            color: #666;
-        }
-        
-        .cart-item-price {
-            font-size: 20px;
-            font-weight: 700;
-            color: #000;
-            text-align: center;
-        }
-        
-        .cart-item-quantity {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            justify-content: center;
-        }
-        
-        .quantity-btn {
-            width: 32px;
-            height: 32px;
-            border: 1px solid #ddd;
-            background: white;
-            border-radius: 4px;
-            font-size: 18px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        
-        .quantity-btn:hover {
-            background: #f5f5f5;
-        }
-        
-        .quantity-input {
-            width: 50px;
-            height: 32px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            text-align: center;
-            font-size: 16px;
-        }
-        
-        .cart-item-remove {
-            background: none;
-            border: none;
-            color: #ff4444;
-            font-size: 20px;
-            cursor: pointer;
-            padding: 5px;
-            opacity: 0.6;
-            transition: opacity 0.3s;
-        }
-        
-        .cart-item-remove:hover {
-            opacity: 1;
-        }
-        
-        /* Стили для итогов */
-        .cart-summary {
-            background: white;
-            border: 1px solid #eee;
-            border-radius: 12px;
-            padding: 30px;
-            position: sticky;
-            top: 100px;
-            height: fit-content;
-        }
-        
-        .summary-title {
-            font-size: 20px;
-            font-weight: 600;
-            margin-bottom: 25px;
-            padding-bottom: 15px;
-            border-bottom: 1px solid #eee;
-            color: #000;
-        }
-        
-        .summary-row {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 15px;
-            font-size: 16px;
-        }
-        
-        .summary-label {
-            color: #666;
-        }
-        
-        .summary-value {
-            font-weight: 500;
-            color: #000;
-        }
-        
-        .summary-total {
-            margin-top: 25px;
-            padding-top: 20px;
-            border-top: 2px solid #eee;
-            font-size: 20px;
-            font-weight: 700;
-            color: #000;
-        }
-        
-        .summary-total .summary-value {
-            font-size: 24px;
-        }
-        
-        .checkout-button {
-            width: 100%;
-            background: #000;
-            color: white;
-            border: none;
-            padding: 16px;
-            border-radius: 8px;
-            font-size: 18px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: background 0.3s;
-            margin-top: 25px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-        }
-        
-        .checkout-button:hover {
-            background: #333;
-        }
-        
-        .checkout-button:disabled {
-            background: #ccc;
-            cursor: not-allowed;
-        }
-        
-        .cart-actions {
-            display: flex;
-            gap: 15px;
-            margin-top: 20px;
-        }
-        
-        .action-button {
-            flex: 1;
-            padding: 12px;
-            border: 1px solid #ddd;
-            background: white;
-            border-radius: 8px;
-            font-size: 14px;
-            cursor: pointer;
-            transition: all 0.3s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-        }
-        
-        .action-button:hover {
-            background: #f5f5f5;
-            border-color: #000;
-        }
-        
-        /* Стили для пустой корзины */
-        .empty-cart {
-            text-align: center;
-            padding: 80px 20px;
-        }
-        
-        .empty-cart-icon {
-            font-size: 80px;
-            color: #eee;
-            margin-bottom: 30px;
-        }
-        
-        .empty-cart h2 {
-            font-size: 28px;
-            margin-bottom: 15px;
-            color: #333;
-        }
-        
-        .empty-cart p {
-            font-size: 16px;
-            color: #666;
-            margin-bottom: 30px;
-            max-width: 400px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-        
-        /* Стили для уведомлений */
-        .notification {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background: #4CAF50;
-            color: white;
-            padding: 15px 20px;
-            border-radius: 8px;
-            z-index: 9999;
-            animation: slideInRight 0.3s ease, fadeOut 0.3s ease 2.7s forwards;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-            max-width: 300px;
-            display: none;
-        }
-        
-        .notification.show {
-            display: block;
-        }
-        
-        .notification-content {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        
-        .notification-content i {
-            font-size: 18px;
-        }
-        
-        @keyframes slideInRight {
-            from { transform: translateX(100%); opacity: 0; }
-            to { transform: translateX(0); opacity: 1; }
-        }
-        
-        @keyframes fadeOut {
-            from { opacity: 1; }
-            to { opacity: 0; }
-        }
-        
-        /* Адаптивность */
-        @media (max-width: 768px) {
-            .cart-item {
-                grid-template-columns: 100px 1fr;
-                grid-template-rows: auto auto auto;
-                gap: 15px;
-            }
-            
-            .cart-item-image {
-                grid-row: 1 / 3;
-                width: 100px;
-                height: 100px;
-            }
-            
-            .cart-item-price {
-                grid-column: 2;
-                text-align: left;
-            }
-            
-            .cart-item-quantity {
-                grid-column: 2;
-                justify-content: flex-start;
-            }
-            
-            .cart-item-remove {
-                grid-column: 2;
-                justify-self: flex-end;
-                margin-top: -40px;
-            }
-            
-            .cart-actions {
-                flex-direction: column;
-            }
-        }
-        
-        @media (max-width: 480px) {
-            .cart-container {
-                padding: 0 15px;
-            }
-            
-            .cart-item {
-                padding: 15px;
-            }
-            
-            .cart-summary {
-                padding: 20px;
-            }
-        }
-    </style>
 </head>
 <body>
+    <!-- Preloader -->
+    <div class="preloader" id="preloader">
+        <div class="preloader-container">
+            <div class="preloader-logo">EVERIST</div>
+            <div class="spinner">
+                <div class="spinner-circle"></div>
+                <div class="spinner-circle"></div>
+                <div class="spinner-circle"></div>
+                <div class="spinner-circle"></div>
+            </div>
+            <div class="progress-container">
+                <div class="progress-bar" id="progressBar"></div>
+            </div>
+            <div class="loading-text" id="loadingText">
+                Загрузка корзины...
+            </div>
+            <div class="progress-counter" id="progressCounter">0%</div>
+        </div>
+        <div class="preloader-background"></div>
+    </div>
+
+    <!-- Accessibility Panel -->
+    <div class="accessibility-panel">
+        <div class="accessibility-controls">
+            <button class="accessibility-btn" data-size="small" title="Уменьшить шрифт">
+                <span class="icon">A-</span>
+            </button>
+            <button class="accessibility-btn active" data-size="medium" title="Стандартный шрифт">
+                <span class="icon">A</span>
+            </button>
+            <button class="accessibility-btn" data-size="large" title="Увеличить шрифт">
+                <span class="icon">A+</span>
+            </button>
+            <button class="accessibility-btn" data-size="xlarge" title="Сильно увеличить шрифт">
+                <span class="icon">A++</span>
+            </button>
+            <button class="lang-toggle" id="langToggle" title="Переключить язык">
+                <span class="lang-icon">EN</span>
+            </button>
+            <button class="theme-toggle" id="themeToggle" title="Переключить тему">
+                <span class="theme-icon sun">☀️</span>
+                <span class="theme-icon moon">🌙</span>
+            </button>
+            <button class="reset-btn" id="resetSettings" title="Сбросить настройки">↻</button>
+        </div>
+    </div>
+
     <!-- Header -->
     <header class="main-header">
         <a href="../index.html" class="logo">EVERIST</a>
@@ -415,14 +89,129 @@
         <div class="cart-container">
             <div class="cart-header">
                 <h1 class="cart-title">Корзина</h1>
-                <p class="cart-subtitle">Ваши экологичные покупки</p>
+                <p class="cart-subtitle">Ваши экологичные товары</p>
             </div>
             
-            <div class="cart-content" id="cartContent">
-                <!-- Будет заполнено скриптом -->
+            <div class="cart-content">
+                <div class="cart-items" id="cartItems">
+                    <!-- Товары в корзине будут загружены через JavaScript -->
+                    <div class="empty-cart" id="emptyCart">
+                        <i class="fas fa-shopping-cart fa-3x"></i>
+                        <h3>Ваша корзина пуста</h3>
+                        <p>Добавьте товары из магазина</p>
+                        <a href="shop.html" class="btn btn-primary">
+                            <i class="fas fa-store"></i> Перейти в магазин
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="cart-summary" id="cartSummary">
+                    <h3>Итог заказа</h3>
+                    
+                    <div class="summary-row">
+                        <span>Товары</span>
+                        <span id="subtotal">$0.00</span>
+                    </div>
+                    
+                    <div class="summary-row">
+                        <span>Доставка</span>
+                        <span id="shipping">$5.00</span>
+                    </div>
+                    
+                    <div class="summary-row discount">
+                        <span>Скидка</span>
+                        <span id="discount">-$0.00</span>
+                    </div>
+                    
+                    <div class="summary-row total">
+                        <span>Итого</span>
+                        <span id="total">$5.00</span>
+                    </div>
+                    
+                    <button class="btn btn-primary checkout-btn" id="checkoutBtn" disabled>
+                        <i class="fas fa-lock"></i> Перейти к оформлению
+                    </button>
+                    
+                    <div class="cart-actions">
+                        <button class="btn btn-outline clear-cart-btn" id="clearCartBtn">
+                            <i class="fas fa-trash"></i> Очистить корзину
+                        </button>
+                        <a href="shop.html" class="continue-shopping">
+                            <i class="fas fa-arrow-left"></i> Продолжить покупки
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="cart-recommendations">
+                <h3>Рекомендуемые товары</h3>
+                <div class="recommendations-grid" id="recommendationsGrid">
+                    <!-- Рекомендации будут загружены через JavaScript -->
+                </div>
             </div>
         </div>
     </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>Helpful Links</h4>
+                    <ul>
+                        <li><a href="faq.html">FAQ</a></li>
+                        <li><a href="help-center.html">HELP CENTER</a></li>
+                        <li><a href="cap-back.html">CAP BACK</a></li>
+                        <li><a href="shipping.html">SHIPPING POLICY</a></li>
+                        <li><a href="returns.html">RETURN POLICY</a></li>
+                        <li><a href="privacy.html">PRIVACY POLICY</a></li>
+                        <li><a href="terms.html">TERMS</a></li>
+                        <li><a href="#">SEARCH</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Community</h4>
+                    <ul>
+                        <li><a href="reviews.html">REVIEWS</a></li>
+                        <li><a href="press.html">PRESS</a></li>
+                        <li><a href="#"><i class="fab fa-instagram"></i> INSTAGRAM</a></li>
+                        <li><a href="#"><i class="fab fa-tiktok"></i> TIKTOK</a></li>
+                        <li><a href="#"><i class="fab fa-facebook"></i> FACEBOOK</a></li>
+                        <li><a href="partners.html">BECOME A RETAIL PARTNER</a></li>
+                        <li><a href="affiliate.html">BECOME AN AFFILIATE</a></li>
+                        <li><a href="ambassador.html">BECOME AN AMBASSADOR</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Contact Us</h4>
+                    <p>Ask us anything.</p>
+                    <p><a href="mailto:info@helloeverist.com">info@helloeverist.com</a></p>
+                    <a href="contact.html" class="btn btn-outline">CONTACT FORM</a>
+                </div>
+                
+                <div class="footer-section newsletter">
+                    <h4>Join our eco-optimist community</h4>
+                    <p>Get secret deals, new arrivals and occasionally we'll send you cat jokes.</p>
+                    <form class="newsletter-form">
+                        <input type="email" placeholder="Your email address" required>
+                        <button type="submit" class="btn btn-primary">SUBSCRIBE</button>
+                    </form>
+                    <div class="social-icons">
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-tiktok"></i></a>
+                        <a href="#"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2023, Everist. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
 
     <!-- Уведомление -->
     <div class="notification" id="notification">
@@ -432,362 +221,9 @@
         </div>
     </div>
 
-    <!-- Подключаем скрипты -->
+    <!-- Скрипты -->
     <script src="../js/data.js"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', async function() {
-            await initializeCart();
-        });
-        
-        let cartItems = [];
-        
-        async function initializeCart() {
-            // Проверяем авторизацию
-            const currentUser = window.dataService?.getCurrentUser();
-            
-            if (!currentUser) {
-                // Если пользователь не авторизован, перенаправляем на страницу входа
-                alert('Пожалуйста, войдите в систему, чтобы просмотреть корзину');
-                window.location.href = 'login.html';
-                return;
-            }
-            
-            // Обновляем header
-            updateHeader(currentUser);
-            
-            // Загружаем корзину
-            await loadCart(currentUser.id);
-        }
-        
-        function updateHeader(user) {
-            const headerRight = document.getElementById('headerRight');
-            if (!headerRight) return;
-            
-            const cartCount = window.dataService.getCartItemCount(user.id);
-            
-            headerRight.innerHTML = `
-                <a href="#" class="search-icon">🔍</a>
-                <a href="profile.html" class="user-icon" title="${user.email}">
-                    ${user.name.split(' ')[0] || user.email}
-                </a>
-                <a href="cart.html" class="cart-icon">
-                    🛒
-                    <span class="cart-badge" style="${cartCount > 0 ? 'display: flex' : 'display: none'}">
-                        ${cartCount}
-                    </span>
-                </a>
-            `;
-        }
-        
-        async function loadCart(userId) {
-            try {
-                cartItems = window.dataService.getCartItems(userId);
-                renderCart();
-            } catch (error) {
-                console.error('❌ Ошибка загрузки корзины:', error);
-                showEmptyCart();
-            }
-        }
-        
-        function renderCart() {
-            const cartContent = document.getElementById('cartContent');
-            if (!cartContent) return;
-            
-            if (cartItems.length === 0) {
-                showEmptyCart();
-                return;
-            }
-            
-            // Рассчитываем итоги
-            const subtotal = cartItems.reduce((sum, item) => {
-                return sum + (item.product ? item.product.price * item.quantity : 0);
-            }, 0);
-            
-            const shipping = subtotal > 50 ? 0 : 5.99; // Бесплатная доставка от $50
-            const tax = subtotal * 0.1; // 10% налог
-            const total = subtotal + shipping + tax;
-            
-            // Рендерим список товаров
-            const cartItemsHTML = cartItems.map(item => {
-                if (!item.product) return '';
-                
-                return `
-                    <div class="cart-item" data-product-id="${item.productId}">
-                        <div class="cart-item-image">
-                            <img src="${item.product.image}" 
-                                 alt="${item.product.name}"
-                                 onerror="this.src='../img/placeholder.jpg'">
-                        </div>
-                        
-                        <div class="cart-item-info">
-                            <div class="cart-item-name">${item.product.name}</div>
-                            <div class="cart-item-category">
-                                ${getCategoryName(item.product.category)}
-                            </div>
-                            <div class="cart-item-features">
-                                ${item.product.features.slice(0, 2).map(feature => `
-                                    <span class="feature-tag">${feature}</span>
-                                `).join('')}
-                            </div>
-                        </div>
-                        
-                        <div class="cart-item-price">
-                            $${item.product.price.toFixed(2)}
-                        </div>
-                        
-                        <div class="cart-item-quantity">
-                            <button class="quantity-btn" 
-                                    onclick="updateQuantity(${item.productId}, ${item.quantity - 1})">
-                                -
-                            </button>
-                            <input type="text" 
-                                   class="quantity-input" 
-                                   value="${item.quantity}"
-                                   onchange="updateQuantity(${item.productId}, parseInt(this.value))">
-                            <button class="quantity-btn" 
-                                    onclick="updateQuantity(${item.productId}, ${item.quantity + 1})">
-                                +
-                            </button>
-                        </div>
-                        
-                        <button class="cart-item-remove" 
-                                onclick="removeFromCart(${item.productId})">
-                            <i class="fas fa-times"></i>
-                        </button>
-                    </div>
-                `;
-            }).join('');
-            
-            // Рендерим итоговую информацию
-            const summaryHTML = `
-                <div class="cart-summary">
-                    <h3 class="summary-title">Итог заказа</h3>
-                    
-                    <div class="summary-row">
-                        <span class="summary-label">Промежуточный итог</span>
-                        <span class="summary-value">$${subtotal.toFixed(2)}</span>
-                    </div>
-                    
-                    <div class="summary-row">
-                        <span class="summary-label">Доставка</span>
-                        <span class="summary-value">
-                            ${shipping === 0 ? 'Бесплатно' : `$${shipping.toFixed(2)}`}
-                        </span>
-                    </div>
-                    
-                    <div class="summary-row">
-                        <span class="summary-label">Налог (10%)</span>
-                        <span class="summary-value">$${tax.toFixed(2)}</span>
-                    </div>
-                    
-                    <div class="summary-row summary-total">
-                        <span class="summary-label">Итого</span>
-                        <span class="summary-value">$${total.toFixed(2)}</span>
-                    </div>
-                    
-                    <button class="checkout-button" onclick="checkout()">
-                        <i class="fas fa-lock"></i> Оформить заказ
-                    </button>
-                    
-                    <div class="cart-actions">
-                        <button class="action-button" onclick="continueShopping()">
-                            <i class="fas fa-arrow-left"></i> Продолжить покупки
-                        </button>
-                        <button class="action-button" onclick="clearCart()">
-                            <i class="fas fa-trash"></i> Очистить корзину
-                        </button>
-                    </div>
-                </div>
-            `;
-            
-            // Объединяем все
-            cartContent.innerHTML = `
-                <div class="cart-items">
-                    ${cartItemsHTML}
-                </div>
-                ${summaryHTML}
-            `;
-        }
-        
-        function showEmptyCart() {
-            const cartContent = document.getElementById('cartContent');
-            if (!cartContent) return;
-            
-            cartContent.innerHTML = `
-                <div class="empty-cart">
-                    <div class="empty-cart-icon">
-                        <i class="fas fa-shopping-cart"></i>
-                    </div>
-                    <h2>Ваша корзина пуста</h2>
-                    <p>Добавьте товары из нашего магазина, чтобы сделать заказ</p>
-                    <div style="display: flex; gap: 15px; justify-content: center;">
-                        <a href="shop.html" class="btn btn-primary">
-                            <i class="fas fa-shopping-bag"></i> Перейти в магазин
-                        </a>
-                        <a href="../index.html" class="btn btn-outline">
-                            <i class="fas fa-home"></i> На главную
-                        </a>
-                    </div>
-                </div>
-            `;
-        }
-        
-        async function updateQuantity(productId, newQuantity) {
-            const currentUser = window.dataService?.getCurrentUser();
-            if (!currentUser) return;
-            
-            try {
-                if (newQuantity < 1) {
-                    await window.dataService.removeFromCart(currentUser.id, productId);
-                    showNotification('Товар удален из корзины');
-                } else {
-                    await window.dataService.updateCartItemQuantity(currentUser.id, productId, newQuantity);
-                    showNotification('Количество обновлено');
-                }
-                
-                // Обновляем корзину
-                await loadCart(currentUser.id);
-                
-                // Обновляем бейдж в header
-                window.dataService.updateCartBadge();
-                
-            } catch (error) {
-                console.error('❌ Ошибка обновления количества:', error);
-                showNotification('Ошибка обновления количества', 'error');
-            }
-        }
-        
-        async function removeFromCart(productId) {
-            const currentUser = window.dataService?.getCurrentUser();
-            if (!currentUser) return;
-            
-            if (confirm('Удалить товар из корзины?')) {
-                try {
-                    await window.dataService.removeFromCart(currentUser.id, productId);
-                    showNotification('Товар удален из корзины');
-                    
-                    // Обновляем корзину
-                    await loadCart(currentUser.id);
-                    
-                    // Обновляем бейдж в header
-                    window.dataService.updateCartBadge();
-                    
-                } catch (error) {
-                    console.error('❌ Ошибка удаления товара:', error);
-                    showNotification('Ошибка удаления товара', 'error');
-                }
-            }
-        }
-        
-        async function clearCart() {
-            const currentUser = window.dataService?.getCurrentUser();
-            if (!currentUser) return;
-            
-            if (confirm('Очистить всю корзину?')) {
-                try {
-                    await window.dataService.clearCart(currentUser.id);
-                    showNotification('Корзина очищена');
-                    
-                    // Обновляем корзину
-                    await loadCart(currentUser.id);
-                    
-                    // Обновляем бейдж в header
-                    window.dataService.updateCartBadge();
-                    
-                } catch (error) {
-                    console.error('❌ Ошибка очистки корзины:', error);
-                    showNotification('Ошибка очистки корзины', 'error');
-                }
-            }
-        }
-        
-        function continueShopping() {
-            window.location.href = 'shop.html';
-        }
-        
-        function checkout() {
-            const currentUser = window.dataService?.getCurrentUser();
-            if (!currentUser || cartItems.length === 0) return;
-            
-            // Проверяем, есть ли адрес доставки
-            if (!currentUser.address) {
-                if (confirm('У вас не указан адрес доставки. Хотите указать его сейчас?')) {
-                    // В реальном приложении здесь будет форма ввода адреса
-                    const address = prompt('Введите адрес доставки:');
-                    if (address) {
-                        try {
-                            window.dataService.updateUserProfile(currentUser.id, { address });
-                            showNotification('Адрес сохранен');
-                        } catch (error) {
-                            console.error('❌ Ошибка сохранения адреса:', error);
-                        }
-                    }
-                } else {
-                    return;
-                }
-            }
-            
-            // Создаем заказ
-            try {
-                const order = window.dataService.createOrder(currentUser.id, currentUser.address);
-                
-                // Показываем подтверждение
-                alert(`Заказ #${order.id} успешно оформлен!\n\nСумма: $${order.total.toFixed(2)}\nСтатус: ${getStatusText(order.status)}\n\nСпасибо за покупку!`);
-                
-                // Перенаправляем в профиль
-                window.location.href = 'profile.html';
-                
-            } catch (error) {
-                console.error('❌ Ошибка оформления заказа:', error);
-                alert('Ошибка оформления заказа: ' + error.message);
-            }
-        }
-        
-        function showNotification(message, type = 'success') {
-            const notification = document.getElementById('notification');
-            const messageEl = document.getElementById('notificationMessage');
-            
-            if (!notification || !messageEl) return;
-            
-            // Устанавливаем сообщение и стиль
-            messageEl.textContent = message;
-            
-            if (type === 'error') {
-                notification.style.background = '#f44336';
-            } else {
-                notification.style.background = '#4CAF50';
-            }
-            
-            // Показываем уведомление
-            notification.classList.add('show');
-            
-            // Скрываем через 3 секунды
-            setTimeout(() => {
-                notification.classList.remove('show');
-            }, 3000);
-        }
-        
-        function getCategoryName(category) {
-            const categories = {
-                'hair': 'Для волос',
-                'face': 'Для лица',
-                'body': 'Для тела',
-                'kit': 'Наборы',
-                'oral': 'Уход за полостью рта',
-                'home': 'Для дома',
-                'perfume': 'Ароматы'
-            };
-            return categories[category] || category;
-        }
-        
-        function getStatusText(status) {
-            const statuses = {
-                'completed': 'Завершен',
-                'pending': 'Ожидает оплаты',
-                'processing': 'В обработке'
-            };
-            return statuses[status] || status;
-        }
-    </script>
+    <script src="../js/cart.js"></script>
+    <script src="../script.js"></script>
 </body>
 </html>
