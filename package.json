@@ -1,7 +1,7 @@
 {
   "name": "everist-shop",
   "version": "1.0.0",
-  "description": "Everist Waterless Haircare Shop",
+  "description": "Shop",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",

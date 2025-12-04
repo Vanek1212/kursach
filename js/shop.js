@@ -1,183 +1,225 @@
-// js/shop.js - Логика для страницы магазина
+// js/shop.js - Исправленная версия для скрытия прелоадера
 
-// Глобальные переменные магазина
 let allProducts = [];
 let filteredProducts = [];
 let currentPage = 1;
 const productsPerPage = 9;
 
-// Основная функция инициализации магазина
+// Ждем готовности dataService
+async function waitForDataService() {
+    console.log('⏳ Ожидание DataService...');
+    
+    // Если dataService уже готов
+    if (window.dataService && window.dataService.isDataLoaded) {
+        console.log('✅ DataService уже загружен');
+        return window.dataService;
+    }
+    
+    // Ждем события готовности
+    return new Promise((resolve) => {
+        const eventHandler = (e) => {
+            console.log('✅ Событие dataServiceReady получено');
+            window.removeEventListener('dataServiceReady', eventHandler);
+            clearTimeout(timeout);
+            resolve(window.dataService);
+        };
+        
+        window.addEventListener('dataServiceReady', eventHandler);
+        
+        // Таймаут на случай если событие не придет
+        const timeout = setTimeout(() => {
+            console.log('⚠️ Таймаут ожидания DataService, продолжаем...');
+            window.removeEventListener('dataServiceReady', eventHandler);
+            if (window.dataService) {
+                resolve(window.dataService);
+            } else {
+                // Создаем пустой dataService для продолжения работы
+                window.dataService = {
+                    getAllProducts: () => [],
+                    getCurrentUser: () => null,
+                    getCartItems: () => [],
+                    getCartItemCount: () => 0
+                };
+                resolve(window.dataService);
+            }
+        }, 3000);
+    });
+}
+
+// Основная инициализация
 async function initializeShop() {
     console.log('🛍️ Инициализация магазина...');
     
     try {
-        // Ждем загрузку dataService
-        if (!window.dataService) {
-            console.error('❌ DataService не найден');
-            
-            // Пробуем загрузить вручную
-            await loadDataService();
+        // Сразу показываем прелоадер
+        showPreloader();
+        
+        // Ждем готовности dataService
+        const dataService = await waitForDataService();
+        
+        console.log('✅ DataService готов, загружаем товары...');
+        
+        // Получаем товары
+        allProducts = dataService.getAllProducts();
+        console.log('📦 Получено товаров:', allProducts.length);
+        
+        if (allProducts.length === 0) {
+            console.warn('⚠️ Нет товаров для отображения');
+            showEmptyState();
+            hidePreloader(); // Скрываем прелоадер
+            return;
         }
         
-        // Проверяем авторизацию
-        const currentUser = window.dataService?.getCurrentUser();
-        console.log('👤 Текущий пользователь:', currentUser?.email || 'Не авторизован');
+        // Преобразуем данные
+        allProducts = allProducts.map(product => ({
+            ...product,
+            price: parseFloat(product.price) || 0,
+            oldPrice: product.oldPrice ? parseFloat(product.oldPrice) : null,
+            rating: product.rating || 4.0,
+            reviews: product.reviews || 0,
+            features: product.features || [],
+            description: product.description || "Описание отсутствует"
+        }));
         
-        // Обновляем header
-        updateHeader(currentUser);
+        filteredProducts = [...allProducts];
         
-        // Загружаем товары
-        await loadProducts();
-        
-        // Настраиваем фильтры
+        // Обновляем интерфейс
+        updateHeader(dataService);
+        renderProducts();
+        renderPagination();
         setupFilters();
-        
-        // Настраиваем поиск
         setupSearch();
-        
-        // Настраиваем категории
         setupCategories();
         
-        // Инициализируем preloader
-        initializePreloader();
+        // Скрываем прелоадер
+        hidePreloader();
         
         console.log('✅ Магазин успешно инициализирован');
         
     } catch (error) {
         console.error('❌ Ошибка инициализации магазина:', error);
+        hidePreloader();
         showErrorMessage();
     }
 }
 
-// Загрузка DataService
-async function loadDataService() {
-    return new Promise((resolve) => {
-        const checkDataService = setInterval(() => {
-            if (window.dataService) {
-                clearInterval(checkDataService);
-                resolve(window.dataService);
-            }
-        }, 100);
+// Показ прелоадера
+function showPreloader() {
+    const preloader = document.getElementById('preloader');
+    if (preloader) {
+        preloader.style.display = 'flex';
+        preloader.style.opacity = '1';
+        preloader.style.visibility = 'visible';
         
-        // Таймаут 5 секунд
-        setTimeout(() => {
-            clearInterval(checkDataService);
-            if (!window.dataService) {
-                console.error('❌ DataService не загрузился за 5 секунд');
-                showErrorMessage();
-            }
-        }, 5000);
-    });
+        // Анимация загрузки
+        let progress = 0;
+        const progressBar = document.getElementById('progressBar');
+        const progressCounter = document.getElementById('progressCounter');
+        
+        if (progressBar && progressCounter) {
+            const interval = setInterval(() => {
+                progress += 1;
+                if (progress <= 100) {
+                    progressBar.style.width = progress + '%';
+                    progressCounter.textContent = progress + '%';
+                } else {
+                    clearInterval(interval);
+                }
+            }, 30);
+        }
+    }
 }
 
-// Обновление header
-function updateHeader(user) {
+// Скрытие прелоадера
+function hidePreloader() {
+    const preloader = document.getElementById('preloader');
+    if (preloader) {
+        console.log('👋 Скрытие прелоадера...');
+        
+        // Сначала анимация исчезновения
+        preloader.style.opacity = '0';
+        preloader.style.visibility = 'hidden';
+        
+        // Затем скрываем полностью
+        setTimeout(() => {
+            preloader.style.display = 'none';
+            console.log('✅ Прелоадер скрыт');
+        }, 500);
+    } else {
+        console.log('⚠️ Прелоадер не найден');
+    }
+}
+
+// Обновление заголовка
+function updateHeader(dataService) {
     const headerRight = document.getElementById('headerRight');
-    if (!headerRight) {
-        console.warn('⚠️ Элемент headerRight не найден');
-        return;
-    }
+    if (!headerRight) return;
     
-    let cartCount = 0;
-    if (user && window.dataService) {
-        cartCount = window.dataService.getCartItemCount(user.id);
-    }
+    const currentUser = dataService.getCurrentUser ? dataService.getCurrentUser() : null;
+    const cartCount = currentUser ? dataService.getCartItemCount(currentUser.id) : 0;
     
-    if (user) {
-        headerRight.innerHTML = `
-            <a href="#" class="search-icon">🔍</a>
-            <a href="profile.html" class="user-icon" title="${user.email}">
-                ${user.name?.split(' ')[0] || user.email || '👤'}
-            </a>
-            <a href="cart.html" class="cart-icon">
-                🛒
-                <span class="cart-badge" style="${cartCount > 0 ? 'display: flex' : 'display: none'}">
-                    ${cartCount}
-                </span>
+    let headerHTML = `
+        <a href="#" class="search-icon" onclick="event.preventDefault(); document.getElementById('searchInput').focus()">
+            <i class="fas fa-search"></i>
+        </a>
+    `;
+    
+    if (currentUser) {
+        headerHTML += `
+            <a href="profile.html" class="user-icon" title="${currentUser.email}">
+                <i class="fas fa-user"></i>
+                <span class="user-name">${currentUser.name?.split(' ')[0] || 'Профиль'}</span>
             </a>
         `;
     } else {
-        headerRight.innerHTML = `
-            <a href="#" class="search-icon">🔍</a>
-            <a href="login.html" class="user-icon">👤</a>
-            <a href="cart.html" class="cart-icon">
-                🛒
-                <span class="cart-badge" style="display: none">0</span>
+        headerHTML += `
+            <a href="login.html" class="user-icon">
+                <i class="fas fa-user"></i>
+                <span class="user-name">Войти</span>
             </a>
         `;
     }
-}
-
-// Загрузка товаров
-async function loadProducts() {
-    try {
-        console.log('📦 Загрузка товаров...');
-        
-        if (!window.dataService || !window.dataService.getAllProducts) {
-            throw new Error('DataService не инициализирован');
-        }
-        
-        allProducts = window.dataService.getAllProducts();
-        console.log(`✅ Загружено товаров: ${allProducts.length}`);
-        
-        // Преобразуем цены в числа
-        allProducts = allProducts.map(product => ({
-            ...product,
-            price: parseFloat(product.price),
-            oldPrice: product.oldPrice ? parseFloat(product.oldPrice) : null
-        }));
-        
-        filteredProducts = [...allProducts];
-        
-        // Скрываем preloader
-        hidePreloader();
-        
-        renderProducts();
-        renderPagination();
-        
-    } catch (error) {
-        console.error('❌ Ошибка загрузки товаров:', error);
-        showErrorMessage();
-    }
+    
+    headerHTML += `
+        <a href="cart.html" class="cart-icon">
+            <i class="fas fa-shopping-cart"></i>
+            ${cartCount > 0 ? `<span class="cart-badge" style="display: flex">${cartCount}</span>` : '<span class="cart-badge" style="display: none">0</span>'}
+        </a>
+    `;
+    
+    headerRight.innerHTML = headerHTML;
 }
 
 // Рендеринг товаров
 function renderProducts() {
     const productsGrid = document.getElementById('productsGrid');
-    if (!productsGrid) return;
+    if (!productsGrid) {
+        console.error('❌ productsGrid не найден');
+        return;
+    }
     
-    // Рассчитываем индексы для текущей страницы
     const startIndex = (currentPage - 1) * productsPerPage;
     const endIndex = startIndex + productsPerPage;
     const productsToShow = filteredProducts.slice(startIndex, endIndex);
     
+    console.log(`📊 Рендеринг товаров: ${productsToShow.length} из ${filteredProducts.length}`);
+    
     if (productsToShow.length === 0) {
-        productsGrid.innerHTML = `
-            <div class="empty-state">
-                <i class="fas fa-search"></i>
-                <h3>Товары не найдены</h3>
-                <p>Попробуйте изменить параметры поиска или выберите другую категорию</p>
-                <button class="btn btn-primary" onclick="resetFilters()">
-                    Сбросить фильтры
-                </button>
-            </div>
-        `;
+        showEmptyState();
         return;
     }
     
-    const currentUser = window.dataService?.getCurrentUser();
-    const userCart = currentUser ? window.dataService.getCartItems(currentUser.id) : [];
+    const dataService = window.dataService || {};
+    const currentUser = dataService.getCurrentUser ? dataService.getCurrentUser() : null;
+    const cartItems = currentUser ? dataService.getCartItems ? dataService.getCartItems(currentUser.id) : [] : [];
     
     productsGrid.innerHTML = productsToShow.map(product => {
-        const isInCart = userCart.some(item => item.productId === product.id);
-        const oldPrice = product.oldPrice;
-        const currentPrice = product.price;
-        const hasDiscount = oldPrice && oldPrice > currentPrice;
+        const isInCart = cartItems.some(item => item.productId === product.id);
+        const hasDiscount = product.oldPrice && product.oldPrice > product.price;
         const discountPercent = hasDiscount 
-            ? Math.round((oldPrice - currentPrice) / oldPrice * 100)
+            ? Math.round((product.oldPrice - product.price) / product.oldPrice * 100)
             : 0;
         
-        // Определяем бейдж
         let badge = '';
         if (hasDiscount && discountPercent > 0) {
             badge = `<div class="product-badge sale">-${discountPercent}%</div>`;
@@ -187,60 +229,52 @@ function renderProducts() {
             badge = `<div class="product-badge">BESTSELLER</div>`;
         }
         
-        // Исправляем путь к изображению
-        const imagePath = product.image || '../img/placeholder.jpg';
+        // Используем изображение из данных или заглушку
+        const imageUrl = product.image || 'https://images.unsplash.com/photo-1556228578-9c360e2d0b4a?w=400&auto=format&fit=crop';
         
         return `
             <div class="product-card" data-product-id="${product.id}">
                 ${badge}
                 
                 <div class="product-image">
-                    <img src="${imagePath}" alt="${product.name}" 
-                         onerror="this.src='../img/placeholder.jpg'">
+                    <img src="${imageUrl}" alt="${product.name}" 
+                         loading="lazy"
+                         onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1556228578-9c360e2d0b4a?w=400&auto=format&fit=crop'">
                     <div class="quick-view" onclick="showProductDetail(${product.id})">
-                        Быстрый просмотр
+                        <i class="fas fa-eye"></i> Быстрый просмотр
                     </div>
                 </div>
                 
                 <div class="product-info">
-                    <div class="product-category">
-                        ${getCategoryName(product.category)}
-                    </div>
-                    
-                    <h3 class="product-name" title="${product.name}">
-                        ${product.name}
-                    </h3>
-                    
-                    <p class="product-description" title="${product.description}">
-                        ${product.description}
-                    </p>
+                    <div class="product-category">${getCategoryName(product.category)}</div>
+                    <h3 class="product-name" title="${product.name}">${product.name}</h3>
+                    <p class="product-description">${product.description || 'Описание товара'}</p>
                     
                     <div class="product-price">
-                        <span class="current-price">$${currentPrice.toFixed(2)}</span>
-                        ${hasDiscount ? `
-                            <span class="old-price">$${oldPrice.toFixed(2)}</span>
-                        ` : ''}
+                        <span class="current-price">$${product.price.toFixed(2)}</span>
+                        ${hasDiscount ? `<span class="old-price">$${product.oldPrice.toFixed(2)}</span>` : ''}
                     </div>
                     
                     <div class="product-reviews">
-                        <div class="stars">${getStarRating(product.rating || product.reviews)}</div>
+                        <div class="stars">${getStarRating(product.rating || 4)}</div>
                         <span class="review-count">${product.reviews || 0} отзывов</span>
                     </div>
                     
+                    ${product.features && product.features.length > 0 ? `
                     <div class="product-features">
-                        ${(product.features || []).slice(0, 2).map(feature => `
-                            <span class="feature-tag">${feature}</span>
-                        `).join('')}
+                        ${product.features.slice(0, 2).map(feature => 
+                            `<span class="feature-tag">${feature}</span>`
+                        ).join('')}
                     </div>
+                    ` : ''}
                     
                     <div class="product-actions">
                         <button class="add-to-cart-btn ${isInCart ? 'added' : ''}" 
-                                onclick="addToCart(${product.id})" 
-                                ${!currentUser ? 'disabled' : ''}>
-                            ${isInCart ? '✓ В корзине' : 'В корзину'}
+                                onclick="addToCart(${product.id})"
+                                ${!currentUser ? 'disabled title="Войдите, чтобы добавить в корзину"' : ''}>
+                            ${isInCart ? '<i class="fas fa-check"></i> В корзине' : '<i class="fas fa-shopping-cart"></i> В корзину'}
                         </button>
-                        
-                        <button class="wishlist-btn" onclick="toggleWishlist(${product.id})">
+                        <button class="wishlist-btn" onclick="toggleWishlist(${product.id})" title="Добавить в избранное">
                             <i class="far fa-heart"></i>
                         </button>
                     </div>
@@ -250,72 +284,128 @@ function renderProducts() {
     }).join('');
 }
 
-// Рендеринг пагинации
-function renderPagination() {
-    const pagination = document.getElementById('pagination');
-    if (!pagination) return;
-    
-    const totalPages = Math.ceil(filteredProducts.length / productsPerPage);
-    
-    if (totalPages <= 1) {
-        pagination.innerHTML = '';
+// Добавление в корзину
+async function addToCart(productId) {
+    const dataService = window.dataService;
+    if (!dataService || !dataService.addToCart) {
+        alert('Сервис корзины не доступен');
         return;
     }
     
-    let pages = [];
+    const currentUser = dataService.getCurrentUser ? dataService.getCurrentUser() : null;
     
-    // Всегда показываем первую страницу
-    pages.push(1);
-    
-    // Показываем страницы вокруг текущей
-    for (let i = Math.max(2, currentPage - 1); i <= Math.min(totalPages - 1, currentPage + 1); i++) {
-        if (!pages.includes(i)) pages.push(i);
+    if (!currentUser) {
+        alert('Пожалуйста, войдите в систему, чтобы добавить товары в корзину');
+        window.location.href = 'login.html';
+        return;
     }
     
-    // Всегда показываем последнюю страницу
-    if (totalPages > 1 && !pages.includes(totalPages)) {
-        pages.push(totalPages);
-    }
-    
-    // Добавляем многоточия
-    let paginationHTML = '';
-    
-    if (currentPage > 1) {
-        paginationHTML += `
-            <button class="page-btn" onclick="goToPage(${currentPage - 1})">
-                <i class="fas fa-chevron-left"></i>
-            </button>
-        `;
-    }
-    
-    let prevPage = 0;
-    pages.forEach(page => {
-        if (page > prevPage + 1) {
-            paginationHTML += '<span class="page-dots">...</span>';
+    try {
+        await dataService.addToCart(currentUser.id, productId, 1);
+        updateHeader(dataService);
+        
+        // Обновляем кнопку
+        const button = document.querySelector(`[onclick="addToCart(${productId})"]`);
+        if (button) {
+            button.innerHTML = '<i class="fas fa-check"></i> В корзине';
+            button.classList.add('added');
+            button.disabled = true;
+            
+            // Через 3 секунды возвращаем возможность добавить еще
+            setTimeout(() => {
+                button.disabled = false;
+            }, 3000);
         }
         
-        paginationHTML += `
-            <button class="page-btn ${page === currentPage ? 'active' : ''}" 
-                    onclick="goToPage(${page})">
-                ${page}
-            </button>
-        `;
+        showNotification('Товар добавлен в корзину!');
         
-        prevPage = page;
-    });
-    
-    if (currentPage < totalPages) {
-        paginationHTML += `
-            <button class="page-btn" onclick="goToPage(${currentPage + 1})">
-                <i class="fas fa-chevron-right"></i>
-            </button>
-        `;
+    } catch (error) {
+        console.error('❌ Ошибка при добавлении в корзину:', error);
+        alert('Не удалось добавить товар в корзину');
     }
-    
-    pagination.innerHTML = paginationHTML;
 }
 
-// Настройка фильтров
+// Вспомогательные функции
+function getCategoryName(category) {
+    const categories = {
+        'hair': 'Для волос',
+        'face': 'Для лица',
+        'body': 'Для тела',
+        'kit': 'Наборы',
+        'oral': 'Уход за полостью рта',
+        'home': 'Для дома',
+        'perfume': 'Ароматы'
+    };
+    return categories[category] || category;
+}
+
+function getStarRating(rating) {
+    const fullStars = Math.floor(rating);
+    const hasHalfStar = rating % 1 >= 0.5;
+    const emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0);
+    
+    let stars = '★'.repeat(fullStars);
+    if (hasHalfStar) stars += '½';
+    stars += '☆'.repeat(emptyStars);
+    
+    return stars;
+}
+
+function showNotification(message) {
+    // Удаляем старые уведомления
+    const oldNotifications = document.querySelectorAll('.notification');
+    oldNotifications.forEach(n => n.remove());
+    
+    const notification = document.createElement('div');
+    notification.className = 'notification';
+    notification.innerHTML = `
+        <div class="notification-content">
+            <i class="fas fa-check-circle"></i>
+            <span>${message}</span>
+        </div>
+    `;
+    document.body.appendChild(notification);
+    
+    setTimeout(() => {
+        if (notification.parentNode) {
+            notification.remove();
+        }
+    }, 3000);
+}
+
+function showEmptyState() {
+    const productsGrid = document.getElementById('productsGrid');
+    if (!productsGrid) return;
+    
+    productsGrid.innerHTML = `
+        <div class="empty-state">
+            <i class="fas fa-search fa-3x"></i>
+            <h3>Товары не найдены</h3>
+            <p>Попробуйте изменить параметры поиска или выбрать другую категорию</p>
+            <button class="btn btn-primary" onclick="resetFilters()">
+                <i class="fas fa-redo"></i> Сбросить фильтры
+            </button>
+        </div>
+    `;
+}
+
+function showErrorMessage() {
+    const productsGrid = document.getElementById('productsGrid');
+    if (!productsGrid) return;
+    
+    productsGrid.innerHTML = `
+        <div class="empty-state">
+            <i class="fas fa-exclamation-triangle fa-3x"></i>
+            <h3>Ошибка загрузки товаров</h3>
+            <p>Пожалуйста, попробуйте обновить страницу</p>
+            <button class="btn btn-primary" onclick="location.reload()">
+                <i class="fas fa-sync-alt"></i> Обновить страницу
+            </button>
+        </div>
+    `;
+}
+
+// Фильтры, поиск, пагинация
 function setupFilters() {
     const sortSelect = document.getElementById('sortSelect');
     const priceSelect = document.getElementById('priceSelect');
@@ -329,7 +419,6 @@ function setupFilters() {
     }
 }
 
-// Настройка поиска
 function setupSearch() {
     const searchInput = document.getElementById('searchInput');
     const searchButton = document.getElementById('searchButton');
@@ -346,12 +435,11 @@ function setupSearch() {
         let searchTimeout;
         searchInput.addEventListener('input', function() {
             clearTimeout(searchTimeout);
-            searchTimeout = setTimeout(performSearch, 300);
+            searchTimeout = setTimeout(performSearch, 500);
         });
     }
 }
 
-// Настройка категорий
 function setupCategories() {
     const categoryButtons = document.querySelectorAll('.category-btn');
     
@@ -367,11 +455,12 @@ function setupCategories() {
     });
 }
 
-// Применение фильтров
 function applyFilters() {
     const selectedCategory = document.querySelector('.category-btn.active')?.dataset.category || 'all';
     const sortValue = document.getElementById('sortSelect')?.value || 'featured';
     const priceValue = document.getElementById('priceSelect')?.value || '';
+    
+    console.log('🔧 Применение фильтров:', { selectedCategory, sortValue, priceValue });
     
     // Фильтрация по категории
     if (selectedCategory === 'all') {
@@ -404,16 +493,12 @@ function applyFilters() {
             filteredProducts.sort((a, b) => b.price - a.price);
             break;
         case 'newest':
-            // Предполагаем, что товары с большими ID - новее
             filteredProducts.sort((a, b) => b.id - a.id);
             break;
         case 'rating':
-            // Сортируем по количеству отзывов (популярности)
-            filteredProducts.sort((a, b) => b.reviews - a.reviews);
+            filteredProducts.sort((a, b) => (b.rating || 0) - (a.rating || 0));
             break;
-        case 'featured':
         default:
-            // По умолчанию - популярные товары
             filteredProducts.sort((a, b) => b.reviews - a.reviews);
             break;
     }
@@ -426,10 +511,11 @@ function applyFilters() {
     renderPagination();
 }
 
-// Выполнение поиска
 function performSearch() {
     const searchInput = document.getElementById('searchInput');
     const query = searchInput?.value.trim().toLowerCase() || '';
+    
+    console.log('🔍 Поиск:', query);
     
     if (!query) {
         applyFilters();
@@ -450,7 +536,6 @@ function performSearch() {
     renderPagination();
 }
 
-// Сброс фильтров
 function resetFilters() {
     const searchInput = document.getElementById('searchInput');
     const sortSelect = document.getElementById('sortSelect');
@@ -471,7 +556,70 @@ function resetFilters() {
     applyFilters();
 }
 
-// Переход на страницу
+function renderPagination() {
+    const pagination = document.getElementById('pagination');
+    if (!pagination) return;
+    
+    const totalPages = Math.ceil(filteredProducts.length / productsPerPage);
+    
+    if (totalPages <= 1) {
+        pagination.innerHTML = '';
+        return;
+    }
+    
+    let pages = [];
+    
+    // Всегда показываем первую страницу
+    pages.push(1);
+    
+    // Показываем страницы вокруг текущей
+    for (let i = Math.max(2, currentPage - 1); i <= Math.min(totalPages - 1, currentPage + 1); i++) {
+        if (!pages.includes(i)) pages.push(i);
+    }
+    
+    // Всегда показываем последнюю страницу
+    if (totalPages > 1 && !pages.includes(totalPages)) {
+        pages.push(totalPages);
+    }
+    
+    // Создаем HTML для пагинации
+    let paginationHTML = '';
+    
+    if (currentPage > 1) {
+        paginationHTML += `
+            <button class="page-btn" onclick="goToPage(${currentPage - 1})" title="Предыдущая">
+                <i class="fas fa-chevron-left"></i>
+            </button>
+        `;
+    }
+    
+    let prevPage = 0;
+    pages.forEach(page => {
+        if (page > prevPage + 1) {
+            paginationHTML += '<span class="page-dots">...</span>';
+        }
+        
+        paginationHTML += `
+            <button class="page-btn ${page === currentPage ? 'active' : ''}" 
+                    onclick="goToPage(${page})">
+                ${page}
+            </button>
+        `;
+        
+        prevPage = page;
+    });
+    
+    if (currentPage < totalPages) {
+        paginationHTML += `
+            <button class="page-btn" onclick="goToPage(${currentPage + 1})" title="Следующая">
+                <i class="fas fa-chevron-right"></i>
+            </button>
+        `;
+    }
+    
+    pagination.innerHTML = paginationHTML;
+}
+
 function goToPage(page) {
     const totalPages = Math.ceil(filteredProducts.length / productsPerPage);
     
@@ -483,50 +631,17 @@ function goToPage(page) {
     renderProducts();
     renderPagination();
     
-    // Прокручиваем к началу товаров
+    // Плавная прокрутка к началу товаров
     const productsGrid = document.getElementById('productsGrid');
     if (productsGrid) {
         productsGrid.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
 }
 
-// Добавление в корзину
-async function addToCart(productId) {
-    const currentUser = window.dataService?.getCurrentUser();
-    
-    if (!currentUser) {
-        alert('Пожалуйста, войдите в систему, чтобы добавить товары в корзину');
-        window.location.href = 'login.html';
-        return;
-    }
-    
-    try {
-        // Добавляем товар в корзину
-        await window.dataService.addToCart(currentUser.id, productId, 1);
-        
-        // Обновляем бейдж в header
-        window.dataService.updateCartBadge();
-        
-        // Обновляем кнопку на "В корзине"
-        const button = document.querySelector(`[onclick="addToCart(${productId})"]`);
-        if (button) {
-            button.textContent = '✓ В корзине';
-            button.classList.add('added');
-            button.disabled = true;
-            
-            // Возвращаем исходный текст через 3 секунды
-            setTimeout(() => {
-                button.textContent = 'В корзине';
-            }, 3000);
-        }
-        
-        // Показываем уведомление
-        showNotification('Товар добавлен в корзину!');
-        
-    } catch (error) {
-        console.error('❌ Ошибка при добавлении в корзину:', error);
-        alert('Не удалось добавить товар в корзину');
-    }
+// Просмотр деталей товара
+function showProductDetail(productId) {
+    // В реальном приложении здесь будет переход на страницу товара
+    alert('Функция быстрого просмотра в разработке. ID товара: ' + productId);
 }
 
 // Добавление в избранное
@@ -547,104 +662,19 @@ function toggleWishlist(productId) {
     }
 }
 
-// Просмотр деталей товара
-function showProductDetail(productId) {
-    // В реальном приложении здесь будет переход на страницу товара
-    alert('Функция быстрого просмотра в разработке. ID товара: ' + productId);
-}
-
-// Показ уведомления
-function showNotification(message) {
-    // Создаем элемент уведомления
-    const notification = document.createElement('div');
-    notification.className = 'notification';
-    notification.innerHTML = `
-        <div class="notification-content">
-            <i class="fas fa-check-circle"></i>
-            <span>${message}</span>
-        </div>
-    `;
-    
-    document.body.appendChild(notification);
-    
-    // Удаляем уведомление через 3 секунды
-    setTimeout(() => {
-        if (notification.parentNode) {
-            notification.remove();
-        }
-    }, 3000);
-}
-
-// Инициализация preloader
-function initializePreloader() {
-    const preloader = document.getElementById('preloader');
-    if (!preloader) return;
-    
-    // Скрываем preloader через 1 секунду
-    setTimeout(() => {
-        hidePreloader();
-    }, 1000);
-}
-
-// Скрытие preloader
-function hidePreloader() {
-    const preloader = document.getElementById('preloader');
-    if (preloader) {
-        preloader.style.opacity = '0';
-        preloader.style.visibility = 'hidden';
-        setTimeout(() => {
-            preloader.style.display = 'none';
-        }, 300);
-    }
-}
-
-// Показ ошибки
-function showErrorMessage() {
-    const productsGrid = document.getElementById('productsGrid');
-    if (!productsGrid) return;
-    
-    productsGrid.innerHTML = `
-        <div class="empty-state">
-            <i class="fas fa-exclamation-triangle"></i>
-            <h3>Ошибка загрузки товаров</h3>
-            <p>Пожалуйста, попробуйте обновить страницу или зайти позже</p>
-            <button class="btn btn-primary" onclick="location.reload()">
-                Обновить страницу
-            </button>
-        </div>
-    `;
-}
-
-// Получение названия категории
-function getCategoryName(category) {
-    const categories = {
-        'hair': 'Для волос',
-        'face': 'Для лица',
-        'body': 'Для тела',
-        'kit': 'Наборы',
-        'oral': 'Уход за полостью рта',
-        'home': 'Для дома',
-        'perfume': 'Ароматы'
-    };
-    return categories[category] || category;
-}
-
-// Получение звездного рейтинга
-function getStarRating(reviews) {
-    // Простой способ показать рейтинг по количеству отзывов
-    const rating = Math.min(5, Math.max(1, Math.floor(reviews / 20) || 3));
-    return '★'.repeat(rating) + '☆'.repeat(5 - rating);
-}
-
-// Инициализация при загрузке DOM
-document.addEventListener('DOMContentLoaded', async function() {
-    console.log('📄 DOM загружен, инициализация магазина...');
-    await initializeShop();
-});
-
 // Экспортируем функции для глобального использования
 window.addToCart = addToCart;
 window.toggleWishlist = toggleWishlist;
 window.showProductDetail = showProductDetail;
 window.goToPage = goToPage;
 window.resetFilters = resetFilters;
+
+// Запускаем при загрузке DOM
+document.addEventListener('DOMContentLoaded', () => {
+    console.log('📄 DOM загружен, запускаем магазин...');
+    
+    // Даем время на загрузку других скриптов
+    setTimeout(() => {
+        initializeShop();
+    }, 100);
+});
