@@ -1,4 +1,6 @@
-// js/cart.js - Функционал корзины
+// js/cart.js - Исправленная версия с интеграцией dataService
+
+let currentCartItems = [];
 
 // Основная инициализация
 async function initializeCart() {
@@ -7,6 +9,7 @@ async function initializeCart() {
     try {
         showPreloader();
         
+        // Ждем готовности dataService
         await waitForDataService();
         
         const dataService = window.dataService;
@@ -29,11 +32,56 @@ async function initializeCart() {
         
         console.log('✅ Корзина успешно инициализирована');
         
+        // Слушаем события обновления корзины
+        window.addEventListener('cartUpdated', handleCartUpdated);
+        
     } catch (error) {
         console.error('❌ Ошибка инициализации корзины:', error);
         hidePreloader();
         showErrorMessage();
     }
+}
+
+// Обработчик события обновления корзины
+function handleCartUpdated() {
+    console.log('🔄 Событие cartUpdated получено в cart.js');
+    const dataService = window.dataService;
+    if (!dataService) return;
+    
+    const currentUser = dataService.getCurrentUser();
+    if (!currentUser) return;
+    
+    loadCartItems(currentUser.id);
+    updateHeader(dataService);
+}
+
+// Ждем готовности dataService
+async function waitForDataService() {
+    console.log('⏳ Ожидание DataService...');
+    
+    if (window.dataService && window.dataService.isReady()) {
+        console.log('✅ DataService уже загружен');
+        return window.dataService;
+    }
+    
+    return new Promise((resolve) => {
+        const eventHandler = (e) => {
+            console.log('✅ Событие dataServiceReady получено');
+            window.removeEventListener('dataServiceReady', eventHandler);
+            clearTimeout(timeout);
+            resolve(window.dataService);
+        };
+        
+        window.addEventListener('dataServiceReady', eventHandler);
+        
+        const timeout = setTimeout(() => {
+            console.log('⚠️ Таймаут ожидания DataService, продолжаем...');
+            window.removeEventListener('dataServiceReady', eventHandler);
+            if (window.dataService) {
+                resolve(window.dataService);
+            }
+        }, 3000);
+    });
 }
 
 // Показ прелоадера
@@ -43,22 +91,6 @@ function showPreloader() {
         preloader.style.display = 'flex';
         preloader.style.opacity = '1';
         preloader.style.visibility = 'visible';
-        
-        let progress = 0;
-        const progressBar = document.getElementById('progressBar');
-        const progressCounter = document.getElementById('progressCounter');
-        
-        if (progressBar && progressCounter) {
-            const interval = setInterval(() => {
-                progress += 1;
-                if (progress <= 100) {
-                    progressBar.style.width = progress + '%';
-                    progressCounter.textContent = progress + '%';
-                } else {
-                    clearInterval(interval);
-                }
-            }, 30);
-        }
     }
 }
 
@@ -73,31 +105,6 @@ function hidePreloader() {
             preloader.style.display = 'none';
         }, 500);
     }
-}
-
-// Ждем готовности dataService
-async function waitForDataService() {
-    return new Promise((resolve) => {
-        if (window.dataService && window.dataService.isReady()) {
-            resolve(window.dataService);
-            return;
-        }
-        
-        const eventHandler = (e) => {
-            window.removeEventListener('dataServiceReady', eventHandler);
-            clearTimeout(timeout);
-            resolve(window.dataService);
-        };
-        
-        window.addEventListener('dataServiceReady', eventHandler);
-        
-        const timeout = setTimeout(() => {
-            window.removeEventListener('dataServiceReady', eventHandler);
-            if (window.dataService) {
-                resolve(window.dataService);
-            }
-        }, 3000);
-    });
 }
 
 // Обновление заголовка
@@ -141,84 +148,91 @@ function updateHeader(dataService) {
 }
 
 // Загрузка товаров в корзине
-function loadCartItems(userId) {
+async function loadCartItems(userId) {
     const dataService = window.dataService;
     if (!dataService) {
         console.error('❌ DataService не доступен');
         return;
     }
     
-    const cartItems = dataService.getCartItems(userId);
-    const cartItemsContainer = document.getElementById('cartItems');
-    const emptyCart = document.getElementById('emptyCart');
-    const checkoutBtn = document.getElementById('checkoutBtn');
-    
-    console.log(`🛒 Товаров в корзине: ${cartItems.length}`);
-    
-    if (cartItems.length === 0) {
-        emptyCart.classList.add('show');
-        cartItemsContainer.innerHTML = '';
-        checkoutBtn.disabled = true;
-        updateSummary({ subtotal: 0, shipping: 5, discount: 0, total: 5 });
-        return;
-    }
-    
-    emptyCart.classList.remove('show');
-    checkoutBtn.disabled = false;
-    
-    // Рендерим товары
-    cartItemsContainer.innerHTML = cartItems.map(item => {
-        const product = item.product;
-        if (!product) return '';
+    try {
+        // Получаем корзину из dataService
+        currentCartItems = dataService.getCartItems(userId);
+        const cartItemsContainer = document.getElementById('cartItems');
+        const emptyCart = document.getElementById('emptyCart');
+        const checkoutBtn = document.getElementById('checkoutBtn');
         
-        const totalPrice = product.price * item.quantity;
+        console.log(`🛒 Товаров в корзине из dataService: ${currentCartItems.length}`);
         
-        return `
-            <div class="cart-item" data-product-id="${product.id}">
-                <div class="cart-item-image">
-                    <img src="${product.image || 'https://images.unsplash.com/photo-1556228578-9c360e2d0b4a?w=200&auto=format&fit=crop'}" 
-                         alt="${product.name}"
-                         onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1556228578-9c360e2d0b4a?w=200&auto=format&fit=crop'">
-                </div>
-                
-                <div class="cart-item-info">
-                    <h4 class="cart-item-name" onclick="viewProduct(${product.id})">${product.name}</h4>
-                    <div class="cart-item-category">${getCategoryName(product.category)}</div>
-                    <div class="cart-item-price">$${totalPrice.toFixed(2)}</div>
-                    <div class="cart-item-price-small">$${product.price.toFixed(2)} × ${item.quantity}</div>
-                </div>
-                
-                <div class="cart-item-controls">
-                    <div class="quantity-controls">
-                        <button class="quantity-btn minus" onclick="updateQuantity(${product.id}, ${item.quantity - 1})">
-                            <i class="fas fa-minus"></i>
-                        </button>
-                        <input type="number" 
-                               class="quantity-input" 
-                               value="${item.quantity}" 
-                               min="1" 
-                               max="99"
-                               onchange="updateQuantity(${product.id}, this.value)">
-                        <button class="quantity-btn plus" onclick="updateQuantity(${product.id}, ${item.quantity + 1})">
-                            <i class="fas fa-plus"></i>
-                        </button>
+        if (currentCartItems.length === 0) {
+            emptyCart.classList.add('show');
+            cartItemsContainer.innerHTML = '';
+            checkoutBtn.disabled = true;
+            updateSummary({ subtotal: 0, shipping: 5, discount: 0, total: 5 });
+            return;
+        }
+        
+        emptyCart.classList.remove('show');
+        checkoutBtn.disabled = false;
+        
+        // Рендерим товары
+        cartItemsContainer.innerHTML = currentCartItems.map(item => {
+            const product = item.product;
+            if (!product) return '';
+            
+            const totalPrice = product.price * item.quantity;
+            
+            return `
+                <div class="cart-item" data-product-id="${product.id}">
+                    <div class="cart-item-image">
+                        <img src="${product.image || 'https://images.unsplash.com/photo-1556228578-9c360e2d0b4a?w=200&auto=format&fit=crop'}" 
+                             alt="${product.name}"
+                             onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1556228578-9c360e2d0b4a?w=200&auto=format&fit=crop'">
                     </div>
                     
-                    <button class="remove-btn" onclick="removeFromCart(${product.id})">
-                        <i class="fas fa-trash"></i> Удалить
-                    </button>
+                    <div class="cart-item-info">
+                        <h4 class="cart-item-name" onclick="viewProduct(${product.id})">${product.name}</h4>
+                        <div class="cart-item-category">${getCategoryName(product.category)}</div>
+                        <div class="cart-item-price">$${totalPrice.toFixed(2)}</div>
+                        <div class="cart-item-price-small">$${product.price.toFixed(2)} × ${item.quantity}</div>
+                    </div>
+                    
+                    <div class="cart-item-controls">
+                        <div class="quantity-controls">
+                            <button class="quantity-btn minus" onclick="updateQuantity(${product.id}, ${item.quantity - 1})">
+                                <i class="fas fa-minus"></i>
+                            </button>
+                            <input type="number" 
+                                   class="quantity-input" 
+                                   value="${item.quantity}" 
+                                   min="1" 
+                                   max="99"
+                                   onchange="updateQuantity(${product.id}, this.value)">
+                            <button class="quantity-btn plus" onclick="updateQuantity(${product.id}, ${item.quantity + 1})">
+                                <i class="fas fa-plus"></i>
+                            </button>
+                        </div>
+                        
+                        <button class="remove-btn" onclick="removeFromCart(${product.id})">
+                            <i class="fas fa-trash"></i> Удалить
+                        </button>
+                    </div>
                 </div>
-            </div>
-        `;
-    }).join('');
-    
-    // Обновляем итоговую сумму
-    const subtotal = dataService.getCartTotal(userId);
-    const shipping = 5.00;
-    const discount = calculateDiscount(subtotal);
-    const total = subtotal + shipping - discount;
-    
-    updateSummary({ subtotal, shipping, discount, total });
+            `;
+        }).join('');
+        
+        // Обновляем итоговую сумму
+        const subtotal = dataService.getCartTotal(userId);
+        const shipping = 5.00;
+        const discount = calculateDiscount(subtotal);
+        const total = subtotal + shipping - discount;
+        
+        updateSummary({ subtotal, shipping, discount, total });
+        
+    } catch (error) {
+        console.error('❌ Ошибка загрузки корзины:', error);
+        showNotification('Ошибка загрузки корзины', 'error');
+    }
 }
 
 // Обновление количества товара
@@ -246,11 +260,13 @@ async function updateQuantity(productId, newQuantity) {
     
     try {
         await dataService.updateCartItemQuantity(currentUser.id, productId, newQuantity);
-        loadCartItems(currentUser.id);
+        
+        // Обновляем корзину
+        await loadCartItems(currentUser.id);
         updateHeader(dataService);
         showNotification('Количество обновлено', 'success');
         
-        // Отправляем событие обновления корзины
+        // Отправляем событие обновления корзины для shop.js
         window.dispatchEvent(new Event('cartUpdated'));
         
     } catch (error) {
@@ -279,11 +295,13 @@ async function removeFromCart(productId) {
     
     try {
         await dataService.removeFromCart(currentUser.id, productId);
-        loadCartItems(currentUser.id);
+        
+        // Обновляем корзину
+        await loadCartItems(currentUser.id);
         updateHeader(dataService);
         showNotification('Товар удален из корзины', 'info');
         
-        // Отправляем событие обновления корзины
+        // Отправляем событие обновления корзины для shop.js
         window.dispatchEvent(new Event('cartUpdated'));
         
     } catch (error) {
@@ -312,11 +330,13 @@ async function clearCart() {
     
     try {
         await dataService.clearCart(currentUser.id);
-        loadCartItems(currentUser.id);
+        
+        // Обновляем корзину
+        await loadCartItems(currentUser.id);
         updateHeader(dataService);
         showNotification('Корзина очищена', 'info');
         
-        // Отправляем событие обновления корзины
+        // Отправляем событие обновления корзины для shop.js
         window.dispatchEvent(new Event('cartUpdated'));
         
     } catch (error) {
@@ -327,10 +347,15 @@ async function clearCart() {
 
 // Обновление итоговой суммы
 function updateSummary({ subtotal, shipping, discount, total }) {
-    document.getElementById('subtotal').textContent = `$${subtotal.toFixed(2)}`;
-    document.getElementById('shipping').textContent = `$${shipping.toFixed(2)}`;
-    document.getElementById('discount').textContent = `-$${discount.toFixed(2)}`;
-    document.getElementById('total').textContent = `$${total.toFixed(2)}`;
+    const subtotalEl = document.getElementById('subtotal');
+    const shippingEl = document.getElementById('shipping');
+    const discountEl = document.getElementById('discount');
+    const totalEl = document.getElementById('total');
+    
+    if (subtotalEl) subtotalEl.textContent = `$${subtotal.toFixed(2)}`;
+    if (shippingEl) shippingEl.textContent = `$${shipping.toFixed(2)}`;
+    if (discountEl) discountEl.textContent = `-$${discount.toFixed(2)}`;
+    if (totalEl) totalEl.textContent = `$${total.toFixed(2)}`;
 }
 
 // Расчет скидки
@@ -412,12 +437,14 @@ async function addRecommendationToCart(productId) {
     
     try {
         await dataService.addToCart(currentUser.id, productId, 1);
-        loadCartItems(currentUser.id);
+        
+        // Обновляем корзину и рекомендации
+        await loadCartItems(currentUser.id);
         loadRecommendations();
         updateHeader(dataService);
         showNotification('Товар добавлен в корзину!', 'success');
         
-        // Отправляем событие обновления корзины
+        // Отправляем событие обновления корзины для shop.js
         window.dispatchEvent(new Event('cartUpdated'));
         
     } catch (error) {
@@ -455,22 +482,41 @@ function getCategoryName(category) {
 }
 
 function showNotification(message, type = 'success') {
-    const notification = document.getElementById('notification');
-    const messageEl = document.getElementById('notificationMessage');
+    // Удаляем старые уведомления
+    const oldNotifications = document.querySelectorAll('.notification');
+    oldNotifications.forEach(n => n.remove());
     
-    if (!notification || !messageEl) return;
+    const notification = document.createElement('div');
+    notification.className = `notification notification-${type}`;
     
-    // Устанавливаем сообщение и стиль
-    messageEl.textContent = message;
-    notification.className = 'notification';
-    notification.classList.add(type);
+    let icon = 'fa-check-circle';
+    if (type === 'info') icon = 'fa-info-circle';
+    if (type === 'error') icon = 'fa-exclamation-circle';
     
-    // Показываем уведомление
-    notification.classList.add('show');
+    notification.innerHTML = `
+        <div class="notification-content">
+            <i class="fas ${icon}"></i>
+            <span>${message}</span>
+        </div>
+    `;
     
-    // Скрываем через 3 секунды
+    document.body.appendChild(notification);
+    
+    // Анимация появления
     setTimeout(() => {
-        notification.classList.remove('show');
+        notification.style.opacity = '1';
+        notification.style.transform = 'translateY(0)';
+    }, 10);
+    
+    // Удаляем через 3 секунды
+    setTimeout(() => {
+        notification.style.opacity = '0';
+        notification.style.transform = 'translateY(-20px)';
+        setTimeout(() => {
+            if (notification.parentNode) {
+                notification.remove();
+            }
+        }, 300);
     }, 3000);
 }
 
@@ -513,8 +559,8 @@ function showErrorMessage() {
 
 // Просмотр товара
 function viewProduct(productId) {
-    window.location.href = `product.html?id=${productId}`;
-    // Если страницы продукта нет, можно открыть модальное окно или перенаправить в магазин
+    // В реальном приложении здесь будет переход на страницу товара
+    alert('Функция просмотра товара в разработке. ID товара: ' + productId);
 }
 
 // Оформление заказа
@@ -538,22 +584,21 @@ async function checkout() {
     }
     
     // В реальном приложении здесь будет переход на страницу оформления заказа
-    // или показ модального окна с формой оформления
-    
     alert('Функция оформления заказа в разработке\n\nВ будущем здесь будет:\n1. Форма доставки\n2. Выбор способа оплаты\n3. Подтверждение заказа');
-    
-    /*
-    try {
-        const order = await dataService.createOrder(currentUser.id);
-        showNotification(`Заказ #${order.id} успешно оформлен!`, 'success');
-        loadCartItems(currentUser.id);
-        updateHeader(dataService);
-    } catch (error) {
-        console.error('❌ Ошибка оформления заказа:', error);
-        showNotification('Не удалось оформить заказ', 'error');
-    }
-    */
 }
+
+// Функция для обновления корзины извне (вызывается из shop.js)
+window.updateCartFromShop = function() {
+    console.log('🔄 Вызов updateCartFromShop из shop.js');
+    const dataService = window.dataService;
+    if (!dataService) return;
+    
+    const currentUser = dataService.getCurrentUser();
+    if (!currentUser) return;
+    
+    loadCartItems(currentUser.id);
+    updateHeader(dataService);
+};
 
 // Экспортируем функции для глобального использования
 window.updateQuantity = updateQuantity;

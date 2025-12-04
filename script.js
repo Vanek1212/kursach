@@ -588,11 +588,9 @@ function translatePage(lang) {
         ru: {
             // Header and navigation
             'SHOP': 'МАГАЗИН',
-            'LEARN': 'О ПРОДУКТЕ',
-            'SUSTAINABILITY': 'ЭКОЛОГИЧНОСТЬ',
-            'OUR STORY': 'О НАС',
-            'PRESS': 'ПРЕССА',
-            'QUIZ': 'ТЕСТ',
+            'ABOUT': 'О НАС',
+            'CONTACTS': 'КОНТАКТЫ',
+            
             
             // Hero section - полный текст заголовка
             'Find Your Shower Routine (& Receive a Free Gift!)': 'Найдите свой уход (& Получите Подарок!)',
@@ -723,11 +721,9 @@ function translatePage(lang) {
         en: {
             // Russian translations back to English
             'МАГАЗИН': 'SHOP',
-            'О ПРОДУКТЕ': 'LEARN',
-            'ЭКОЛОГИЧНОСТЬ': 'SUSTAINABILITY',
+            'КОНТАКТЫ': 'CONTACTS',
             'О НАС': 'OUR STORY',
-            'ПРЕССА': 'PRESS',
-            'ТЕСТ': 'QUIZ',
+            
             
             'Найдите свой уход (& Получите Подарок!)': 'Find Your Shower Routine (& Receive a Free Gift!)',
             

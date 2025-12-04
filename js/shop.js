@@ -1,4 +1,4 @@
-// js/shop.js - Исправленная версия с переключаемой корзиной
+// js/shop.js - Исправленная версия с полной синхронизацией корзины
 
 let allProducts = [];
 let filteredProducts = [];
@@ -35,7 +35,9 @@ async function waitForDataService() {
                     getCurrentUser: () => null,
                     getCartItems: () => [],
                     getCartItemCount: () => 0,
-                    isProductInCart: () => false
+                    isProductInCart: () => false,
+                    addToCart: async () => {},
+                    removeFromCart: async () => {}
                 };
                 resolve(window.dataService);
             }
@@ -83,6 +85,9 @@ async function initializeShop() {
         setupSearch();
         setupCategories();
         
+        // Слушаем события обновления корзины
+        window.addEventListener('cartUpdated', handleCartUpdate);
+        
         hidePreloader();
         
         console.log('✅ Магазин успешно инициализирован');
@@ -92,6 +97,41 @@ async function initializeShop() {
         hidePreloader();
         showErrorMessage();
     }
+}
+
+// Обработчик обновления корзины
+function handleCartUpdate() {
+    console.log('🔄 Обработка обновления корзины в shop.js');
+    
+    const dataService = window.dataService;
+    if (!dataService) return;
+    
+    // Обновляем заголовок
+    updateHeader(dataService);
+    
+    // Обновляем все кнопки корзины
+    updateAllCartButtons();
+}
+
+// Обновление всех кнопок корзины на странице
+function updateAllCartButtons() {
+    const dataService = window.dataService;
+    if (!dataService) return;
+    
+    const currentUser = dataService.getCurrentUser();
+    if (!currentUser) return;
+    
+    const buttons = document.querySelectorAll('.add-to-cart-btn');
+    buttons.forEach(button => {
+        const productId = button.getAttribute('data-product-id');
+        if (productId) {
+            const isInCart = dataService.isProductInCart ?
+                dataService.isProductInCart(currentUser.id, parseInt(productId)) :
+                false;
+            
+            updateCartButton(button, isInCart);
+        }
+    });
 }
 
 // Показ прелоадера
@@ -262,8 +302,8 @@ function renderProducts() {
                     <div class="product-actions">
                         <button class="add-to-cart-btn ${isInCart ? 'added' : ''}" 
                                 onclick="toggleCart(${product.id}, this)"
-                                ${!currentUser ? 'disabled title="Войдите, чтобы добавить в корзину"' : ''}
-                                data-product-id="${product.id}">
+                                data-product-id="${product.id}"
+                                ${!currentUser ? 'disabled title="Войдите, чтобы добавить в корзину"' : ''}>
                             ${isInCart ? 
                                 '<i class="fas fa-check"></i> В корзине' : 
                                 '<i class="fas fa-shopping-cart"></i> В корзину'}
@@ -282,15 +322,17 @@ function renderProducts() {
 async function toggleCart(productId, button) {
     const dataService = window.dataService;
     if (!dataService || !dataService.addToCart) {
-        alert('Сервис корзины не доступен');
+        showNotification('Сервис корзины не доступен', 'error');
         return;
     }
     
     const currentUser = dataService.getCurrentUser ? dataService.getCurrentUser() : null;
     
     if (!currentUser) {
-        alert('Пожалуйста, войдите в систему, чтобы управлять корзиной');
-        window.location.href = 'login.html';
+        showNotification('Пожалуйста, войдите в систему, чтобы управлять корзиной', 'info');
+        setTimeout(() => {
+            window.location.href = 'login.html';
+        }, 1500);
         return;
     }
     
@@ -314,6 +356,14 @@ async function toggleCart(productId, button) {
         // Обновляем заголовок (бейдж корзины)
         updateHeader(dataService);
         
+        // Отправляем событие обновления корзины
+        window.dispatchEvent(new CustomEvent('cartUpdated'));
+        
+        // Если корзина открыта в другой вкладке, обновляем ее
+        if (typeof window.updateCartFromShop === 'function') {
+            window.updateCartFromShop();
+        }
+        
     } catch (error) {
         console.error('❌ Ошибка при работе с корзиной:', error);
         showNotification('Не удалось обновить корзину', 'error');
@@ -324,14 +374,11 @@ async function toggleCart(productId, button) {
 function updateCartButton(button, isInCart) {
     if (!button) return;
     
-    const icon = button.querySelector('i');
     if (isInCart) {
-        icon.className = 'fas fa-check';
         button.innerHTML = '<i class="fas fa-check"></i> В корзине';
         button.classList.add('added');
         button.title = 'Нажмите, чтобы удалить из корзины';
     } else {
-        icon.className = 'fas fa-shopping-cart';
         button.innerHTML = '<i class="fas fa-shopping-cart"></i> В корзину';
         button.classList.remove('added');
         button.title = '';
@@ -365,6 +412,7 @@ function getStarRating(rating) {
 }
 
 function showNotification(message, type = 'success') {
+    // Удаляем старые уведомления
     const oldNotifications = document.querySelectorAll('.notification');
     oldNotifications.forEach(n => n.remove());
     
@@ -382,12 +430,43 @@ function showNotification(message, type = 'success') {
         </div>
     `;
     
+    // Добавляем стили для анимации
+    notification.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        padding: 15px 20px;
+        border-radius: 8px;
+        z-index: 9999;
+        animation: slideInRight 0.3s ease, fadeOut 0.3s ease 2.7s forwards;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        max-width: 300px;
+        opacity: 0;
+        transform: translateX(100%);
+    `;
+    
+    if (type === 'success') notification.style.background = '#4CAF50';
+    if (type === 'info') notification.style.background = '#2196F3';
+    if (type === 'error') notification.style.background = '#f44336';
+    notification.style.color = 'white';
+    
     document.body.appendChild(notification);
     
+    // Запускаем анимацию
     setTimeout(() => {
-        if (notification.parentNode) {
-            notification.remove();
-        }
+        notification.style.opacity = '1';
+        notification.style.transform = 'translateX(0)';
+    }, 10);
+    
+    // Удаляем через 3 секунды
+    setTimeout(() => {
+        notification.style.opacity = '0';
+        notification.style.transform = 'translateX(100%)';
+        setTimeout(() => {
+            if (notification.parentNode) {
+                notification.remove();
+            }
+        }, 300);
     }, 3000);
 }
 
@@ -644,6 +723,7 @@ function goToPage(page) {
 
 // Просмотр деталей товара
 function showProductDetail(productId) {
+    // В реальном приложении здесь будет переход на страницу товара
     alert('Функция быстрого просмотра в разработке. ID товара: ' + productId);
 }
 
@@ -665,25 +745,19 @@ function toggleWishlist(productId) {
     }
 }
 
-// Функция для обновления всех кнопок корзины на странице
-function updateAllCartButtons() {
-    if (!window.dataService) return;
+// Функция для обновления корзины из других страниц
+window.updateCartFromShop = function() {
+    console.log('🔄 Вызов updateCartFromShop из cart.js');
     
-    const currentUser = window.dataService.getCurrentUser();
-    if (!currentUser) return;
+    const dataService = window.dataService;
+    if (!dataService) return;
     
-    const buttons = document.querySelectorAll('.add-to-cart-btn');
-    buttons.forEach(button => {
-        const productId = button.getAttribute('data-product-id');
-        if (productId) {
-            const isInCart = window.dataService.isProductInCart ?
-                window.dataService.isProductInCart(currentUser.id, parseInt(productId)) :
-                false;
-            
-            updateCartButton(button, isInCart);
-        }
-    });
-}
+    // Обновляем заголовок
+    updateHeader(dataService);
+    
+    // Обновляем все кнопки корзины
+    updateAllCartButtons();
+};
 
 // Экспортируем функции для глобального использования
 window.toggleCart = toggleCart;
@@ -701,3 +775,31 @@ document.addEventListener('DOMContentLoaded', () => {
         initializeShop();
     }, 100);
 });
+
+// Добавляем CSS для анимаций уведомлений
+if (!document.querySelector('#notification-animations')) {
+    const style = document.createElement('style');
+    style.id = 'notification-animations';
+    style.textContent = `
+        @keyframes slideInRight {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+        
+        @keyframes fadeOut {
+            from {
+                opacity: 1;
+            }
+            to {
+                opacity: 0;
+            }
+        }
+    `;
+    document.head.appendChild(style);
+}
