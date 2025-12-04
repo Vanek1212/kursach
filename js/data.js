@@ -1,8 +1,5 @@
 // js/data.js
 
-// Исправляем путь к файлу данных
-const API_URL = '/data/data.json'; // Изменено с 'data.json' на '../data.json'
-
 class DataService {
     constructor() {
         this.data = null;
@@ -11,90 +8,85 @@ class DataService {
         this.cart = [];
         this.orders = [];
         this.currentUser = null;
-        this.isInitialized = false; // Флаг инициализации
+        this.isInitialized = false;
+        this.initializationPromise = null;
     }
 
-    // Загрузка данных с локального JSON файла
+    // Загрузка данных с сервера
     async loadData() {
-        try {
-            console.log('📥 Загрузка данных из:', API_URL);
-            
-            // Пробуем несколько способов загрузки
-            let response;
+        console.log('📥 Загрузка данных...');
+        
+        // Список возможных путей к data.json
+        const possiblePaths = [
+            '/data/data.json',    // если сервер запущен из корня проекта
+            'data/data.json',     // относительный путь
+            '/data.json',         // если data.json в корне
+            'data.json',          // относительный путь из корня
+            '../data/data.json',  // из папки js
+            '../data.json'        // из папки js
+        ];
+        
+        let loadedData = null;
+        let lastError = null;
+        
+        // Пробуем все пути по очереди
+        for (const path of possiblePaths) {
             try {
-                response = await fetch(API_URL);
-            } catch (fetchError) {
-                console.log('🔄 Пробуем альтернативный путь...');
-                // Пробуем другие возможные пути
-                const altPaths = [
-                    'data.json',
-                    '/data.json',
-                    'data/data.json',
-                    '../data/data.json'
-                ];
+                console.log(`🔄 Пробуем путь: ${path}`);
+                const response = await fetch(path);
                 
-                for (const path of altPaths) {
-                    try {
-                        response = await fetch(path);
-                        if (response.ok) break;
-                    } catch (e) {
-                        continue;
-                    }
+                if (response.ok) {
+                    loadedData = await response.json();
+                    console.log(`✅ Данные успешно загружены с пути: ${path}`);
+                    console.log(`📊 Данные: ${JSON.stringify(loadedData, null, 2).substring(0, 200)}...`);
+                    break;
+                } else {
+                    console.log(`❌ Путь ${path}: статус ${response.status}`);
                 }
+            } catch (error) {
+                lastError = error;
+                console.log(`❌ Ошибка загрузки с пути ${path}:`, error.message);
             }
-            
-            if (!response || !response.ok) {
-                throw new Error(`Не удалось загрузить данные. Статус: ${response ? response.status : 'no response'}`);
-            }
-            
-            this.data = await response.json();
-            
-            // Инициализируем данные
-            this.users = this.data.users || [];
-            this.products = this.data.products || [];
-            this.cart = this.data.cart || [];
-            this.orders = this.data.orders || [];
-            
-            console.log('✅ Данные успешно загружены:', {
-                users: this.users.length,
-                products: this.products.length,
-                cart: this.cart.length,
-                orders: this.orders.length
-            });
-            
-            // Логируем несколько первых товаров для отладки
-            if (this.products.length > 0) {
-                console.log('📊 Первые 3 товара:', this.products.slice(0, 3));
-            }
-            
-            return this.data;
-        } catch (error) {
-            console.error('❌ Ошибка загрузки данных:', error);
-            
-            // Пробуем загрузить из localStorage как fallback
-            try {
-                this.loadFromLocalStorage();
-                if (this.products.length > 0) {
-                    console.log('🔄 Используем данные из localStorage');
-                    return this.data;
-                }
-            } catch (localError) {
-                console.log('⚠️ Не удалось загрузить из localStorage:', localError);
-            }
-            
-            // Если ничего не работает, загружаем демо-данные
-            console.log('🔄 Загружаем демо-данные...');
-            this.loadDemoProducts();
-            
-            return this.data;
         }
+        
+        if (!loadedData) {
+            console.error('❌ Не удалось загрузить данные ни с одного пути');
+            
+            // Пробуем загрузить из localStorage
+            const localStorageData = this.loadFromLocalStorage();
+            if (localStorageData) {
+                console.log('🔄 Используем данные из localStorage');
+                loadedData = localStorageData;
+            } else {
+                console.log('🔄 Загружаем демо-данные...');
+                this.loadDemoProducts();
+                return this.data;
+            }
+        }
+        
+        this.data = loadedData;
+        this.users = this.data.users || [];
+        this.products = this.data.products || [];
+        this.cart = this.data.cart || [];
+        this.orders = this.data.orders || [];
+        
+        console.log('✅ Данные успешно загружены:');
+        console.log(`   👥 Пользователей: ${this.users.length}`);
+        console.log(`   🛍️ Товаров: ${this.products.length}`);
+        console.log(`   🛒 Корзины: ${this.cart.length}`);
+        console.log(`   📦 Заказов: ${this.orders.length}`);
+        
+        // Сохраняем в localStorage для будущего использования
+        this.saveToLocalStorage();
+        
+        return this.data;
     }
 
-    // Загрузка демо-данных если JSON не загрузился
+    // Загрузка демо-данных
     loadDemoProducts() {
-        console.log('🛠️ Создание демо-товаров...');
+        console.log('🛠️ Создание демо-данных...');
         
-        // Создаем демо-товары на основе вашего data.json
+        // Основные демо-товары
         this.products = [
             {
                 id: 1,
@@ -158,7 +150,7 @@ class DataService {
             }
         ];
         
-        // Используем существующих пользователей или создаем демо-пользователя
+        // Демо-пользователи
         if (this.users.length === 0) {
             this.users = [
                 {
@@ -169,42 +161,91 @@ class DataService {
                     avatar: "https://i.pravatar.cc/150?img=1",
                     phone: "+7 (999) 000-00-00",
                     address: "ул. Примерная, 1",
-                    registrationDate: "2023-01-01"
+                    registrationDate: new Date().toISOString().split('T')[0]
                 }
             ];
         }
         
         this.cart = [];
         this.orders = [];
+        this.data = {
+            users: this.users,
+            products: this.products,
+            cart: this.cart,
+            orders: this.orders
+        };
         
-        console.log('✅ Демо-данные загружены:', this.products.length, 'товаров');
+        console.log('✅ Демо-данные созданы');
+        this.saveToLocalStorage();
     }
 
-    // Сохранение данных в localStorage
-    saveData() {
+    // Сохранение в localStorage
+    saveToLocalStorage() {
         try {
-            // Обновляем this.data
-            this.data = {
-                users: this.users,
-                products: this.products,
-                cart: this.cart,
-                orders: this.orders
-            };
-            
-            // Сохраняем отдельные массивы в localStorage
             localStorage.setItem('everist_users', JSON.stringify(this.users));
             localStorage.setItem('everist_products', JSON.stringify(this.products));
             localStorage.setItem('everist_cart', JSON.stringify(this.cart));
             localStorage.setItem('everist_orders', JSON.stringify(this.orders));
             
-            // Сохраняем текущего пользователя
             if (this.currentUser) {
                 localStorage.setItem('everist_current_user', JSON.stringify(this.currentUser));
             }
             
             console.log('💾 Данные сохранены в localStorage');
         } catch (error) {
-            console.error('❌ Ошибка сохранения данных:', error);
+            console.error('❌ Ошибка сохранения в localStorage:', error);
+        }
+    }
+
+    // Загрузка из localStorage
+    loadFromLocalStorage() {
+        try {
+            console.log('📥 Загрузка из localStorage...');
+            
+            const savedUsers = localStorage.getItem('everist_users');
+            const savedProducts = localStorage.getItem('everist_products');
+            const savedCart = localStorage.getItem('everist_cart');
+            const savedOrders = localStorage.getItem('everist_orders');
+            const savedCurrentUser = localStorage.getItem('everist_current_user');
+
+            if (savedProducts) {
+                const parsed = JSON.parse(savedProducts);
+                if (parsed && parsed.length > 0) {
+                    this.products = parsed;
+                    console.log(`🛍️ Товары из localStorage: ${this.products.length}`);
+                }
+            }
+            
+            if (savedUsers) {
+                const parsed = JSON.parse(savedUsers);
+                if (parsed && parsed.length > 0) {
+                    this.users = parsed;
+                }
+            }
+            
+            if (savedCart) {
+                this.cart = JSON.parse(savedCart);
+            }
+            
+            if (savedOrders) {
+                this.orders = JSON.parse(savedOrders);
+            }
+            
+            if (savedCurrentUser) {
+                this.currentUser = JSON.parse(savedCurrentUser);
+                console.log(`👤 Текущий пользователь из localStorage: ${this.currentUser.email}`);
+            }
+            
+            return {
+                users: this.users,
+                products: this.products,
+                cart: this.cart,
+                orders: this.orders
+            };
+            
+        } catch (error) {
+            console.error('❌ Ошибка загрузки из localStorage:', error);
+            return null;
         }
     }
 
@@ -214,7 +255,7 @@ class DataService {
             const savedUser = localStorage.getItem('everist_current_user');
             if (savedUser) {
                 this.currentUser = JSON.parse(savedUser);
-                console.log('👤 Текущий пользователь загружен:', this.currentUser.email);
+                console.log(`👤 Текущий пользователь загружен: ${this.currentUser.email}`);
             }
         } catch (error) {
             console.error('❌ Ошибка загрузки пользователя:', error);
@@ -224,12 +265,14 @@ class DataService {
 
     // ===== ПОЛЬЗОВАТЕЛИ =====
     registerUser(email, password, name, phone = '', address = '') {
+        console.log(`📝 Регистрация пользователя: ${email}`);
+        
         // Проверяем, нет ли уже пользователя с таким email
-        const existingUser = this.users.find(user => user.email === email);
-        if (existingUser) {
+        if (this.isEmailRegistered(email)) {
             throw new Error('Пользователь с таким email уже существует');
         }
 
+        // Создаем нового пользователя
         const newUser = {
             id: this.users.length > 0 ? Math.max(...this.users.map(u => u.id)) + 1 : 1,
             email,
@@ -242,13 +285,16 @@ class DataService {
         };
 
         this.users.push(newUser);
-        this.saveData();
-        console.log('✅ Новый пользователь зарегистрирован:', email);
+        this.saveToLocalStorage();
+        
+        console.log(`✅ Пользователь зарегистрирован: ${email}`);
         
         return newUser;
     }
 
     loginUser(email, password) {
+        console.log(`🔐 Вход пользователя: ${email}`);
+        
         const user = this.users.find(u => u.email === email && u.password === password);
         
         if (!user) {
@@ -257,18 +303,21 @@ class DataService {
 
         this.currentUser = { ...user };
         localStorage.setItem('everist_current_user', JSON.stringify(this.currentUser));
-        console.log('🔐 Пользователь авторизован:', email);
+        
+        console.log(`✅ Пользователь авторизован: ${email}`);
         
         return user;
     }
 
     logoutUser() {
+        console.log(`👋 Выход пользователя: ${this.currentUser?.email || 'неизвестен'}`);
         this.currentUser = null;
         localStorage.removeItem('everist_current_user');
-        console.log('👋 Пользователь вышел из системы');
     }
 
     updateUserProfile(userId, updates) {
+        console.log(`📝 Обновление профиля пользователя ID: ${userId}`);
+        
         const userIndex = this.users.findIndex(u => u.id === userId);
         if (userIndex === -1) {
             throw new Error('Пользователь не найден');
@@ -282,20 +331,44 @@ class DataService {
             localStorage.setItem('everist_current_user', JSON.stringify(this.currentUser));
         }
         
-        this.saveData();
-        console.log('📝 Профиль пользователя обновлен:', userId);
+        this.saveToLocalStorage();
+        console.log(`✅ Профиль пользователя обновлен: ID ${userId}`);
         
         return this.users[userIndex];
     }
 
+    // Проверка, зарегистрирован ли email
+    isEmailRegistered(email) {
+        return this.users.some(user => user.email === email);
+    }
+
+    // Получение пользователя по email
+    getUserByEmail(email) {
+        return this.users.find(user => user.email === email);
+    }
+
+    // Проверка авторизации
+    isAuthenticated() {
+        return this.currentUser !== null;
+    }
+
+    // Получение текущего пользователя
+    getCurrentUser() {
+        return this.currentUser;
+    }
+
     // ===== ТОВАРЫ =====
     getAllProducts() {
-        console.log('📊 Получение всех товаров:', this.products?.length || 0);
-        return this.products || [];
+        console.log(`📊 Получение всех товаров: ${this.products.length}`);
+        return this.products;
     }
 
     getProductById(id) {
-        return this.products.find(p => p.id === id);
+        const product = this.products.find(p => p.id === id);
+        if (!product) {
+            console.warn(`⚠️ Товар с ID ${id} не найден`);
+        }
+        return product;
     }
 
     getProductsByCategory(category) {
@@ -307,12 +380,17 @@ class DataService {
         return this.products.filter(p => 
             p.name.toLowerCase().includes(lowerQuery) ||
             p.description.toLowerCase().includes(lowerQuery) ||
-            p.category.toLowerCase().includes(lowerQuery)
+            p.category.toLowerCase().includes(lowerQuery) ||
+            (p.features || []).some(feature => 
+                feature.toLowerCase().includes(lowerQuery)
+            )
         );
     }
 
     // ===== КОРЗИНА =====
     getCartItems(userId) {
+        console.log(`🛒 Получение корзины пользователя ID: ${userId}`);
+        
         if (!this.cart) return [];
         
         const userCart = this.cart.filter(item => item.userId === userId);
@@ -329,6 +407,8 @@ class DataService {
     }
 
     addToCart(userId, productId, quantity = 1) {
+        console.log(`➕ Добавление в корзину: пользователь ${userId}, товар ${productId}, количество ${quantity}`);
+        
         // Проверяем, есть ли уже этот товар в корзине
         const existingItem = this.cart.find(
             item => item.userId === userId && item.productId === productId
@@ -347,13 +427,17 @@ class DataService {
             this.cart.push(newCartItem);
         }
 
-        this.saveData();
-        console.log('🛒 Товар добавлен в корзину:', { userId, productId, quantity });
+        this.saveToLocalStorage();
+        this.updateCartBadge();
+        
+        console.log(`✅ Товар добавлен в корзину`);
         
         return this.getCartItems(userId);
     }
 
     updateCartItemQuantity(userId, productId, quantity) {
+        console.log(`🔄 Обновление количества: пользователь ${userId}, товар ${productId}, количество ${quantity}`);
+        
         const cartItem = this.cart.find(
             item => item.userId === userId && item.productId === productId
         );
@@ -371,33 +455,41 @@ class DataService {
             cartItem.quantity = quantity;
         }
 
-        this.saveData();
-        console.log('🔄 Количество товара обновлено:', { userId, productId, quantity });
+        this.saveToLocalStorage();
+        this.updateCartBadge();
+        
+        console.log(`✅ Количество товара обновлено`);
         
         return this.getCartItems(userId);
     }
 
     removeFromCart(userId, productId) {
+        console.log(`🗑️ Удаление из корзины: пользователь ${userId}, товар ${productId}`);
+        
         const initialLength = this.cart.length;
         this.cart = this.cart.filter(
             item => !(item.userId === userId && item.productId === productId)
         );
 
         if (this.cart.length < initialLength) {
-            this.saveData();
-            console.log('🗑️ Товар удален из корзины:', { userId, productId });
+            this.saveToLocalStorage();
+            this.updateCartBadge();
+            console.log(`✅ Товар удален из корзины`);
         }
         
         return this.getCartItems(userId);
     }
 
     clearCart(userId) {
+        console.log(`🧹 Очистка корзины пользователя: ${userId}`);
+        
         const initialLength = this.cart.length;
         this.cart = this.cart.filter(item => item.userId !== userId);
         
         if (this.cart.length < initialLength) {
-            this.saveData();
-            console.log('🧹 Корзина очищена для пользователя:', userId);
+            this.saveToLocalStorage();
+            this.updateCartBadge();
+            console.log(`✅ Корзина очищена`);
         }
         
         return this.getCartItems(userId);
@@ -405,97 +497,27 @@ class DataService {
 
     getCartTotal(userId) {
         const cartItems = this.getCartItems(userId);
-        return cartItems.reduce((total, item) => {
-            return total + (item.product ? item.product.price * item.quantity : 0);
+        const total = cartItems.reduce((sum, item) => {
+            return sum + (item.product ? item.product.price * item.quantity : 0);
         }, 0);
+        
+        console.log(`💰 Общая сумма корзины пользователя ${userId}: $${total.toFixed(2)}`);
+        return total;
     }
 
     getCartItemCount(userId) {
         if (!this.cart) return 0;
         const userCart = this.cart.filter(item => item.userId === userId);
-        return userCart.reduce((total, item) => total + item.quantity, 0);
-    }
-
-    // ===== ИНИЦИАЛИЗАЦИЯ =====
-    async initialize() {
-        try {
-            console.log('🚀 Инициализация DataService...');
-            
-            // Загружаем из localStorage первым делом
-            this.loadFromLocalStorage();
-            
-            // Загружаем из JSON файла
-            await this.loadData();
-            
-            // Загружаем текущего пользователя
-            this.loadCurrentUser();
-            
-            // Сохраняем данные если они не были в localStorage
-            this.saveData();
-            
-            this.isInitialized = true;
-            
-            console.log('✅ DataService инициализирован');
-            console.log('📦 Товаров доступно:', this.products.length);
-            console.log('👥 Пользователей:', this.users.length);
-            
-            // Отправляем событие что dataService готов
-            window.dispatchEvent(new Event('dataServiceReady'));
-            
-            return this;
-        } catch (error) {
-            console.error('❌ Ошибка инициализации DataService:', error);
-            this.isInitialized = true;
-            return this;
-        }
-    }
-
-    loadFromLocalStorage() {
-        try {
-            console.log('📥 Загрузка из localStorage...');
-            
-            const savedUsers = localStorage.getItem('everist_users');
-            const savedProducts = localStorage.getItem('everist_products');
-            const savedCart = localStorage.getItem('everist_cart');
-            const savedOrders = localStorage.getItem('everist_orders');
-
-            if (savedProducts) {
-                const parsedProducts = JSON.parse(savedProducts);
-                if (parsedProducts.length > 0) {
-                    this.products = parsedProducts;
-                    console.log('🛍️ Товары из localStorage:', this.products.length);
-                }
-            }
-            if (savedUsers) {
-                const parsedUsers = JSON.parse(savedUsers);
-                if (parsedUsers.length > 0) {
-                    this.users = parsedUsers;
-                }
-            }
-            if (savedCart) {
-                this.cart = JSON.parse(savedCart);
-            }
-            if (savedOrders) {
-                this.orders = JSON.parse(savedOrders);
-            }
-        } catch (error) {
-            console.error('❌ Ошибка загрузки из localStorage:', error);
-        }
-    }
-
-    // Проверка авторизации
-    isAuthenticated() {
-        return this.currentUser !== null;
-    }
-
-    // Получение текущего пользователя
-    getCurrentUser() {
-        return this.currentUser;
+        const count = userCart.reduce((total, item) => total + item.quantity, 0);
+        return count;
     }
 
     // Обновление бейджа корзины
     updateCartBadge() {
-        if (!this.currentUser) return;
+        if (!this.currentUser) {
+            console.log('⚠️ Нет текущего пользователя для обновления бейджа');
+            return;
+        }
 
         const count = this.getCartItemCount(this.currentUser.id);
         const badges = document.querySelectorAll('.cart-badge');
@@ -504,31 +526,178 @@ class DataService {
             if (badge) {
                 badge.textContent = count;
                 badge.style.display = count > 0 ? 'flex' : 'none';
+                console.log(`🔄 Бейдж корзины обновлен: ${count}`);
             }
         });
+    }
+
+    // ===== ЗАКАЗЫ =====
+    getUserOrders(userId) {
+        console.log(`📦 Получение заказов пользователя: ${userId}`);
+        return (this.orders || []).filter(order => order.userId === userId);
+    }
+
+    createOrder(userId, deliveryAddress = '') {
+        console.log(`🛒 Создание заказа для пользователя: ${userId}`);
+        
+        const cartItems = this.getCartItems(userId);
+        
+        if (cartItems.length === 0) {
+            throw new Error('Корзина пуста');
+        }
+
+        const total = this.getCartTotal(userId);
+        
+        // Создаем заказ
+        const order = {
+            id: this.orders.length > 0 
+                ? Math.max(...this.orders.map(o => o.id)) + 1 
+                : 1,
+            userId,
+            products: cartItems.map(item => ({
+                productId: item.productId,
+                quantity: item.quantity
+            })),
+            total,
+            status: 'pending',
+            orderDate: new Date().toISOString().split('T')[0],
+            deliveryAddress: deliveryAddress || this.currentUser?.address || ''
+        };
+
+        this.orders.push(order);
+        this.saveToLocalStorage();
+        
+        // Очищаем корзину пользователя
+        this.clearCart(userId);
+        
+        console.log(`✅ Заказ создан: ID ${order.id}, сумма: $${total.toFixed(2)}`);
+        
+        return order;
+    }
+
+    // ===== ИНИЦИАЛИЗАЦИЯ =====
+    async initialize() {
+        // Если уже инициализирован, возвращаем Promise
+        if (this.isInitialized) {
+            return Promise.resolve(this);
+        }
+        
+        // Если уже идет инициализация, возвращаем существующий Promise
+        if (this.initializationPromise) {
+            return this.initializationPromise;
+        }
+        
+        console.log('🚀 Инициализация DataService...');
+        
+        this.initializationPromise = new Promise(async (resolve, reject) => {
+            try {
+                // 1. Загружаем из localStorage
+                this.loadFromLocalStorage();
+                
+                // 2. Загружаем из файла
+                await this.loadData();
+                
+                // 3. Загружаем текущего пользователя
+                this.loadCurrentUser();
+                
+                this.isInitialized = true;
+                
+                console.log('✅ DataService успешно инициализирован');
+                console.log(`📊 Итоговые данные:`);
+                console.log(`   👥 Пользователей: ${this.users.length}`);
+                console.log(`   🛍️ Товаров: ${this.products.length}`);
+                console.log(`   🛒 Записей в корзине: ${this.cart.length}`);
+                console.log(`   📦 Заказов: ${this.orders.length}`);
+                
+                // Отправляем событие о готовности
+                this.emitReadyEvent();
+                
+                resolve(this);
+                
+            } catch (error) {
+                console.error('❌ Ошибка инициализации DataService:', error);
+                this.isInitialized = true;
+                resolve(this); // Все равно разрешаем, чтобы приложение работало
+            }
+        });
+        
+        return this.initializationPromise;
+    }
+
+    // Отправка события о готовности
+    emitReadyEvent() {
+        const event = new CustomEvent('dataServiceReady', {
+            detail: {
+                success: true,
+                productsCount: this.products.length,
+                usersCount: this.users.length
+            }
+        });
+        
+        // Отправляем на window
+        window.dispatchEvent(event);
+        
+        // Отправляем на document (для обратной совместимости)
+        document.dispatchEvent(new Event('dataServiceReady'));
+        
+        console.log('📢 Событие dataServiceReady отправлено');
+    }
+
+    // Проверка готовности
+    isReady() {
+        return this.isInitialized;
+    }
+
+    // Сброс данных (для тестирования)
+    resetData() {
+        console.log('⚠️ Сброс всех данных DataService');
+        this.users = [];
+        this.products = [];
+        this.cart = [];
+        this.orders = [];
+        this.currentUser = null;
+        this.isInitialized = false;
+        
+        localStorage.removeItem('everist_users');
+        localStorage.removeItem('everist_products');
+        localStorage.removeItem('everist_cart');
+        localStorage.removeItem('everist_orders');
+        localStorage.removeItem('everist_current_user');
+        
+        console.log('✅ Данные сброшены');
     }
 }
 
 // Создаем глобальный экземпляр
 window.dataService = new DataService();
 
-// Инициализируем при загрузке страницы
-document.addEventListener('DOMContentLoaded', async () => {
+// Функция для принудительной инициализации
+window.initializeDataService = async function() {
     try {
-        console.log('📄 DOM загружен, инициализация DataService...');
-        
-        // Не ждем завершения, чтобы не блокировать загрузку
-        window.dataService.initialize().then(() => {
-            console.log('✅ DataService готов к использованию');
-            
-            // Обновляем бейдж корзины
-            window.dataService.updateCartBadge();
-            
-            // Отправляем событие что все готово
-            document.dispatchEvent(new Event('shopDataReady'));
-        });
-        
+        await window.dataService.initialize();
+        return window.dataService;
     } catch (error) {
-        console.error('❌ Не удалось инициализировать DataService:', error);
+        console.error('❌ Ошибка принудительной инициализации:', error);
+        return window.dataService;
     }
+};
+
+// Автоматическая инициализация при загрузке
+document.addEventListener('DOMContentLoaded', async () => {
+    console.log('📄 DOM загружен, начинаем инициализацию DataService...');
+    
+    // Даем время другим скриптам загрузиться
+    setTimeout(async () => {
+        try {
+            await window.dataService.initialize();
+            console.log('✅ DataService готов к использованию');
+        } catch (error) {
+            console.error('❌ Ошибка автоматической инициализации:', error);
+        }
+    }, 100);
 });
+
+// Экспортируем для использования в других модулях
+if (typeof module !== 'undefined' && module.exports) {
+    module.exports = DataService;
+}
