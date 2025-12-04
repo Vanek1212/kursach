@@ -24,7 +24,7 @@ const server = http.createServer((req, res) => {
     let filePath = req.url.split('?')[0];
     
     // Если корневой путь, отдаем index.html
-    if (filePath === '/') {
+    if (filePath === '/' || filePath === '') {
         filePath = '/index.html';
     }
     

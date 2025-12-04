@@ -417,8 +417,40 @@
             }
         }
     </style>
+    <script>async function initializeShop() {
+    // Проверяем авторизацию
+    const currentUser = window.dataService?.getCurrentUser();
+    
+    // Обновляем header
+    updateHeader(currentUser);
+    
+    // Проверяем, инициализирован ли dataService
+    if (!window.dataService || !window.dataService.getAllProducts) {
+        console.error('DataService не загружен');
+        showErrorMessage();
+        return;
+    }
+    
+    try {
+        // Загружаем товары
+        await loadProducts();
+        
+        // Настраиваем фильтры
+        setupFilters();
+        
+        // Настраиваем поиск
+        setupSearch();
+        
+        // Настраиваем категории
+        setupCategories();
+    } catch (error) {
+        console.error('Ошибка инициализации магазина:', error);
+        showErrorMessage();
+    }
+}</script>
 </head>
 <body>
+    
     <!-- Header -->
     <header class="main-header">
         <a href="../index.html" class="logo">EVERIST</a>
