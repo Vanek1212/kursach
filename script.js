@@ -588,8 +588,8 @@ function translatePage(lang) {
         ru: {
             // Header and navigation
             'SHOP': 'МАГАЗИН',
-            'ABOUT': 'О НАС',
-            'CONTACTS': 'КОНТАКТЫ',
+            'OUR STORY': 'О НАС',
+            'CONTACT': 'КОНТАКТЫ',
             
             
             // Hero section - полный текст заголовка
@@ -721,7 +721,7 @@ function translatePage(lang) {
         en: {
             // Russian translations back to English
             'МАГАЗИН': 'SHOP',
-            'КОНТАКТЫ': 'CONTACTS',
+            'КОНТАКТЫ': 'CONTACT',
             'О НАС': 'OUR STORY',
             
             

@@ -12,6 +12,9 @@
     <!-- Иконки -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
+    <!-- Flatpickr для выбора даты -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    
     <!-- Наши стили -->
     <link rel="stylesheet" href="../css/style.css">
     <link rel="stylesheet" href="../css/responsive.css">
@@ -25,10 +28,10 @@
     <header class="main-header">
         <a href="../index.html" class="logo">EVERIST</a>
         <nav class="nav-links">
-                <a href="/pages/shop.html">SHOP</a>
-                <a href="/pages/about.html">ABOUT</a>
-                <a href="/pages/contact.html">CONTACT</a>
-            </nav>
+            <a href="/pages/shop.html">SHOP</a>
+            <a href="/pages/about.html">ABOUT</a>
+            <a href="/pages/contact.html">CONTACT</a>
+        </nav>
         <div class="header-right" id="headerRight">
             <a href="#" class="search-icon">🔍</a>
             <a href="login.html" class="user-icon">👤</a>
@@ -39,101 +42,343 @@
         </div>
     </header>
 
+    <!-- Модальное окно пользовательского соглашения -->
+    <div class="modal-overlay" id="termsModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Пользовательское соглашение</h3>
+                <button class="modal-close" id="closeTermsModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <h4>Условия использования сервиса Everist</h4>
+                <p>1. Настоящее Пользовательское соглашение (далее — «Соглашение») регулирует отношения между вами (далее — «Пользователь») и компанией Everist (далее — «Компания»).</p>
+                <p>2. Регистрируясь в сервисе, вы подтверждаете, что вам исполнилось 16 лет.</p>
+                <p>3. Вы обязуетесь предоставлять достоверную информацию при регистрации.</p>
+                <p>4. Вы несете ответственность за сохранность своих учетных данных.</p>
+                <p>5. Компания оставляет за собой право изменять условия Соглашения.</p>
+                <p>6. Все споры решаются в соответствии с законодательством Республики Беларусь.</p>
+                <p>7. Сервис предоставляется «как есть», без гарантий любого рода.</p>
+                <p>8. Вы соглашаетесь на обработку своих персональных данных в соответствии с Политикой конфиденциальности.</p>
+                
+                <div class="terms-scroll-notice">
+                    <i class="fas fa-exclamation-circle"></i>
+                    Пожалуйста, прокрутите до конца, чтобы прочитать все условия
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-secondary" id="declineTerms">Не принимаю</button>
+                <button class="btn-primary" id="acceptTerms">Принимаю условия</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Основной контент -->
     <main>
         <div class="auth-container">
             <div class="auth-header">
                 <div class="auth-logo">EVERIST</div>
                 <h1 class="auth-title">Создать аккаунт</h1>
+                <p class="auth-subtitle">Заполните все обязательные поля для регистрации</p>
+            </div>
+            
+            <div class="registration-progress">
+                <div class="progress-step active" data-step="1">1</div>
+                <div class="progress-line"></div>
+                <div class="progress-step" data-step="2">2</div>
+                <div class="progress-line"></div>
+                <div class="progress-step" data-step="3">3</div>
             </div>
             
             <div class="error-message" id="errorMessage"></div>
             <div class="success-message" id="successMessage"></div>
             
             <form class="auth-form" id="registerForm">
-                <div class="form-row">
+                <!-- Шаг 1: Основная информация -->
+                <div class="form-step active" id="step1">
+                    <h3 class="step-title">Основная информация</h3>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="lastName">Фамилия *</label>
+                            <input 
+                                type="text" 
+                                id="lastName" 
+                                name="lastName" 
+                                placeholder="Фамилия" 
+                                required
+                                data-validation="name"
+                            >
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="firstName">Имя *</label>
+                            <input 
+                                type="text" 
+                                id="firstName" 
+                                name="firstName" 
+                                placeholder="Имя" 
+                                required
+                                data-validation="name"
+                            >
+                        </div>
+                    </div>
+                    
                     <div class="form-group">
-                        <label for="firstName">Имя *</label>
+                        <label for="middleName">Отчество</label>
                         <input 
                             type="text" 
-                            id="firstName" 
-                            name="firstName" 
-                            placeholder="Имя" 
-                            required
+                            id="middleName" 
+                            name="middleName" 
+                            placeholder="Отчество (необязательно)"
+                            data-validation="name"
                         >
                     </div>
                     
                     <div class="form-group">
-                        <label for="lastName">Фамилия</label>
+                        <label for="birthDate">Дата рождения *</label>
+                        <div class="date-input-wrapper">
+                            <input 
+                                type="text" 
+                                id="birthDate" 
+                                name="birthDate" 
+                                placeholder="дд.мм.гггг" 
+                                required
+                                readonly
+                                data-validation="date"
+                            >
+                            <i class="fas fa-calendar-alt date-icon"></i>
+                        </div>
+                        <div class="field-hint">
+                            <i class="fas fa-info-circle"></i>
+                            Для регистрации необходимо быть старше 16 лет
+                        </div>
+                    </div>
+                    
+                    <div class="step-buttons">
+                        <button type="button" class="btn-next" id="nextStep1">
+                            Далее <i class="fas fa-arrow-right"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Шаг 2: Контактные данные и пароль -->
+                <div class="form-step" id="step2">
+                    <h3 class="step-title">Контактные данные</h3>
+                    
+                    <div class="form-group">
+                        <label for="phone">Номер телефона *</label>
+                        <div class="phone-input-wrapper">
+                            <div class="country-code">+375</div>
+                            <input 
+                                type="tel" 
+                                id="phone" 
+                                name="phone" 
+                                placeholder="29 123 45 67" 
+                                required
+                                pattern="[0-9\s\-]+"
+                                maxlength="15"
+                                data-validation="phone"
+                            >
+                        </div>
+                        <div class="field-hint">
+                            <i class="fas fa-check-circle"></i>
+                            Поддерживаются только номера Республики Беларусь
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="email">Email *</label>
                         <input 
-                            type="text" 
-                            id="lastName" 
-                            name="lastName" 
-                            placeholder="Фамилия"
+                            type="email" 
+                            id="email" 
+                            name="email" 
+                            placeholder="your@email.com" 
+                            required
+                            data-validation="email"
                         >
                     </div>
-                </div>
-                
-                <div class="form-group">
-                    <label for="email">Email *</label>
-                    <input 
-                        type="email" 
-                        id="email" 
-                        name="email" 
-                        placeholder="your@email.com" 
-                        required
-                    >
-                </div>
-                
-                <div class="form-group">
-                    <label for="password">Пароль *</label>
-                    <input 
-                        type="password" 
-                        id="password" 
-                        name="password" 
-                        placeholder="Не менее 6 символов" 
-                        required
-                    >
-                    <div class="password-strength">
-                        <div class="strength-meter" id="passwordStrength"></div>
+                    
+                    <div class="password-method-selector">
+                        <h4>Способ задания пароля *</h4>
+                        <div class="radio-group">
+                            <label class="radio-option">
+                                <input type="radio" name="passwordMethod" value="manual" checked>
+                                <span class="radio-custom"></span>
+                                <span class="radio-text">Ввести пароль самостоятельно</span>
+                            </label>
+                            <label class="radio-option">
+                                <input type="radio" name="passwordMethod" value="auto">
+                                <span class="radio-custom"></span>
+                                <span class="radio-text">Сгенерировать пароль автоматически</span>
+                            </label>
+                        </div>
                     </div>
-                    <div class="password-hint" id="passwordHint">
-                        Пароль должен содержать не менее 6 символов
+                    
+                    <div class="password-section manual" id="manualPasswordSection">
+                        <div class="form-group">
+                            <label for="password">Пароль *</label>
+                            <div class="password-input-wrapper">
+                                <input 
+                                    type="password" 
+                                    id="password" 
+                                    name="password" 
+                                    placeholder="Минимум 8 символов" 
+                                    required
+                                    minlength="8"
+                                    maxlength="20"
+                                    data-validation="password"
+                                >
+                                <button type="button" class="toggle-password" id="togglePassword">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            </div>
+                            <div class="password-strength">
+                                <div class="strength-meter" id="passwordStrength"></div>
+                                <div class="strength-label" id="strengthLabel">Сложность пароля</div>
+                            </div>
+                            <div class="password-requirements">
+                                <h5>Требования к паролю:</h5>
+                                <ul>
+                                    <li id="req-length"><i class="fas fa-circle"></i> От 8 до 20 символов</li>
+                                    <li id="req-uppercase"><i class="fas fa-circle"></i> Минимум одна заглавная буква</li>
+                                    <li id="req-lowercase"><i class="fas fa-circle"></i> Минимум одна строчная буква</li>
+                                    <li id="req-digit"><i class="fas fa-circle"></i> Минимум одна цифра</li>
+                                    <li id="req-special"><i class="fas fa-circle"></i> Минимум один специальный символ</li>
+                                    <li id="req-common"><i class="fas fa-circle"></i> Не входит в TOP-100 паролей</li>
+                                </ul>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="confirmPassword">Подтверждение пароля *</label>
+                            <div class="password-input-wrapper">
+                                <input 
+                                    type="password" 
+                                    id="confirmPassword" 
+                                    name="confirmPassword" 
+                                    placeholder="Повторите пароль" 
+                                    required
+                                    data-validation="confirm"
+                                >
+                                <button type="button" class="toggle-password" id="toggleConfirmPassword">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            </div>
+                            <div class="field-hint no-paste">
+                                <i class="fas fa-ban"></i>
+                                Копирование и вставка в это поле запрещены
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="password-section auto" id="autoPasswordSection" style="display: none;">
+                        <div class="auto-password-container">
+                            <div class="generated-password">
+                                <input 
+                                    type="text" 
+                                    id="generatedPassword" 
+                                    readonly
+                                >
+                                <button type="button" class="copy-password" id="copyPassword">
+                                    <i class="far fa-copy"></i>
+                                </button>
+                            </div>
+                            <button type="button" class="btn-secondary" id="regeneratePassword">
+                                <i class="fas fa-redo"></i> Сгенерировать новый
+                            </button>
+                            <div class="field-hint">
+                                <i class="fas fa-shield-alt"></i>
+                                Автоматически сгенерированный пароль соответствует всем требованиям безопасности
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="step-buttons">
+                        <button type="button" class="btn-back" id="backStep2">
+                            <i class="fas fa-arrow-left"></i> Назад
+                        </button>
+                        <button type="button" class="btn-next" id="nextStep2">
+                            Далее <i class="fas fa-arrow-right"></i>
+                        </button>
                     </div>
                 </div>
                 
-                <div class="form-group">
-                    <label for="confirmPassword">Подтвердите пароль *</label>
-                    <input 
-                        type="password" 
-                        id="confirmPassword" 
-                        name="confirmPassword" 
-                        placeholder="Повторите пароль" 
-                        required
-                    >
+                <!-- Шаг 3: Никнейм и соглашение -->
+                <div class="form-step" id="step3">
+    <h3 class="step-title">Завершение регистрации</h3>
+    
+           <div class="form-group">
+        <label for="username">Никнейм *</label>
+        <div class="username-generator">
+            <div class="username-input-wrapper">
+                <input 
+                    type="text" 
+                    id="username" 
+                    name="username" 
+                    placeholder="Ваш никнейм" 
+                    required
+                    readonly
+                >
+                <p>
+                <div class="username-actions">
+                    <button type="button" class="btn-generate-username" id="generateUsername">
+                        <i class="fas fa-dice"></i> Сгенерировать
+                    </button>
+                    <button type="button" class="btn-edit-username" id="editUsername">
+                        <i class="fas fa-edit"></i> Ввести вручную
+                    </button>
                 </div>
-                
-                <div class="form-group">
-                    <label for="phone">Телефон</label>
-                    <input 
-                        type="tel" 
-                        id="phone" 
-                        name="phone" 
-                        placeholder="+7 (999) 123-45-67"
-                    >
+                </p>
+            </div>
+        </div>
+        <div class="field-hint">
+            <i class="fas fa-sync-alt"></i>
+            Осталось попыток генерации: <span id="attemptsCount">5</span>
+        </div>
+           </div>
+    
+    <div class="form-group" id="manualUsernameSection" style="display: none;">
+        <label for="manualUsername">Введите свой никнейм *</label>
+        <input 
+            type="text" 
+            id="manualUsername" 
+            name="manualUsername" 
+            placeholder="Придумайте уникальный никнейм (мин. 3 символа)"
+            data-validation="username"
+        >
+        <div class="field-hint">
+            <i class="fas fa-lightbulb"></i>
+            Никнейм должен быть уникальным и содержать только буквы, цифры и _
+        </div>
+    </div>
+                    
+                    <div class="terms-agreement">
+                        <div class="terms-checkbox">
+                            <input type="checkbox" id="terms" name="terms" required>
+                            <label for="terms">
+                                Я прочитал(а) и соглашаюсь с 
+                                <a href="#" class="terms-link" id="showTermsModal">Пользовательским соглашением</a> *
+                            </label>
+                        </div>
+                        <div class="terms-summary">
+                            <p><strong>Краткое содержание:</strong></p>
+                            <ul>
+                                <li>Подтверждаю, что мне исполнилось 16 лет</li>
+                                <li>Принимаю условия использования сервиса</li>
+                                <li>Соглашаюсь на обработку персональных данных</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="step-buttons">
+                        <button type="button" class="btn-back" id="backStep3">
+                            <i class="fas fa-arrow-left"></i> Назад
+                        </button>
+                        <button type="submit" class="btn-submit" id="submitRegistration">
+                            <i class="fas fa-user-plus"></i> Зарегистрироваться
+                        </button>
+                    </div>
                 </div>
-                
-                <div class="terms-checkbox">
-                    <input type="checkbox" id="terms" name="terms" required>
-                    <label for="terms">
-                        Я согласен с <a href="#">Условиями использования</a> 
-                        и <a href="#">Политикой конфиденциальности</a> *
-                    </label>
-                </div>
-                
-                <button type="submit" class="auth-button" id="registerButton">
-                    Создать аккаунт
-                </button>
             </form>
             
             <div class="auth-links">
@@ -144,6 +389,8 @@
     </main>
 
     <!-- Подключаем скрипты -->
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/ru.js"></script>
     <script src="../js/data.js"></script>
     <script src="../js/registr.js"></script>
 </body>
