@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blog - Everist</title>
+    <!-- стили -->
+</head>
+<body>
+    <!-- Прелоадер -->
+<div class="preloader" id="preloader">
+    <div class="preloader-container">
+        <div class="preloader-logo">EVERIST</div>
+        
+        <!-- Анимированный спиннер -->
+        <div class="spinner">
+            <div class="spinner-circle"></div>
+            <div class="spinner-circle"></div>
+            <div class="spinner-circle"></div>
+            <div class="spinner-circle"></div>
+        </div>
+        
+        <!-- Прогресс бар -->
+        <div class="progress-container">
+            <div class="progress-bar" id="progressBar"></div>
+        </div>
+        
+        <!-- Сообщение о загрузке -->
+        <div class="loading-text" id="loadingText">
+            Загрузка экологичных решений...
+        </div>
+        
+        <!-- Счетчик прогресса -->
+        <div class="progress-counter" id="progressCounter">0%</div>
+    </div>
+    
+    <!-- Фон прелоадера -->
+    <div class="preloader-background"></div>
+</div>
+   <!-- Accessibility Panel -->
+<div class="accessibility-panel">
+    <div class="accessibility-controls">
+        <button class="accessibility-btn" data-size="small" title="Уменьшить шрифт">
+            <span class="icon">A-</span>
+        </button>
+        <button class="accessibility-btn active" data-size="medium" title="Стандартный шрифт">
+            <span class="icon">A</span>
+        </button>
+        <button class="accessibility-btn" data-size="large" title="Увеличить шрифт">
+            <span class="icon">A+</span>
+        </button>
+        <button class="accessibility-btn" data-size="xlarge" title="Сильно увеличить шрифт">
+            <span class="icon">A++</span>
+        </button>
+        <button class="lang-toggle" id="langToggle" title="Переключить язык">
+            <span class="lang-icon">EN</span>
+        </button>
+        <button class="theme-toggle" id="themeToggle" title="Переключить тему">
+            <span class="theme-icon sun"style= "display: none;">☀️</span>
+            <span class="theme-icon moon">🌙</span>
+        </button>
+        <button class="reset-btn" id="resetSettings" title="Сбросить настройки">↻</button>
+    </div>
+</div>
+    <!-- Top Banner -->
+    <div class="top-banner">
+        <div class="banner-container">
+            <p class="banner-text">Our holiday kits are up to 20% off - get them while you can!</p>
+            <button class="banner-close">✕</button>
+        </div>
+    </div>
+
+    
+    <!-- Header -->
+    <header class="main-header">
+        <!-- навигация -->
+    </header>
+
+    <!-- Blog Hero -->
+    <section class="blog-hero">
+        <div class="container">
+            <h1>Everist Blog</h1>
+            <p>Tips, stories, and inspiration for sustainable living</p>
+        </div>
+    </section>
+
+    <!-- Featured Post -->
+    <section class="blog-featured">
+        <div class="container">
+            <div class="featured-post">
+                <img src="../img/blog-featured.jpg" alt="Sustainable living">
+                <div class="featured-content">
+                    <span class="category">Sustainability</span>
+                    <h2>The Future of Beauty is Waterless</h2>
+                    <p>Discover how removing water from personal care products can revolutionize the industry...</p>
+                    <a href="blog-post.html" class="btn btn-outline">Read More</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Blog Grid -->
+    <section class="blog-grid">
+        <div class="container">
+            <div class="blog-filters">
+                <button class="filter-btn active" data-category="all">All</button>
+                <button class="filter-btn" data-category="sustainability">Sustainability</button>
+                <button class="filter-btn" data-category="haircare">Haircare Tips</button>
+                <button class="filter-btn" data-category="lifestyle">Lifestyle</button>
+            </div>
+
+            <div class="posts-grid">
+                <article class="post-card" data-category="sustainability">
+                    <img src="../img/blog1.jpg" alt="Zero waste">
+                    <div class="post-content">
+                        <span class="post-category">Sustainability</span>
+                        <h3>5 Simple Ways to Reduce Plastic Waste</h3>
+                        <p class="post-excerpt">Small changes that make a big impact...</p>
+                        <div class="post-meta">
+                            <span class="date">March 15, 2024</span>
+                            <span class="read-time">5 min read</span>
+                        </div>
+                    </div>
+                </article>
+                <!-- остальные статьи -->
+            </div>
+
+            <!-- Pagination -->
+            <div class="blog-pagination">
+                <button class="page-btn active">1</button>
+                <button class="page-btn">2</button>
+                <button class="page-btn">3</button>
+                <button class="page-btn next">Next →</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Newsletter -->
+    <section class="blog-newsletter">
+        <div class="container">
+            <h2>Join our eco-community</h2>
+            <p>Get weekly tips and exclusive content</p>
+            <form class="newsletter-form">
+                <input type="email" placeholder="Your email address" required>
+                <button type="submit" class="btn btn-primary">Subscribe</button>
+            </form>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">...</footer>
+
+    <script type="module" src="../js/blog.js"></script>
+</body>
+</html>

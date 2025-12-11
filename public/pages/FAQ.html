@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FAQ - Everist</title>
+    <!-- стили -->
+</head>
+<body>
+    <!-- Прелоадер -->
+<div class="preloader" id="preloader">
+    <div class="preloader-container">
+        <div class="preloader-logo">EVERIST</div>
+        
+        <!-- Анимированный спиннер -->
+        <div class="spinner">
+            <div class="spinner-circle"></div>
+            <div class="spinner-circle"></div>
+            <div class="spinner-circle"></div>
+            <div class="spinner-circle"></div>
+        </div>
+        
+        <!-- Прогресс бар -->
+        <div class="progress-container">
+            <div class="progress-bar" id="progressBar"></div>
+        </div>
+        
+        <!-- Сообщение о загрузке -->
+        <div class="loading-text" id="loadingText">
+            Загрузка экологичных решений...
+        </div>
+        
+        <!-- Счетчик прогресса -->
+        <div class="progress-counter" id="progressCounter">0%</div>
+    </div>
+    
+    <!-- Фон прелоадера -->
+    <div class="preloader-background"></div>
+</div>
+   <!-- Accessibility Panel -->
+<div class="accessibility-panel">
+    <div class="accessibility-controls">
+        <button class="accessibility-btn" data-size="small" title="Уменьшить шрифт">
+            <span class="icon">A-</span>
+        </button>
+        <button class="accessibility-btn active" data-size="medium" title="Стандартный шрифт">
+            <span class="icon">A</span>
+        </button>
+        <button class="accessibility-btn" data-size="large" title="Увеличить шрифт">
+            <span class="icon">A+</span>
+        </button>
+        <button class="accessibility-btn" data-size="xlarge" title="Сильно увеличить шрифт">
+            <span class="icon">A++</span>
+        </button>
+        <button class="lang-toggle" id="langToggle" title="Переключить язык">
+            <span class="lang-icon">EN</span>
+        </button>
+        <button class="theme-toggle" id="themeToggle" title="Переключить тему">
+            <span class="theme-icon sun"style= "display: none;">☀️</span>
+            <span class="theme-icon moon">🌙</span>
+        </button>
+        <button class="reset-btn" id="resetSettings" title="Сбросить настройки">↻</button>
+    </div>
+</div>
+    <!-- Top Banner -->
+    <div class="top-banner">
+        <div class="banner-container">
+            <p class="banner-text">Our holiday kits are up to 20% off - get them while you can!</p>
+            <button class="banner-close">✕</button>
+        </div>
+    </div>
+
+    
+    <!-- Header -->
+    <header class="main-header">
+        <!-- навигация как обычно -->
+    </header>
+
+    <!-- FAQ Hero -->
+    <section class="faq-hero">
+        <div class="container">
+            <h1>Frequently Asked Questions</h1>
+            <p>Find answers to common questions about our products and mission</p>
+        </div>
+    </section>
+
+    <!-- Search FAQ -->
+    <section class="faq-search">
+        <div class="container">
+            <div class="search-box">
+                <i class="fas fa-search"></i>
+                <input type="text" id="faqSearch" placeholder="Search questions...">
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Categories -->
+    <section class="faq-categories">
+        <div class="container">
+            <div class="categories-tabs">
+                <button class="category-tab active" data-category="all">All Questions</button>
+                <button class="category-tab" data-category="products">Products</button>
+                <button class="category-tab" data-category="shipping">Shipping & Delivery</button>
+                <button class="category-tab" data-category="returns">Returns & Exchanges</button>
+                <button class="category-tab" data-category="sustainability">Sustainability</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ List -->
+    <section class="faq-list">
+        <div class="container">
+            <div class="faq-accordion">
+                <!-- Product Questions -->
+                <div class="faq-category" data-category="products">
+                    <h2>Product Questions</h2>
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            <h3>How do waterless products work?</h3>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="faq-answer">
+                            <p>Our waterless concentrates are activated by the water in your shower...</p>
+                        </div>
+                    </div>
+                    <!-- остальные вопросы -->
+                </div>
+
+                <!-- Shipping Questions -->
+                <div class="faq-category" data-category="shipping">
+                    <h2>Shipping & Delivery</h2>
+                    <!-- вопросы -->
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Still Have Questions -->
+    <section class="faq-contact">
+        <div class="container">
+            <div class="contact-cta">
+                <h2>Still have questions?</h2>
+                <p>Can't find the answer you're looking for? Please contact our team.</p>
+                <a href="contact.html" class="btn btn-primary">Contact Us</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">...</footer>
+
+    <script type="module" src="../js/faq.js"></script>
+</body>
+</html>

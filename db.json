@@ -1,0 +1,988 @@
+{
+  "users": [
+    {
+      "id": "1",
+      "email": "user1@example.com",
+      "password": "password123",
+      "name": "Алексей Иванов",
+      "avatar": "https://i.pravatar.cc/150?img=1",
+      "phone": "+375 29 123 45 67",
+      "address": "ул. Пушкина, д. 10, кв. 5",
+      "registrationDate": "2023-01-15",
+      "username": "alexey_ivanov",
+      "birthDate": "15.05.1985",
+      "acceptedTerms": true,
+      "isActive": true
+    },
+    {
+      "id": "2",
+      "email": "user2@example.com",
+      "password": "password456",
+      "name": "Мария Петрова",
+      "avatar": "https://i.pravatar.cc/150?img=2",
+      "phone": "+375 29 234 56 78",
+      "address": "ул. Ленина, д. 25, кв. 12",
+      "registrationDate": "2023-02-20",
+      "username": "maria_petrova",
+      "birthDate": "20.02.1990",
+      "acceptedTerms": true,
+      "isActive": true
+    },
+    {
+      "id": "3",
+      "email": "user3@example.com",
+      "password": "password789",
+      "name": "Иван Сидоров",
+      "avatar": "https://i.pravatar.cc/150?img=3",
+      "phone": "+375 29 345 67 89",
+      "address": "ул. Советская, д. 30, кв. 8",
+      "registrationDate": "2023-03-10",
+      "username": "ivan_sidorov",
+      "birthDate": "10.03.1988",
+      "acceptedTerms": true,
+      "isActive": true
+    },
+    {
+      "id": "4",
+      "email": "user4@example.com",
+      "password": "password101",
+      "name": "Екатерина Волкова",
+      "avatar": "https://i.pravatar.cc/150?img=4",
+      "phone": "+375 29 456 78 90",
+      "address": "ул. Мира, д. 15, кв. 3",
+      "registrationDate": "2023-04-05",
+      "username": "ekaterina_volkova",
+      "birthDate": "05.04.1992",
+      "acceptedTerms": true,
+      "isActive": true
+    },
+    {
+      "id": "5",
+      "email": "user5@example.com",
+      "password": "password102",
+      "name": "Дмитрий Козлов",
+      "avatar": "https://i.pravatar.cc/150?img=5",
+      "phone": "+375 29 567 89 01",
+      "address": "ул. Центральная, д. 42, кв. 21",
+      "registrationDate": "2023-05-12",
+      "username": "dmitry_kozlov",
+      "birthDate": "12.05.1987",
+      "acceptedTerms": true,
+      "isActive": true
+    },
+    {
+      "id": "6",
+      "email": "user6@example.com",
+      "password": "password103",
+      "name": "Ольга Новикова",
+      "avatar": "https://i.pravatar.cc/150?img=6",
+      "phone": "+375 29 678 90 12",
+      "address": "ул. Садовая, д. 8, кв. 7",
+      "registrationDate": "2023-06-18",
+      "username": "olga_novikova",
+      "birthDate": "18.06.1991",
+      "acceptedTerms": true,
+      "isActive": true
+    },
+    {
+      "id": "7",
+      "email": "user7@example.com",
+      "password": "password104",
+      "name": "Сергей Федоров",
+      "avatar": "https://i.pravatar.cc/150?img=7",
+      "phone": "+375 29 789 01 23",
+      "address": "ул. Лесная, д. 33, кв. 14",
+      "registrationDate": "2023-07-22",
+      "username": "sergey_fedorov",
+      "birthDate": "22.07.1989",
+      "acceptedTerms": true,
+      "isActive": true
+    },
+    {
+      "id": "8",
+      "email": "user8@example.com",
+      "password": "password105",
+      "name": "Анна Морозова",
+      "avatar": "https://i.pravatar.cc/150?img=8",
+      "phone": "+375 29 890 12 34",
+      "address": "ул. Речная, д. 17, кв. 9",
+      "registrationDate": "2023-08-30",
+      "username": "anna_morozova",
+      "birthDate": "30.08.1993",
+      "acceptedTerms": true,
+      "isActive": true
+    },
+    {
+      "id": "9",
+      "email": "user9@example.com",
+      "password": "password106",
+      "name": "Павел Захаров",
+      "avatar": "https://i.pravatar.cc/150?img=9",
+      "phone": "+375 29 901 23 45",
+      "address": "ул. Школьная, д. 21, кв. 11",
+      "registrationDate": "2023-09-14",
+      "username": "pavel_zakharov",
+      "birthDate": "14.09.1986",
+      "acceptedTerms": true,
+      "isActive": true
+    },
+    {
+      "id": "10",
+      "email": "user10@example.com",
+      "password": "password107",
+      "name": "Наталья Павлова",
+      "avatar": "https://i.pravatar.cc/150?img=10",
+      "phone": "+375 29 012 34 56",
+      "address": "ул. Молодежная, д. 5, кв. 4",
+      "registrationDate": "2023-10-25",
+      "username": "natalya_pavlova",
+      "birthDate": "25.10.1994",
+      "acceptedTerms": true,
+      "isActive": true
+    },
+    {
+      "id": "11",
+      "email": "lalalala@gmail.com",
+      "password": "!f@6gQ^&Jd^F",
+      "name": "ыаыва иии gfuffufi",
+      "avatar": "https://i.pravatar.cc/150?img=11",
+      "phone": "+375 22 222 22 22",
+      "address": "",
+      "registrationDate": "2025-12-07",
+      "username": "happy_dragon787",
+      "birthDate": "07.12.2009",
+      "acceptedTerms": true,
+      "isActive": true
+    },
+    {
+      "id": "12",
+      "email": "uhusudbsbsd@gmail.com",
+      "password": "KNKj26xG#@#*",
+      "name": "qqqqqqqqqqqqqq qqqqqqqqqqqq qqqqqqqqqq",
+      "avatar": "https://i.pravatar.cc/150?img=1",
+      "phone": "+375 22 222 22 22",
+      "address": "",
+      "registrationDate": "2025-12-11",
+      "username": "fast_bear246",
+      "birthDate": "11.12.2009",
+      "acceptedTerms": true,
+      "isActive": true
+    },
+    {
+      "id": 13,
+      "email": "dd222d@gmail.com",
+      "password": "^9g#@CzFZaHt",
+      "name": "лалалалалалал ИВае assassa",
+      "avatar": "https://i.pravatar.cc/150?img=40",
+      "phone": "+375 11 111 11 11",
+      "address": "",
+      "registrationDate": "2025-12-11",
+      "username": "wise_phoenix939",
+      "birthDate": "03.12.2009",
+      "acceptedTerms": true,
+      "isActive": true
+    }
+  ],
+  "products": [
+    {
+      "id": "1",
+      "name": "Waterless Shampoo Paste",
+      "price": 24,
+      "oldPrice": 26,
+      "image": "https://images.unsplash.com/photo-1608248543803-ba4f8c70ae0b?w=400",
+      "reviews": 85,
+      "description": "Безводный шампунь-паста для любых типов волос",
+      "category": "hair",
+      "volume": "100ml",
+      "ingredients": [
+        "Cocoa Butter",
+        "Aloe Vera",
+        "Vitamin E"
+      ],
+      "features": [
+        "Без воды",
+        "Веганский",
+        "Без пластика"
+      ]
+    },
+    {
+      "id": "2",
+      "name": "Conditioner Concentrate",
+      "price": 24,
+      "oldPrice": null,
+      "image": "https://images.unsplash.com/photo-1608248242905-5f2274e7d4d5?w=400",
+      "reviews": 10,
+      "description": "Концентрат кондиционера для увлажнения волос",
+      "category": "hair",
+      "volume": "100ml",
+      "ingredients": [
+        "Shea Butter",
+        "Jojoba Oil",
+        "Argan Oil"
+      ],
+      "features": [
+        "Без воды",
+        "Без силиконов",
+        "Без парабенов"
+      ]
+    },
+    {
+      "id": "3",
+      "name": "Holiday Kit",
+      "price": 46,
+      "oldPrice": 48,
+      "image": "https://images.unsplash.com/photo-1556228578-9c360e2d0b4a?w=400",
+      "reviews": 32,
+      "description": "Праздничный набор: шампунь + кондиционер",
+      "category": "kit",
+      "volume": "2x100ml",
+      "ingredients": [
+        "Natural Oils",
+        "Plant Extracts",
+        "Essential Oils"
+      ],
+      "features": [
+        "Эко-упаковка",
+        "Идеальный подарок",
+        "Комплект"
+      ]
+    },
+    {
+      "id": "4",
+      "name": "Body Wash Concentrate",
+      "price": 22,
+      "oldPrice": 24,
+      "image": "https://images.unsplash.com/photo-1556228453-efd6c1ff04f6?w=400",
+      "reviews": 45,
+      "description": "Концентрат для душа с натуральными маслами",
+      "category": "body",
+      "volume": "100ml",
+      "ingredients": [
+        "Coconut Oil",
+        "Oat Extract",
+        "Chamomile"
+      ],
+      "features": [
+        "Для тела",
+        "Увлажняющий",
+        "Без SLS"
+      ]
+    },
+    {
+      "id": "5",
+      "name": "Face Cleanser Paste",
+      "price": 28,
+      "oldPrice": 30,
+      "image": "https://images.unsplash.com/photo-1556228578-9c360e2d0b4a?w=400",
+      "reviews": 67,
+      "description": "Очищающая паста для лица с глиной",
+      "category": "face",
+      "volume": "75ml",
+      "ingredients": [
+        "Kaolin Clay",
+        "Tea Tree Oil",
+        "Green Tea"
+      ],
+      "features": [
+        "Для лица",
+        "Очищение пор",
+        "Антибактериальный"
+      ]
+    },
+    {
+      "id": "6",
+      "name": "Travel Set",
+      "price": 38,
+      "oldPrice": 42,
+      "image": "https://images.unsplash.com/photo-1556228578-9c360e2d0b4a?w=400",
+      "reviews": 28,
+      "description": "Дорожный набор для путешествий",
+      "category": "kit",
+      "volume": "3x50ml",
+      "ingredients": [
+        "All Natural",
+        "Travel Size",
+        "Compact"
+      ],
+      "features": [
+        "Для путешествий",
+        "Компактный",
+        "Универсальный"
+      ]
+    },
+    {
+      "id": "7",
+      "name": "Scalp Treatment",
+      "price": 32,
+      "oldPrice": 35,
+      "image": "https://images.unsplash.com/photo-1556228578-9c360e2d0b4a?w=400",
+      "reviews": 39,
+      "description": "Лечение для кожи головы с ментолом",
+      "category": "hair",
+      "volume": "100ml",
+      "ingredients": [
+        "Menthol",
+        "Peppermint",
+        "Salicylic Acid"
+      ],
+      "features": [
+        "Для кожи головы",
+        "Освежающий",
+        "Лечебный"
+      ]
+    },
+    {
+      "id": "8",
+      "name": "Hand Cream Concentrate",
+      "price": 18,
+      "oldPrice": 20,
+      "image": "https://images.unsplash.com/photo-1556228578-9c360e2d0b4a?w=400",
+      "reviews": 52,
+      "description": "Концентрат крема для рук",
+      "category": "body",
+      "volume": "75ml",
+      "ingredients": [
+        "Glycerin",
+        "Beeswax",
+        "Lanolin"
+      ],
+      "features": [
+        "Для рук",
+        "Интенсивное увлажнение",
+        "Быстро впитывается"
+      ]
+    },
+    {
+      "id": "9",
+      "name": "Volume Booster",
+      "price": 29,
+      "oldPrice": 32,
+      "image": "https://images.unsplash.com/photo-1556228578-9c360e2d0b4a?w=400",
+      "reviews": 41,
+      "description": "Усилитель объема для тонких волос",
+      "category": "hair",
+      "volume": "100ml",
+      "ingredients": [
+        "Rice Protein",
+        "Biotin",
+        "Collagen"
+      ],
+      "features": [
+        "Для объема",
+        "Укрепление",
+        "Без утяжеления"
+      ]
+    },
+    {
+      "id": "10",
+      "name": "Color Protect",
+      "price": 26,
+      "oldPrice": 28,
+      "image": "https://images.unsplash.com/photo-1556228578-9c360e2d0b4a?w=400",
+      "reviews": 33,
+      "description": "Защита для окрашенных волос",
+      "category": "hair",
+      "volume": "100ml",
+      "ingredients": [
+        "UV Filter",
+        "Color Lock",
+        "Antioxidants"
+      ],
+      "features": [
+        "Для окрашенных волос",
+        "UV защита",
+        "Сохраняет цвет"
+      ]
+    },
+    {
+      "id": "11",
+      "name": "Hydrating Mask",
+      "price": 34,
+      "oldPrice": 36,
+      "image": "https://images.unsplash.com/photo-1556228578-9c360e2d0b4a?w=400",
+      "reviews": 47,
+      "description": "Интенсивно увлажняющая маска",
+      "category": "hair",
+      "volume": "150ml",
+      "ingredients": [
+        "Hyaluronic Acid",
+        "Ceramides",
+        "Squalane"
+      ],
+      "features": [
+        "Интенсивное увлажнение",
+        "Восстановление",
+        "Для сухих волос"
+      ]
+    },
+    {
+      "id": "12",
+      "name": "Detox Shampoo",
+      "price": 27,
+      "oldPrice": 29,
+      "image": "https://images.unsplash.com/photo-1556228578-9c360e2d0b4a?w=400",
+      "reviews": 38,
+      "description": "Детокс-шампунь для глубокого очищения",
+      "category": "hair",
+      "volume": "100ml",
+      "ingredients": [
+        "Charcoal",
+        "Clay",
+        "Apple Cider Vinegar"
+      ],
+      "features": [
+        "Детокс",
+        "Глубокое очищение",
+        "Баланс pH"
+      ]
+    },
+    {
+      "id": "13",
+      "name": "Overnight Treatment",
+      "price": 36,
+      "oldPrice": 40,
+      "image": "https://images.unsplash.com/photo-1556228578-9c360e2d0b4a?w=400",
+      "reviews": 29,
+      "description": "Ночное лечение для волос",
+      "category": "hair",
+      "volume": "100ml",
+      "ingredients": [
+        "Overnight Repair",
+        "Nourishing Oils",
+        "Proteins"
+      ],
+      "features": [
+        "Ночное применение",
+        "Восстановление",
+        "Без смывания"
+      ]
+    },
+    {
+      "id": "14",
+      "name": "Sunscreen Paste",
+      "price": 30,
+      "oldPrice": 33,
+      "image": "https://images.unsplash.com/photo-1556228578-9c360e2d0b4a?w=400",
+      "reviews": 44,
+      "description": "Солнцезащитная паста для лица",
+      "category": "face",
+      "volume": "50ml",
+      "ingredients": [
+        "SPF 30",
+        "Zinc Oxide",
+        "Antioxidants"
+      ],
+      "features": [
+        "SPF защита",
+        "Для лица",
+        "Водостойкий"
+      ]
+    },
+    {
+      "id": "15",
+      "name": "Lip Balm",
+      "price": 12,
+      "oldPrice": 15,
+      "image": "https://images.unsplash.com/photo-1556228578-9c360e2d0b4a?w=400",
+      "reviews": 56,
+      "description": "Бальзам для губ с медом",
+      "category": "face",
+      "volume": "10ml",
+      "ingredients": [
+        "Beeswax",
+        "Honey",
+        "Vitamin E"
+      ],
+      "features": [
+        "Для губ",
+        "Увлажнение",
+        "Защита"
+      ]
+    },
+    {
+      "id": "16",
+      "name": "Beard Oil",
+      "price": 25,
+      "oldPrice": 28,
+      "image": "https://images.unsplash.com/photo-1556228578-9c360e2d0b4a?w=400",
+      "reviews": 31,
+      "description": "Масло для бороды и кожи",
+      "category": "face",
+      "volume": "30ml",
+      "ingredients": [
+        "Jojoba Oil",
+        "Argan Oil",
+        "Cedarwood"
+      ],
+      "features": [
+        "Для бороды",
+        "Уход за кожей",
+        "Ароматерапия"
+      ]
+    },
+    {
+      "id": "17",
+      "name": "Shaving Cream",
+      "price": 21,
+      "oldPrice": 24,
+      "image": "https://images.unsplash.com/photo-1556228578-9c360e2d0b4a?w=400",
+      "reviews": 42,
+      "description": "Крем для бритья с алоэ вера",
+      "category": "face",
+      "volume": "100ml",
+      "ingredients": [
+        "Aloe Vera",
+        "Chamomile",
+        "Coconut Oil"
+      ],
+      "features": [
+        "Для бритья",
+        "Успокаивающий",
+        "Скольжение"
+      ]
+    },
+    {
+      "id": "18",
+      "name": "Aftershave Balm",
+      "price": 23,
+      "oldPrice": 26,
+      "image": "https://images.unsplash.com/photo-1556228578-9c360e2d0b4a?w=400",
+      "reviews": 37,
+      "description": "Бальзам после бритья",
+      "category": "face",
+      "volume": "100ml",
+      "ingredients": [
+        "Witch Hazel",
+        "Tea Tree",
+        "Menthol"
+      ],
+      "features": [
+        "После бритья",
+        "Антисептик",
+        "Освежение"
+      ]
+    },
+    {
+      "id": "19",
+      "name": "Foot Cream",
+      "price": 19,
+      "oldPrice": 22,
+      "image": "https://images.unsplash.com/photo-1556228578-9c360e2d0b4a?w=400",
+      "reviews": 34,
+      "description": "Крем для ног с мочевиной",
+      "category": "body",
+      "volume": "100ml",
+      "ingredients": [
+        "Urea",
+        "Peppermint",
+        "Shea Butter"
+      ],
+      "features": [
+        "Для ног",
+        "Интенсивное увлажнение",
+        "Освежение"
+      ]
+    },
+    {
+      "id": "20",
+      "name": "Body Scrub",
+      "price": 26,
+      "oldPrice": 29,
+      "image": "https://images.unsplash.com/photo-1556228578-9c360e2d0b4a?w=400",
+      "reviews": 48,
+      "description": "Скраб для тела с морской солью",
+      "category": "body",
+      "volume": "200ml",
+      "ingredients": [
+        "Sea Salt",
+        "Coconut Oil",
+        "Coffee Grounds"
+      ],
+      "features": [
+        "Эксфолиация",
+        "Детокс",
+        "Улучшение кровообращения"
+      ]
+    },
+    {
+      "id": "21",
+      "name": "Bath Salts",
+      "price": 28,
+      "oldPrice": 32,
+      "image": "https://images.unsplash.com/photo-1556228578-9c360e2d0b4a?w=400",
+      "reviews": 25,
+      "description": "Соли для ванны с лавандой",
+      "category": "body",
+      "volume": "500g",
+      "ingredients": [
+        "Epsom Salt",
+        "Lavender",
+        "Essential Oils"
+      ],
+      "features": [
+        "Для ванны",
+        "Релаксация",
+        "Мышцы и суставы"
+      ]
+    },
+    {
+      "id": "22",
+      "name": "Massage Oil",
+      "price": 32,
+      "oldPrice": 35,
+      "image": "https://images.unsplash.com/photo-1556228578-9c360e2d0b4a?w=400",
+      "reviews": 30,
+      "description": "Масло для массажа",
+      "category": "body",
+      "volume": "100ml",
+      "ingredients": [
+        "Sweet Almond Oil",
+        "Grapeseed Oil",
+        "Lavender Oil"
+      ],
+      "features": [
+        "Для массажа",
+        "Расслабление",
+        "Уход за кожей"
+      ]
+    },
+    {
+      "id": "23",
+      "name": "Deodorant Paste",
+      "price": 18,
+      "oldPrice": 20,
+      "image": "https://images.unsplash.com/photo-1556228578-9c360e2d0b4a?w=400",
+      "reviews": 53,
+      "description": "Натуральный дезодорант-паста",
+      "category": "body",
+      "volume": "60ml",
+      "ingredients": [
+        "Baking Soda",
+        "Arrowroot Powder",
+        "Essential Oils"
+      ],
+      "features": [
+        "Натуральный",
+        "Без алюминия",
+        "Антибактериальный"
+      ]
+    },
+    {
+      "id": "24",
+      "name": "Toothpaste Tablets",
+      "price": 16,
+      "oldPrice": 18,
+      "image": "https://images.unsplash.com/photo-1556228578-9c360e2d0b4a?w=400",
+      "reviews": 46,
+      "description": "Таблетки для чистки зубов",
+      "category": "oral",
+      "volume": "60 таблеток",
+      "ingredients": [
+        "Xylitol",
+        "Calcium",
+        "Peppermint Oil"
+      ],
+      "features": [
+        "Без тюбика",
+        "Путешествие",
+        "Эко-упаковка"
+      ]
+    },
+    {
+      "id": "25",
+      "name": "Mouthwash Tablets",
+      "price": 14,
+      "oldPrice": 16,
+      "image": "https://images.unsplash.com/photo-1556228578-9c360e2d0b4a?w=400",
+      "reviews": 39,
+      "description": "Таблетки для ополаскивателя",
+      "category": "oral",
+      "volume": "40 таблеток",
+      "ingredients": [
+        "Tea Tree Oil",
+        "Peppermint",
+        "Aloe Vera"
+      ],
+      "features": [
+        "Без жидкости",
+        "Освежение",
+        "Антибактериальный"
+      ]
+    },
+    {
+      "id": "26",
+      "name": "Solid Perfume",
+      "price": 35,
+      "oldPrice": 40,
+      "image": "https://images.unsplash.com/photo-1556228578-9c360e2d0b4a?w=400",
+      "reviews": 27,
+      "description": "Твердые духи в металлической упаковке",
+      "category": "perfume",
+      "volume": "15g",
+      "ingredients": [
+        "Beeswax",
+        "Jojoba Oil",
+        "Natural Fragrance"
+      ],
+      "features": [
+        "Твердые духи",
+        "Без спирта",
+        "Длительный аромат"
+      ]
+    },
+    {
+      "id": "27",
+      "name": "Laundry Detergent Strips",
+      "price": 42,
+      "oldPrice": 45,
+      "image": "https://images.unsplash.com/photo-1556228578-9c360e2d0b4a?w=400",
+      "reviews": 32,
+      "description": "Полоски для стирки белья",
+      "category": "home",
+      "volume": "32 полоски",
+      "ingredients": [
+        "Plant-based",
+        "Biodegradable",
+        "Fragrance-free"
+      ],
+      "features": [
+        "Без пластика",
+        "Легкие",
+        "Эффективные"
+      ]
+    },
+    {
+      "id": "28",
+      "name": "Dish Soap Bar",
+      "price": 15,
+      "oldPrice": 18,
+      "image": "https://images.unsplash.com/photo-1556228578-9c360e2d0b4a?w=400",
+      "reviews": 41,
+      "description": "Брусок для мытья посуды",
+      "category": "home",
+      "volume": "100g",
+      "ingredients": [
+        "Coconut Oil",
+        "Olive Oil",
+        "Essential Oils"
+      ],
+      "features": [
+        "Без пластика",
+        "Натуральный",
+        "Экономичный"
+      ]
+    },
+    {
+      "id": "29",
+      "name": "All-Purpose Cleaner",
+      "price": 20,
+      "oldPrice": 24,
+      "image": "https://images.unsplash.com/photo-1556228578-9c360e2d0b4a?w=400",
+      "reviews": 36,
+      "description": "Универсальное чистящее средство",
+      "category": "home",
+      "volume": "Таблетки для раствора",
+      "ingredients": [
+        "Citric Acid",
+        "Baking Soda",
+        "Essential Oils"
+      ],
+      "features": [
+        "Универсальное",
+        "Без химии",
+        "Эко-упаковка"
+      ]
+    },
+    {
+      "id": "30",
+      "name": "Linen Spray",
+      "price": 22,
+      "oldPrice": 25,
+      "image": "https://images.unsplash.com/photo-1556228578-9c360e2d0b4a?w=400",
+      "reviews": 29,
+      "description": "Спрей для белья с лавандой",
+      "category": "home",
+      "volume": "100ml",
+      "ingredients": [
+        "Distilled Water",
+        "Lavender Oil",
+        "Vodka"
+      ],
+      "features": [
+        "Для белья",
+        "Ароматерапия",
+        "Антистатик"
+      ]
+    }
+  ],
+  "cart": [
+    {
+      "id": "4",
+      "userId": 2,
+      "productId": 2,
+      "quantity": 1,
+      "addedDate": "2023-11-14"
+    },
+    {
+      "id": "5",
+      "userId": 2,
+      "productId": 4,
+      "quantity": 2,
+      "addedDate": "2023-11-15"
+    },
+    {
+      "id": "6",
+      "userId": 2,
+      "productId": 6,
+      "quantity": 1,
+      "addedDate": "2023-11-16"
+    },
+    {
+      "id": "7",
+      "userId": 3,
+      "productId": 7,
+      "quantity": 2,
+      "addedDate": "2023-11-13"
+    },
+    {
+      "id": "8",
+      "userId": 3,
+      "productId": 8,
+      "quantity": 1,
+      "addedDate": "2023-11-14"
+    },
+    {
+      "id": "9",
+      "userId": 3,
+      "productId": 9,
+      "quantity": 1,
+      "addedDate": "2023-11-15"
+    },
+    {
+      "id": "10",
+      "userId": 4,
+      "productId": 10,
+      "quantity": 1,
+      "addedDate": "2023-11-12"
+    },
+    {
+      "id": "11",
+      "userId": 4,
+      "productId": 11,
+      "quantity": 2,
+      "addedDate": "2023-11-13"
+    },
+    {
+      "id": "12",
+      "userId": 5,
+      "productId": 12,
+      "quantity": 1,
+      "addedDate": "2023-11-14"
+    },
+    {
+      "id": "13",
+      "userId": 5,
+      "productId": 13,
+      "quantity": 1,
+      "addedDate": "2023-11-15"
+    }
+  ],
+  "orders": [
+    {
+      "id": "1",
+      "userId": 1,
+      "products": [
+        {
+          "productId": 1,
+          "quantity": 2
+        },
+        {
+          "productId": 3,
+          "quantity": 1
+        }
+      ],
+      "total": 94,
+      "status": "completed",
+      "orderDate": "2023-11-10",
+      "deliveryAddress": "ул. Пушкина, д. 10, кв. 5"
+    },
+    {
+      "id": "2",
+      "userId": 1,
+      "products": [
+        {
+          "productId": 3,
+          "quantity": 1,
+          "price": 46,
+          "itemTotal": 46
+        },
+        {
+          "productId": 5,
+          "quantity": 3,
+          "price": 28,
+          "itemTotal": 84
+        },
+        {
+          "productId": 11,
+          "quantity": 146,
+          "price": 34,
+          "itemTotal": 4964
+        }
+      ],
+      "total": 5094,
+      "status": "completed",
+      "orderDate": "2025-12-07",
+      "deliveryAddress": "ул. Пушкина, д. 10, кв. 5",
+      "paymentMethod": "card"
+    },
+    {
+      "id": "3",
+      "userId": 1,
+      "products": [
+        {
+          "productId": 30,
+          "quantity": 1,
+          "price": 22,
+          "itemTotal": 22
+        },
+        {
+          "productId": 15,
+          "quantity": 1,
+          "price": 12,
+          "itemTotal": 12
+        },
+        {
+          "productId": 12,
+          "quantity": 1,
+          "price": 27,
+          "itemTotal": 27
+        },
+        {
+          "productId": 11,
+          "quantity": 1,
+          "price": 34,
+          "itemTotal": 34
+        },
+        {
+          "productId": 29,
+          "quantity": 1,
+          "price": 20,
+          "itemTotal": 20
+        },
+        {
+          "productId": 2,
+          "quantity": 1,
+          "price": 24,
+          "itemTotal": 24
+        }
+      ],
+      "total": 139,
+      "status": "completed",
+      "orderDate": "2025-12-08",
+      "deliveryAddress": "ул. Пушкина, д. 10, кв. 5",
+      "paymentMethod": "card"
+    }
+  ],
+  "lastUpdate": "2025-12-08T04:31:45.312Z",
+  "lastUpdateTimestamp": 1765168305312
+}

@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- Шрифты -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Иконки -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Наши стили -->
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/responsive.css">
+    <link rel="stylesheet" href="../css/profile.css">
+    <link rel="stylesheet" href="/css/cart.css">
+    
+    <title>Everist - Мой профиль</title>
+    <link rel="icon" type="image/png" href="../img/logo1.png">
+</head>
+<body>
+    <!-- Header -->
+    <header class="main-header">
+        <a href="../index.html" class="logo">EVERIST</a>
+        <nav class="nav-links">
+                <a href="/pages/shop.html">SHOP</a>
+                <a href="/pages/about.html">ABOUT</a>
+                <a href="/pages/contact.html">CONTACT</a>
+            </nav>
+        <div class="header-right" id="headerRight">
+            <!-- Будет заполнено скриптом -->
+        </div>
+    </header>
+
+    <!-- Основной контент -->
+    <main>
+        <div class="profile-container">
+            <div class="profile-header" id="profileHeader">
+                <!-- Будет заполнено скриптом -->
+            </div>
+            
+            <div class="profile-tabs">
+                <button class="profile-tab active" data-tab="info">
+                    <i class="fas fa-user"></i> Информация
+                </button>
+                <button class="profile-tab" data-tab="orders">
+                    <i class="fas fa-shopping-bag"></i> Заказы
+                </button>
+                <button class="profile-tab" data-tab="cart">
+                    <i class="fas fa-shopping-cart"></i> Корзина
+                </button>
+                <button class="profile-tab" data-tab="settings">
+                    <i class="fas fa-cog"></i> Настройки
+                </button>
+            </div>
+            
+            <!-- Вкладка информации -->
+            <div class="profile-content active" id="infoContent">
+                <div class="info-grid">
+                    <div class="info-card">
+                        <h3>Личная информация</h3>
+                        <div class="info-list" id="personalInfo">
+                            <!-- Будет заполнено скриптом -->
+                        </div>
+                        <button class="edit-button" onclick="editProfile()">
+                            <i class="fas fa-edit"></i> Редактировать
+                        </button>
+                    </div>
+                    
+                    <div class="info-card">
+                        <h3>Статистика</h3>
+                        <div class="info-list">
+                            <div class="info-item">
+                                <span class="info-label">Зарегистрирован</span>
+                                <span class="info-value" id="registrationDate"></span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Всего заказов</span>
+                                <span class="info-value" id="totalOrders">0</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Текущая корзина</span>
+                                <span class="info-value" id="cartItemsCount">0 товаров</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Вкладка заказов -->
+            <div class="profile-content" id="ordersContent">
+                <div class="orders-list" id="ordersList">
+                    <!-- Будет заполнено скриптом -->
+                </div>
+            </div>
+            
+            <!-- Вкладка корзины -->
+            <div class="profile-content" id="cartContent">
+                <div class="profile-cart-summary">
+                    <div class="cart-items" id="cartItemsList">
+                        <!-- Будет заполнено скриптом -->
+                    </div>
+                    
+                    <div class="cart-total">
+                        <div class="total-label">Итого:</div>
+                        <div class="total-amount" id="cartTotal">$0.00</div>
+                    </div>
+                    
+                    <div style="margin-top: 20px; display: flex; gap: 15px;">
+                        <a href="cart.html" class="btn btn-primary">
+                            <i class="fas fa-shopping-cart"></i> Перейти в корзину
+                        </a>
+                        <a href="shop.html" class="btn btn-outline">
+                            <i class="fas fa-plus"></i> Продолжить покупки
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Вкладка настроек -->
+            <div class="profile-content" id="settingsContent">
+                <div class="info-card">
+                    <h3>Настройки аккаунта</h3>
+                    
+                    <div style="margin: 30px 0;">
+                        <button class="btn btn-outline" onclick="changePassword()" style="margin-right: 15px;">
+                            <i class="fas fa-key"></i> Сменить пароль
+                        </button>
+                        <button class="btn btn-outline" onclick="exportData()">
+                            <i class="fas fa-download"></i> Экспорт данных
+                        </button>
+                    </div>
+                    
+                    <div style="margin-top: 40px; padding-top: 20px; border-top: 1px solid #eee;">
+                        <h4 style="color: #d32f2f; margin-bottom: 15px;">Опасная зона</h4>
+                        <p style="color: #666; margin-bottom: 15px;">
+                            Удаление аккаунта невозможно отменить. Все ваши данные будут удалены навсегда.
+                        </p>
+                        <button class="btn" onclick="deleteAccount()" 
+                                style="background: #d32f2f; color: white;">
+                            <i class="fas fa-trash"></i> Удалить аккаунт
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Модальное окно редактирования профиля -->
+    <div class="modal" id="editProfileModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Редактировать профиль</h3>
+                <button class="modal-close" onclick="closeEditModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="editProfileForm">
+                    <div class="form-group">
+                        <label>Имя</label>
+                        <input type="text" id="editName" class="form-control" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="email" id="editEmail" class="form-control" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Телефон</label>
+                        <input type="tel" id="editPhone" class="form-control">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Адрес</label>
+                        <textarea id="editAddress" class="form-control" rows="3"></textarea>
+                    </div>
+                    
+                    <div style="display: flex; gap: 10px;">
+                        <button type="submit" class="btn btn-primary">Сохранить</button>
+                        <button type="button" class="btn btn-outline" onclick="closeEditModal()">Отмена</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Подключаем скрипты -->
+    <script type="module" src="../js/data.js"></script>
+    <script type="module" src="../js/profile.js"></script>
+    <script  type="module" src="../script.js"></script>
+    
+</body>
+</html>

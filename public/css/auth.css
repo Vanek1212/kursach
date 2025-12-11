@@ -1,0 +1,843 @@
+/* css/registr.css */
+
+/* Общие стили для форм аутентификации */
+.auth-container {
+    max-width: 500px;
+    margin: 60px auto;
+    padding: 40px;
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+}
+
+.auth-header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.auth-logo {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 32px;
+    font-weight: 700;
+    font-style: italic;
+    color: #000;
+    margin-bottom: 10px;
+}
+
+.auth-title {
+    font-size: 24px;
+    font-weight: 600;
+    margin-bottom: 10px;
+    color: #333;
+}
+
+.auth-subtitle {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 20px;
+}
+
+/* Прогресс регистрации */
+.registration-progress {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 40px;
+}
+
+.progress-step {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background-color: #eee;
+    color: #999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 14px;
+    transition: all 0.3s ease;
+}
+
+.progress-step.active {
+    background-color: #000;
+    color: white;
+}
+
+.progress-line {
+    width: 80px;
+    height: 2px;
+    background-color: #eee;
+    margin: 0 10px;
+}
+
+/* Шаги формы */
+.form-step {
+    display: none;
+    animation: fadeIn 0.5s ease;
+}
+
+.form-step.active {
+    display: block;
+}
+
+.step-title {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 25px;
+    color: #333;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #f0f0f0;
+}
+
+/* Общие стили формы */
+.auth-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.form-group label {
+    font-size: 14px;
+    font-weight: 500;
+    color: #333;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.form-group label:after {
+    content: "*";
+    color: #e74c3c;
+    margin-left: 2px;
+}
+
+.form-group label.optional:after {
+    content: "";
+}
+
+.form-group input {
+    padding: 14px 16px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 16px;
+    transition: all 0.3s ease;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.form-group input:focus {
+    outline: none;
+    border-color: #000;
+    box-shadow: 0 0 0 2px rgba(0,0,0,0.1);
+}
+
+.form-group input.error {
+    border-color: #e74c3c;
+    background-color: #fff5f5;
+}
+
+.form-group input.success {
+    border-color: #27ae60;
+    background-color: #f0fff4;
+}
+
+/* Специальные поля ввода */
+.date-input-wrapper {
+    position: relative;
+}
+
+.date-input-wrapper .date-icon {
+    position: absolute;
+    right: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #666;
+    pointer-events: none;
+}
+
+.phone-input-wrapper {
+    display: flex;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.country-code {
+    padding: 14px 16px;
+    background-color: #f8f9fa;
+    border-right: 1px solid #ddd;
+    font-weight: 500;
+    color: #333;
+}
+
+.phone-input-wrapper input {
+    border: none !important;
+    border-radius: 0 !important;
+}
+
+.password-input-wrapper {
+    position: relative;
+}
+
+.toggle-password {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: #666;
+    cursor: pointer;
+    padding: 5px;
+}
+
+.toggle-password:hover {
+    color: #000;
+}
+
+/* Кнопки навигации */
+.step-buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px solid #eee;
+}
+
+.btn-primary, .btn-secondary, .btn-next, .btn-back, .btn-submit {
+    padding: 14px 28px;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.btn-primary, .btn-next, .btn-submit {
+    background-color: #000;
+    color: white;
+}
+
+.btn-primary:hover, .btn-next:hover, .btn-submit:hover {
+    background-color: #333;
+    transform: translateY(-1px);
+}
+
+.btn-secondary, .btn-back {
+    background-color: #f8f9fa;
+    color: #333;
+    border: 1px solid #ddd;
+}
+
+.btn-secondary:hover, .btn-back:hover {
+    background-color: #e9ecef;
+}
+
+.btn-submit {
+    background-color: #27ae60;
+}
+
+.btn-submit:hover {
+    background-color: #219653;
+}
+
+/* Выбор метода пароля */
+.password-method-selector {
+    background-color: #f8f9fa;
+    padding: 20px;
+    border-radius: 8px;
+    margin: 15px 0;
+}
+
+.password-method-selector h4 {
+    margin-bottom: 15px;
+    color: #333;
+}
+
+.radio-group {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.radio-option {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+    padding: 12px;
+    border-radius: 6px;
+    transition: background-color 0.3s;
+}
+
+.radio-option:hover {
+    background-color: #e9ecef;
+}
+
+.radio-option input {
+    display: none;
+}
+
+.radio-custom {
+    width: 20px;
+    height: 20px;
+    border: 2px solid #ddd;
+    border-radius: 50%;
+    position: relative;
+    transition: all 0.3s;
+}
+
+.radio-option input:checked + .radio-custom {
+    border-color: #000;
+}
+
+.radio-option input:checked + .radio-custom:after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 10px;
+    height: 10px;
+    background-color: #000;
+    border-radius: 50%;
+}
+
+/* Сложность пароля */
+.password-strength {
+    margin-top: 10px;
+}
+
+.strength-meter {
+    height: 6px;
+    background: #eee;
+    border-radius: 3px;
+    overflow: hidden;
+    margin-bottom: 5px;
+}
+
+.strength-meter:after {
+    content: '';
+    display: block;
+    height: 100%;
+    width: 0;
+    transition: width 0.3s, background-color 0.3s;
+}
+
+.strength-meter.weak:after { width: 33%; background-color: #e74c3c; }
+.strength-meter.medium:after { width: 66%; background-color: #f39c12; }
+.strength-meter.strong:after { width: 100%; background-color: #27ae60; }
+
+.strength-label {
+    font-size: 12px;
+    color: #666;
+    text-align: right;
+}
+
+/* Требования к паролю */
+.password-requirements {
+    background-color: #f8f9fa;
+    padding: 15px;
+    border-radius: 8px;
+    margin-top: 15px;
+}
+
+.password-requirements h5 {
+    margin-bottom: 10px;
+    color: #333;
+    font-size: 14px;
+}
+
+.password-requirements ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.password-requirements li {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 6px;
+    font-size: 12px;
+    color: #666;
+}
+
+.password-requirements li i {
+    font-size: 6px;
+    color: #ccc;
+}
+
+.password-requirements li.valid i {
+    color: #27ae60;
+}
+
+.password-requirements li.invalid i {
+    color: #e74c3c;
+}
+
+/* Автоматически сгенерированный пароль */
+.auto-password-container {
+    background-color: #f0fff4;
+    border: 1px solid #27ae60;
+    border-radius: 8px;
+    padding: 20px;
+    text-align: center;
+}
+
+.generated-password {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.generated-password input {
+    flex: 1;
+    font-family: 'Courier New', monospace;
+    font-size: 16px;
+    text-align: center;
+    letter-spacing: 1px;
+    background-color: white;
+    cursor: default;
+}
+
+.copy-password {
+    padding: 12px 20px;
+    background-color: #27ae60;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.copy-password:hover {
+    background-color: #219653;
+}
+
+/* Генератор никнейма */
+.username-generator {
+    display: flex;
+    gap: 10px;
+}
+
+.username-generator input {
+    flex: 1;
+}
+
+.username-actions {
+    display: flex;
+    gap: 10px;
+}
+
+/* Пользовательское соглашение */
+.terms-agreement {
+    background-color: #f8f9fa;
+    padding: 20px;
+    border-radius: 8px;
+    margin-top: 20px;
+}
+
+.terms-checkbox {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 15px;
+}
+
+.terms-checkbox input {
+    margin-top: 4px;
+}
+
+.terms-checkbox label {
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.terms-link {
+    color: #000;
+    text-decoration: underline;
+    font-weight: 600;
+}
+
+.terms-link:hover {
+    color: #666;
+}
+
+.terms-summary {
+    background-color: white;
+    padding: 15px;
+    border-radius: 6px;
+    font-size: 13px;
+}
+
+.terms-summary p {
+    margin-bottom: 10px;
+    font-weight: 600;
+}
+
+.terms-summary ul {
+    list-style: none;
+    padding-left: 0;
+    margin: 0;
+}
+
+.terms-summary li {
+    padding: 5px 0;
+    color: #666;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.terms-summary li:before {
+    content: "•";
+    color: #27ae60;
+    font-weight: bold;
+}
+
+/* Подсказки */
+.field-hint {
+    font-size: 12px;
+    color: #666;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 5px;
+}
+
+.field-hint i {
+    font-size: 14px;
+}
+
+.field-hint.no-paste {
+    color: #e74c3c;
+}
+
+/* Сообщения */
+.error-message {
+    background-color: #ffeaea;
+    color: #d32f2f;
+    padding: 12px 16px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    font-size: 14px;
+    display: none;
+    border-left: 4px solid #d32f2f;
+}
+
+.error-message.show {
+    display: block;
+    animation: slideIn 0.3s ease;
+}
+
+.success-message {
+    background-color: #e8f5e9;
+    color: #2e7d32;
+    padding: 12px 16px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    font-size: 14px;
+    display: none;
+    border-left: 4px solid #2e7d32;
+}
+
+.success-message.show {
+    display: block;
+    animation: slideIn 0.3s ease;
+}
+
+/* Модальное окно */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0,0,0,0.5);
+    display: none;
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.modal-content {
+    background: white;
+    border-radius: 12px;
+    max-width: 600px;
+    width: 100%;
+    max-height: 80vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.modal-header {
+    padding: 20px 24px;
+    border-bottom: 1px solid #eee;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.modal-header h3 {
+    margin: 0;
+    color: #333;
+}
+
+.modal-close {
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    color: #666;
+    padding: 0;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-close:hover {
+    color: #000;
+}
+
+.modal-body {
+    padding: 24px;
+    overflow-y: auto;
+    flex: 1;
+}
+
+.modal-body h4 {
+    margin-top: 0;
+    color: #333;
+}
+
+.modal-body p {
+    line-height: 1.6;
+    margin-bottom: 15px;
+}
+
+.terms-scroll-notice {
+    background-color: #fff3cd;
+    border: 1px solid #ffeaa7;
+    border-radius: 6px;
+    padding: 12px;
+    margin-top: 20px;
+    text-align: center;
+    color: #856404;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.modal-footer {
+    padding: 20px 24px;
+    border-top: 1px solid #eee;
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+}
+
+/* Анимации */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateX(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+    .auth-container {
+        margin: 30px 20px;
+        padding: 25px;
+    }
+    
+    .form-row {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+    
+    .progress-line {
+        width: 40px;
+    }
+    
+    .username-generator {
+        flex-direction: column;
+    }
+    
+    .username-actions {
+        flex-direction: column;
+    }
+    
+    .modal-content {
+        margin: 20px;
+    }
+}
+
+@media (max-width: 480px) {
+    .step-buttons {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .btn-primary, .btn-secondary, .btn-next, .btn-back, .btn-submit {
+        width: 100%;
+    }
+    
+    .modal-footer {
+        flex-direction: column;
+    }
+    
+    .modal-footer button {
+        width: 100%;
+    }
+}
+/* Стили для генератора никнейма */
+.username-generator {
+    margin-bottom: 10px;
+}
+
+.username-input-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+@media (min-width: 768px) {
+    .username-input-wrapper {
+        flex-direction: row;
+        gap: 15px;
+    }
+    
+    .username-input-wrapper input {
+        flex: 1;
+    }
+}
+
+.username-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.btn-generate-username,
+.btn-edit-username {
+    padding: 12px 16px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    white-space: nowrap;
+}
+
+.btn-generate-username {
+    background-color: #3498db;
+    color: white;
+}
+
+.btn-generate-username:hover {
+    background-color: #2980b9;
+}
+
+.btn-generate-username:disabled {
+    background-color: #bdc3c7;
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+.btn-edit-username {
+    background-color: #f8f9fa;
+    color: #333;
+    border: 1px solid #ddd;
+}
+
+.btn-edit-username:hover {
+    background-color: #e9ecef;
+}
+
+.btn-edit-username:disabled {
+    background-color: #f8f9fa;
+    cursor: not-allowed;
+    opacity: 0.6;
+    border-color: #eee;
+}
+
+/* Адаптивность для кнопок никнейма */
+@media (max-width: 767px) {
+    .btn-generate-username,
+    .btn-edit-username {
+        padding: 10px 14px;
+        font-size: 13px;
+    }
+}
+
+@media (max-width: 480px) {
+    .username-actions {
+        flex-direction: column;
+    }
+    
+    .btn-generate-username,
+    .btn-edit-username {
+        width: 100%;
+    }
+}
+
+/* Стили для ручного ввода никнейма */
+#manualUsernameSection {
+    animation: fadeIn 0.3s ease;
+    margin-top: 10px;
+}
+
+#manualUsernameSection input {
+    font-size: 16px;
+    padding: 14px 16px;
+    transition: all 0.3s ease;
+}
+
+#manualUsernameSection input:focus {
+    border-color: #3498db;
+    box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+}

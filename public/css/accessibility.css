@@ -1,0 +1,567 @@
+/* ===== ACCESSIBILITY STYLES ===== */
+.accessibility-panel {
+   
+    top: 20px;
+    right: 20px;
+    z-index: 9999;
+    transition: all 0.3s ease;
+}
+
+.accessibility-panel.hidden {
+    transform: translateY(-100px);
+    opacity: 0;
+    pointer-events: none;
+}
+
+.accessibility-controls {
+    display: flex;
+    gap: 8px;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 8px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+}
+
+.accessibility-btn,
+.theme-toggle,
+.lang-toggle,
+.reset-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 6px;
+    border: 1px solid #d0d0d0;
+    background: white;
+    color: #333;
+    font-family: 'Roboto', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    padding: 0;
+}
+
+.accessibility-btn:hover,
+.theme-toggle:hover,
+.lang-toggle:hover,
+.reset-btn:hover {
+    background: #f5f5f5;
+    border-color: #1a5d4f;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.accessibility-btn.active {
+    background: #1a5d4f;
+    color: white;
+    border-color: #1a5d4f;
+}
+
+.accessibility-btn.active:hover {
+    background: #164b3f;
+}
+
+.theme-icon,
+.lang-icon {
+    font-size: 18px;
+    transition: all 0.3s ease;
+}
+
+.lang-icon {
+    font-weight: bold;
+}
+
+.reset-btn {
+    font-size: 18px;
+}
+
+/* ===== DARK THEME STYLES - ПОЛНЫЙ НАБОР ===== */
+[data-theme="dark"] {
+    background-color: #121212 !important;
+    color: #e0e0e0 !important;
+}
+
+/* Header и навигация */
+[data-theme="dark"] .main-header {
+    background-color: #1a1a1a !important;
+    border-bottom: 1px solid #333;
+}
+
+[data-theme="dark"] .logo {
+    color: #fff !important;
+}
+
+[data-theme="dark"] .nav-links a {
+    color: #e0e0e0 !important;
+}
+
+[data-theme="dark"] .nav-links a:hover {
+    color: #fff !important;
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+[data-theme="dark"] .user-icon,
+[data-theme="dark"] .cart-icon {
+    color: #e0e0e0 !important;
+}
+
+[data-theme="dark"] .cart-badge {
+    background-color: #1a5d4f !important;
+    color: white !important;
+}
+
+/* Hero Section */
+[data-theme="dark"] .hero {
+    background-color: #1a1a1a !important;
+    background-image: none !important;
+}
+
+[data-theme="dark"] .hero-title {
+    color: #fff !important;
+}
+
+[data-theme="dark"] .hero-subtitle {
+    color: #ccc !important;
+}
+
+/* Awards Section */
+[data-theme="dark"] .awards {
+    background-color: #1e1e1e !important;
+}
+
+[data-theme="dark"] .award-item {
+    background-color: #2a2a2a !important;
+    border: 1px solid #444 !important;
+    color: #e0e0e0 !important;
+}
+
+[data-theme="dark"] .award-item p {
+    color: #ccc !important;
+}
+
+/* Products Section */
+[data-theme="dark"] .reviews-products {
+    background-color: #121212 !important;
+}
+
+[data-theme="dark"] .section-header h2 {
+    color: #fff !important;
+}
+
+[data-theme="dark"] .product-card {
+    background-color: #2a2a2a !important;
+    border: 1px solid #444 !important;
+    color: #e0e0e0 !important;
+}
+
+[data-theme="dark"] .product-title {
+    color: #fff !important;
+}
+
+[data-theme="dark"] .product-price {
+    color: #e0e0e0 !important;
+}
+
+[data-theme="dark"] .product-price .old-price {
+    color: #aaa !important;
+}
+
+[data-theme="dark"] .reviews span {
+    color: #ccc !important;
+}
+
+[data-theme="dark"] .testimonial {
+    background-color: #2a2a2a !important;
+    color: #e0e0e0 !important;
+}
+
+[data-theme="dark"] .quote {
+    color: #e0e0e0 !important;
+}
+
+[data-theme="dark"] .author {
+    color: #ccc !important;
+}
+
+/* Water Info Section */
+[data-theme="dark"] .water-info {
+    background-color: #1a1a1a !important;
+}
+
+[data-theme="dark"] .water-info h2 {
+    color: #fff !important;
+}
+
+[data-theme="dark"] .water-percentage {
+    background-color: #2a2a2a !important;
+}
+
+[data-theme="dark"] .percentage {
+    color: #fff !important;
+}
+
+[data-theme="dark"] .percentage-label {
+    color: #ccc !important;
+}
+
+[data-theme="dark"] .water-description {
+    color: #ccc !important;
+}
+
+[data-theme="dark"] .water-features .feature {
+    background-color: #2a2a2a !important;
+    color: #e0e0e0 !important;
+    border: 1px solid #444 !important;
+}
+
+/* Features Section */
+[data-theme="dark"] .features {
+    background-color: #1e1e1e !important;
+}
+
+[data-theme="dark"] .feature-card {
+    background-color: #2a2a2a !important;
+    color: #e0e0e0 !important;
+    border: 1px solid #444 !important;
+}
+
+[data-theme="dark"] .feature-desc {
+    color: #e0e0e0 !important;
+}
+
+/* Big Idea Section */
+[data-theme="dark"] .big-idea {
+    background-color: #121212 !important;
+}
+
+[data-theme="dark"] .section-title {
+    color: #fff !important;
+}
+
+[data-theme="dark"] .section-subtitle {
+    color: #ccc !important;
+}
+
+[data-theme="dark"] .idea-question,
+[data-theme="dark"] .idea-answer,
+[data-theme="dark"] .idea-conclusion {
+    color: #e0e0e0 !important;
+}
+
+/* Performance Section */
+[data-theme="dark"] .performance {
+    background-color: #1a1a1a !important;
+}
+
+[data-theme="dark"] .performance-text p {
+    color: #e0e0e0 !important;
+}
+
+/* Super Clean Section */
+[data-theme="dark"] .super-clean {
+    background-color: #1e1e1e !important;
+}
+
+[data-theme="dark"] .clean-text p {
+    color: #e0e0e0 !important;
+}
+
+/* Eco Optimists Section */
+[data-theme="dark"] .eco-optimists {
+    background-color: #1a1a1a !important;
+}
+
+[data-theme="dark"] .eco-text p {
+    color: #e0e0e0 !important;
+}
+
+/* User Testimonials */
+[data-theme="dark"] .user-testimonials {
+    background-color: #121212 !important;
+}
+
+[data-theme="dark"] .testimonial-item {
+    background-color: #2a2a2a !important;
+    border: 1px solid #444 !important;
+}
+
+/* Vision Section */
+[data-theme="dark"] .vision {
+    background-color: #1a1a1a !important;
+}
+
+[data-theme="dark"] .vision-text p {
+    color: #e0e0e0 !important;
+}
+
+/* Certificates Section */
+[data-theme="dark"] .certificates {
+    background-color: #1e1e1e !important;
+}
+
+[data-theme="dark"] .certificate-item {
+    background-color: #2a2a2a !important;
+    border: 1px solid #444 !important;
+    color: #e0e0e0 !important;
+}
+
+[data-theme="dark"] .certificate-item p {
+    color: #ccc !important;
+}
+
+/* Footer */
+[data-theme="dark"] .footer {
+    background-color: #1a1a1a !important;
+    color: #ccc !important;
+}
+
+[data-theme="dark"] .footer h4 {
+    color: #fff !important;
+}
+
+[data-theme="dark"] .footer a {
+    color: #aaa !important;
+}
+
+[data-theme="dark"] .footer a:hover {
+    color: #fff !important;
+}
+
+[data-theme="dark"] .footer-section p {
+    color: #ccc !important;
+}
+
+[data-theme="dark"] .social-icons a {
+    color: #ccc !important;
+    border: 1px solid #444 !important;
+}
+
+[data-theme="dark"] .social-icons a:hover {
+    background-color: #2a2a2a !important;
+    color: #fff !important;
+}
+
+[data-theme="dark"] .newsletter-form input {
+    background-color: #2a2a2a !important;
+    border: 1px solid #444 !important;
+    color: #e0e0e0 !important;
+}
+
+[data-theme="dark"] .newsletter-form input::placeholder {
+    color: #888 !important;
+}
+
+[data-theme="dark"] .footer-bottom {
+    border-top: 1px solid #444 !important;
+    color: #888 !important;
+}
+
+/* Кнопки */
+[data-theme="dark"] .btn-primary {
+    background-color: #1a5d4f !important;
+    color: white !important;
+    border: none !important;
+}
+
+[data-theme="dark"] .btn-primary:hover {
+    background-color: #164b3f !important;
+}
+
+[data-theme="dark"] .btn-outline {
+    background-color: transparent !important;
+    color: #1a5d4f !important;
+    border: 2px solid #1a5d4f !important;
+}
+
+[data-theme="dark"] .btn-outline:hover {
+    background-color: #1a5d4f !important;
+    color: white !important;
+}
+
+[data-theme="dark"] .btn-secondary {
+    background-color: #2a2a2a !important;
+    color: #e0e0e0 !important;
+    border: 1px solid #444 !important;
+}
+
+[data-theme="dark"] .btn-secondary:hover {
+    background-color: #1a5d4f !important;
+    color: white !important;
+}
+
+/* Slider controls */
+[data-theme="dark"] .slider-btn {
+    background-color: #2a2a2a !important;
+    color: #e0e0e0 !important;
+    border: 1px solid #444 !important;
+}
+
+[data-theme="dark"] .slider-btn:hover:not(:disabled) {
+    background-color: #1a5d4f !important;
+    color: white !important;
+}
+
+[data-theme="dark"] .slider-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* Accessibility panel в темной теме */
+[data-theme="dark"] .accessibility-controls {
+    background: rgba(26, 26, 26, 0.95) !important;
+    border: 1px solid #444 !important;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3) !important;
+}
+
+[data-theme="dark"] .accessibility-btn,
+[data-theme="dark"] .theme-toggle,
+[data-theme="dark"] .lang-toggle,
+[data-theme="dark"] .reset-btn {
+    background: #2a2a2a !important;
+    color: #e0e0e0 !important;
+    border: 1px solid #444 !important;
+}
+
+[data-theme="dark"] .accessibility-btn:hover,
+[data-theme="dark"] .theme-toggle:hover,
+[data-theme="dark"] .lang-toggle:hover,
+[data-theme="dark"] .reset-btn:hover {
+    background: #333 !important;
+    border-color: #1a5d4f !important;
+}
+
+[data-theme="dark"] .accessibility-btn.active {
+    background: #1a5d4f !important;
+    color: white !important;
+    border-color: #1a5d4f !important;
+}
+
+/* Прелоадер в темной теме */
+[data-theme="dark"] .preloader {
+    background-color: #121212 !important;
+}
+
+[data-theme="dark"] .preloader-container {
+    background-color: #1a1a1a !important;
+    border: 1px solid #444 !important;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4) !important;
+}
+
+[data-theme="dark"] .preloader-logo {
+    color: #fff !important;
+}
+
+[data-theme="dark"] .loading-text {
+    color: #ccc !important;
+}
+
+[data-theme="dark"] .progress-container {
+    background-color: #2a2a2a !important;
+}
+
+[data-theme="dark"] .progress-bar {
+    background-color: #1a5d4f !important;
+}
+
+[data-theme="dark"] .progress-counter {
+    color: #e0e0e0 !important;
+}
+
+[data-theme="dark"] .spinner-circle {
+    border-color: #1a5d4f transparent transparent transparent !important;
+}
+
+/* Top banner в темной теме */
+[data-theme="dark"] .top-banner {
+    background-color: #2a2a2a !important;
+    border-bottom: 1px solid #444 !important;
+}
+
+[data-theme="dark"] .banner-text {
+    color: #e0e0e0 !important;
+}
+
+[data-theme="dark"] .banner-close {
+    color: #ccc !important;
+}
+
+[data-theme="dark"] .banner-close:hover {
+    color: #fff !important;
+    background-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+/* Burger menu в темной теме */
+[data-theme="dark"] .burger-menu .burger-line {
+    background-color: #e0e0e0 !important;
+}
+
+/* Inputs и формы в темной теме */
+[data-theme="dark"] input,
+[data-theme="dark"] textarea,
+[data-theme="dark"] select {
+    background-color: #2a2a2a !important;
+    border: 1px solid #444 !important;
+    color: #e0e0e0 !important;
+}
+
+[data-theme="dark"] input::placeholder,
+[data-theme="dark"] textarea::placeholder {
+    color: #888 !important;
+}
+
+/* Уведомления в темной теме */
+[data-theme="dark"] .accessibility-notification {
+    background: #1a5d4f !important;
+    color: white !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3) !important;
+}
+
+[data-theme="dark"] .welcome-notification {
+    background: #1a5d4f !important;
+    color: white !important;
+}
+
+/* Модальные окна в темной теме */
+[data-theme="dark"] .modal {
+    background-color: rgba(0, 0, 0, 0.8) !important;
+}
+
+[data-theme="dark"] .modal-content {
+    background-color: #2a2a2a !important;
+    color: #e0e0e0 !important;
+    border: 1px solid #444 !important;
+}
+
+[data-theme="dark"] .modal-header {
+    border-bottom: 1px solid #444 !important;
+}
+
+[data-theme="dark"] .modal-header h3 {
+    color: #fff !important;
+}
+
+[data-theme="dark"] .modal-close {
+    color: #ccc !important;
+}
+
+[data-theme="dark"] .modal-close:hover {
+    color: #fff !important;
+}
+
+/* Звезды рейтинга */
+[data-theme="dark"] .stars {
+    color: #ffd700 !important; /* Золотой цвет для звезд */
+}
+
+/* Прогресс бар в прелоадере */
+[data-theme="dark"] .progress-container {
+    background: #2a2a2a !important;
+}
+
+[data-theme="dark"] .progress-bar {
+    background: linear-gradient(90deg, #1a5d4f, #2a8c7a) !important;
+}
