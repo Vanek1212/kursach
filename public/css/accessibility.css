@@ -1,6 +1,6 @@
 /* ===== ACCESSIBILITY STYLES ===== */
 .accessibility-panel {
-   
+    position: fixed; /* ФИКСИРОВАННАЯ ПОЗИЦИЯ */
     top: 20px;
     right: 20px;
     z-index: 9999;
@@ -77,6 +77,186 @@
 
 .reset-btn {
     font-size: 18px;
+}
+
+/* ===== КЛАССЫ ДЛЯ ИЗМЕНЕНИЯ РАЗМЕРА ШРИФТА ===== */
+/* ЭТИ СТИЛИ ДОЛЖНЫ БЫТЬ В САМОМ КОНЦЕ ФАЙЛА ИЛИ ПОСЛЕ ОСНОВНЫХ СТИЛЕЙ */
+
+body.font-small {
+    font-size: 16px !important;
+}
+
+body.font-small h1,
+body.font-small h2,
+body.font-small h3,
+body.font-small h4,
+body.font-small h5,
+body.font-small h6,
+body.font-small p,
+body.font-small span,
+body.font-small a,
+body.font-small li,
+body.font-small button,
+body.font-small input,
+body.font-small textarea,
+body.font-small select,
+body.font-small .hero-title,
+body.font-small .hero-subtitle,
+body.font-small .section-title,
+body.font-small .section-subtitle,
+body.font-small .product-title,
+body.font-small .product-price,
+body.font-small .quote,
+body.font-small .author,
+body.font-small .feature-desc,
+body.font-small .water-description,
+body.font-small .percentage,
+body.font-small .percentage-label {
+    font-size: inherit !important;
+}
+
+body.font-medium {
+    font-size: 18px !important;
+}
+
+body.font-medium h1,
+body.font-medium h2,
+body.font-medium h3,
+body.font-medium h4,
+body.font-medium h5,
+body.font-medium h6,
+body.font-medium p,
+body.font-medium span,
+body.font-medium a,
+body.font-medium li,
+body.font-medium button,
+body.font-medium input,
+body.font-medium textarea,
+body.font-medium select,
+body.font-medium .hero-title,
+body.font-medium .hero-subtitle,
+body.font-medium .section-title,
+body.font-medium .section-subtitle,
+body.font-medium .product-title,
+body.font-medium .product-price,
+body.font-medium .quote,
+body.font-medium .author,
+body.font-medium .feature-desc,
+body.font-medium .water-description,
+body.font-medium .percentage,
+body.font-medium .percentage-label {
+    font-size: inherit !important;
+}
+
+body.font-large {
+    font-size: 20px !important;
+}
+
+body.font-large h1,
+body.font-large h2,
+body.font-large h3,
+body.font-large h4,
+body.font-large h5,
+body.font-large h6,
+body.font-large p,
+body.font-large span,
+body.font-large a,
+body.font-large li,
+body.font-large button,
+body.font-large input,
+body.font-large textarea,
+body.font-large select,
+body.font-large .hero-title,
+body.font-large .hero-subtitle,
+body.font-large .section-title,
+body.font-large .section-subtitle,
+body.font-large .product-title,
+body.font-large .product-price,
+body.font-large .quote,
+body.font-large .author,
+body.font-large .feature-desc,
+body.font-large .water-description,
+body.font-large .percentage,
+body.font-large .percentage-label {
+    font-size: inherit !important;
+}
+
+body.font-xlarge {
+    font-size: 22px !important;
+}
+
+body.font-xlarge h1,
+body.font-xlarge h2,
+body.font-xlarge h3,
+body.font-xlarge h4,
+body.font-xlarge h5,
+body.font-xlarge h6,
+body.font-xlarge p,
+body.font-xlarge span,
+body.font-xlarge a,
+body.font-xlarge li,
+body.font-xlarge button,
+body.font-xlarge input,
+body.font-xlarge textarea,
+body.font-xlarge select,
+body.font-xlarge .hero-title,
+body.font-xlarge .hero-subtitle,
+body.font-xlarge .section-title,
+body.font-xlarge .section-subtitle,
+body.font-xlarge .product-title,
+body.font-xlarge .product-price,
+body.font-xlarge .quote,
+body.font-xlarge .author,
+body.font-xlarge .feature-desc,
+body.font-xlarge .water-description,
+body.font-xlarge .percentage,
+body.font-xlarge .percentage-label {
+    font-size: inherit !important;
+}
+
+/* Анимации для уведомлений */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateX(-50%) translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+    }
+}
+
+@keyframes fadeOutDown {
+    from {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+    }
+    to {
+        opacity: 0;
+        transform: translateX(-50%) translateY(20px);
+    }
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+    .accessibility-panel {
+        top: 10px;
+        right: 10px;
+    }
+    
+    .accessibility-controls {
+        padding: 6px;
+        gap: 4px;
+    }
+    
+    .accessibility-btn,
+    .theme-toggle,
+    .lang-toggle,
+    .reset-btn {
+        width: 36px;
+        height: 36px;
+        font-size: 12px;
+    }
 }
 
 /* ===== DARK THEME STYLES - ПОЛНЫЙ НАБОР ===== */
@@ -554,7 +734,7 @@
 
 /* Звезды рейтинга */
 [data-theme="dark"] .stars {
-    color: #ffd700 !important; /* Золотой цвет для звезд */
+    color: #ffd700 !important;
 }
 
 /* Прогресс бар в прелоадере */
@@ -565,3 +745,790 @@
 [data-theme="dark"] .progress-bar {
     background: linear-gradient(90deg, #1a5d4f, #2a8c7a) !important;
 }
+/* ===== ЦВЕТОВЫЕ СХЕМЫ ===== */
+
+/* Схема 1: Черный фон с белым текстом */
+[data-color-scheme="black-white"] {
+    --bg-color: #000000 !important;
+    --text-color: #ffffff !important;
+    --primary-color: #ffffff !important;
+    --secondary-color: #cccccc !important;
+    --border-color: #333333 !important;
+}
+
+/* Схема 2: Черный фон с зеленым текстом */
+[data-color-scheme="black-green"] {
+    --bg-color: #000000 !important;
+    --text-color: #00ff00 !important;
+    --primary-color: #00ff00 !important;
+    --secondary-color: #00cc00 !important;
+    --border-color: #006600 !important;
+}
+
+/* Схема 3: Белый фон с черным текстом (стандартная) */
+[data-color-scheme="white-black"] {
+    --bg-color: #ffffff !important;
+    --text-color: #000000 !important;
+    --primary-color: #1a5d4f !important;
+    --secondary-color: #333333 !important;
+    --border-color: #cccccc !important;
+}
+
+/* Схема 4: Бежевый фон с коричневым текстом */
+[data-color-scheme="beige-brown"] {
+    --bg-color: #f5f5dc !important;
+    --text-color: #654321 !important;
+    --primary-color: #8b4513 !important;
+    --secondary-color: #a0522d !important;
+    --border-color: #d2b48c !important;
+}
+
+/* Схема 5: Голубой фон с темно-синим текстом */
+[data-color-scheme="blue-darkblue"] {
+    --bg-color: #e6f3ff !important;
+    --text-color: #000080 !important;
+    --primary-color: #0000ff !important;
+    --secondary-color: #4169e1 !important;
+    --border-color: #87ceeb !important;
+}
+
+/* Применение цветовых переменных ко всей странице */
+[data-color-scheme] {
+    background-color: var(--bg-color) !important;
+    color: var(--text-color) !important;
+}
+
+[data-color-scheme] * {
+    color: inherit !important;
+    border-color: var(--border-color) !important;
+}
+
+[data-color-scheme] a {
+    color: var(--primary-color) !important;
+}
+
+[data-color-scheme] a:hover {
+    color: var(--secondary-color) !important;
+}
+
+[data-color-scheme] .btn-primary {
+    background-color: var(--primary-color) !important;
+    color: var(--bg-color) !important;
+    border-color: var(--primary-color) !important;
+}
+
+[data-color-scheme] .btn-outline {
+    background-color: transparent !important;
+    color: var(--primary-color) !important;
+    border-color: var(--primary-color) !important;
+}
+
+[data-color-scheme] .btn-outline:hover {
+    background-color: var(--primary-color) !important;
+    color: var(--bg-color) !important;
+}
+
+[data-color-scheme] .main-header {
+    background-color: var(--bg-color) !important;
+    border-bottom-color: var(--border-color) !important;
+}
+
+[data-color-scheme] .product-card,
+[data-color-scheme] .feature-card,
+[data-color-scheme] .testimonial,
+[data-color-scheme] .award-item {
+    background-color: var(--bg-color) !important;
+    border-color: var(--border-color) !important;
+}
+
+/* Класс для скрытия изображений */
+.images-disabled img {
+    display: none !important;
+}
+
+.images-disabled .product-image,
+.images-disabled .water-info-image,
+.images-disabled .idea-image,
+.images-disabled .performance-image,
+.images-disabled .eco-image,
+.images-disabled .vision-image {
+    background-color: #f0f0f0 !important;
+    min-height: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.images-disabled .product-image::before,
+.images-disabled .water-info-image::before,
+.images-disabled .idea-image::before {
+    content: "Изображение отключено";
+    color: #666;
+    font-size: 14px;
+    text-align: center;
+}
+
+/* Стили для кнопки цветовых схем */
+.color-scheme-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 6px;
+    border: 1px solid #d0d0d0;
+    background: white;
+    color: #333;
+    font-family: 'Roboto', sans-serif;
+    font-size: 18px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    padding: 0;
+}
+
+.color-scheme-btn:hover {
+    background: #f5f5f5;
+    border-color: #1a5d4f;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Стили для кнопки отключения изображений */
+.image-toggle-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 6px;
+    border: 1px solid #d0d0d0;
+    background: white;
+    color: #333;
+    font-family: 'Roboto', sans-serif;
+    font-size: 18px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    padding: 0;
+}
+
+.image-toggle-btn:hover {
+    background: #f5f5f5;
+    border-color: #1a5d4f;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.image-toggle-btn.active {
+    background: #1a5d4f;
+    color: white;
+    border-color: #1a5d4f;
+}
+
+.image-toggle-btn.active:hover {
+    background: #164b3f;
+}
+
+/* Темная тема для новых кнопок */
+[data-theme="dark"] .color-scheme-btn,
+[data-theme="dark"] .image-toggle-btn {
+    background: #2a2a2a !important;
+    color: #e0e0e0 !important;
+    border: 1px solid #444 !important;
+}
+
+[data-theme="dark"] .color-scheme-btn:hover,
+[data-theme="dark"] .image-toggle-btn:hover {
+    background: #333 !important;
+    border-color: #1a5d4f !important;
+}
+
+[data-theme="dark"] .image-toggle-btn.active {
+    background: #1a5d4f !important;
+    color: white !important;
+    border-color: #1a5d4f !important;
+}
+/* ===== СТИЛИ ДЛЯ ЦВЕТОВЫХ СХЕМ ===== */
+
+/* Схема 1: Черный фон с белым текстом */
+[data-color-scheme="black-white"] {
+    background-color: #000000 !important;
+    color: #ffffff !important;
+}
+
+[data-color-scheme="black-white"] * {
+    color: inherit !important;
+    border-color: #333333 !important;
+}
+
+[data-color-scheme="black-white"] a {
+    color: #ffffff !important;
+}
+
+[data-color-scheme="black-white"] a:hover {
+    color: #cccccc !important;
+}
+
+[data-color-scheme="black-white"] .main-header,
+[data-color-scheme="black-white"] .hero,
+[data-color-scheme="black-white"] .awards,
+[data-color-scheme="black-white"] .reviews-products,
+[data-color-scheme="black-white"] .water-info,
+[data-color-scheme="black-white"] .features,
+[data-color-scheme="black-white"] .big-idea,
+[data-color-scheme="black-white"] .performance,
+[data-color-scheme="black-white"] .super-clean,
+[data-color-scheme="black-white"] .eco-optimists,
+[data-color-scheme="black-white"] .user-testimonials,
+[data-color-scheme="black-white"] .vision,
+[data-color-scheme="black-white"] .certificates,
+[data-color-scheme="black-white"] .footer,
+[data-color-scheme="black-white"] .product-card,
+[data-color-scheme="black-white"] .feature-card,
+[data-color-scheme="black-white"] .testimonial,
+[data-color-scheme="black-white"] .award-item,
+[data-color-scheme="black-white"] .value-card,
+[data-color-scheme="black-white"] .team-member,
+[data-color-scheme="black-white"] .timeline-content {
+    background-color: #000000 !important;
+    color: #ffffff !important;
+    border-color: #333333 !important;
+}
+
+[data-color-scheme="black-white"] .logo,
+[data-color-scheme="black-white"] .hero-title,
+[data-color-scheme="black-white"] .product-title,
+[data-color-scheme="black-white"] .section-title,
+[data-color-scheme="black-white"] .water-info h2,
+[data-color-scheme="black-white"] h1,
+[data-color-scheme="black-white"] h2,
+[data-color-scheme="black-white"] h3,
+[data-color-scheme="black-white"] h4 {
+    color: #ffffff !important;
+}
+
+[data-color-scheme="black-white"] .hero-subtitle,
+[data-color-scheme="black-white"] .water-description,
+[data-color-scheme="black-white"] .idea-question,
+[data-color-scheme="black-white"] .idea-answer,
+[data-color-scheme="black-white"] .idea-conclusion,
+[data-color-scheme="black-white"] .performance-text p,
+[data-color-scheme="black-white"] .clean-text p,
+[data-color-scheme="black-white"] .eco-text p,
+[data-color-scheme="black-white"] .vision-text p,
+[data-color-scheme="black-white"] .author,
+[data-color-scheme="black-white"] .footer-section p,
+[data-color-scheme="black-white"] p {
+    color: #cccccc !important;
+}
+
+[data-color-scheme="black-white"] .btn-primary {
+    background-color: #ffffff !important;
+    color: #000000 !important;
+    border-color: #ffffff !important;
+}
+
+[data-color-scheme="black-white"] .btn-outline {
+    background-color: transparent !important;
+    color: #ffffff !important;
+    border-color: #ffffff !important;
+}
+
+[data-color-scheme="black-white"] .btn-outline:hover {
+    background-color: #ffffff !important;
+    color: #000000 !important;
+}
+
+/* Схема 2: Черный фон с зеленым текстом */
+[data-color-scheme="black-green"] {
+    background-color: #000000 !important;
+    color: #00ff00 !important;
+}
+
+[data-color-scheme="black-green"] * {
+    color: inherit !important;
+    border-color: #006600 !important;
+}
+
+[data-color-scheme="black-green"] a {
+    color: #00ff00 !important;
+}
+
+[data-color-scheme="black-green"] a:hover {
+    color: #00cc00 !important;
+}
+
+[data-color-scheme="black-green"] .main-header,
+[data-color-scheme="black-green"] .hero,
+[data-color-scheme="black-green"] .awards,
+[data-color-scheme="black-green"] .reviews-products,
+[data-color-scheme="black-green"] .water-info,
+[data-color-scheme="black-green"] .features,
+[data-color-scheme="black-green"] .big-idea,
+[data-color-scheme="black-green"] .performance,
+[data-color-scheme="black-green"] .super-clean,
+[data-color-scheme="black-green"] .eco-optimists,
+[data-color-scheme="black-green"] .user-testimonials,
+[data-color-scheme="black-green"] .vision,
+[data-color-scheme="black-green"] .certificates,
+[data-color-scheme="black-green"] .footer,
+[data-color-scheme="black-green"] .product-card,
+[data-color-scheme="black-green"] .feature-card,
+[data-color-scheme="black-green"] .testimonial,
+[data-color-scheme="black-green"] .award-item,
+[data-color-scheme="black-green"] .value-card,
+[data-color-scheme="black-green"] .team-member,
+[data-color-scheme="black-green"] .timeline-content {
+    background-color: #000000 !important;
+    color: #00ff00 !important;
+    border-color: #006600 !important;
+}
+
+[data-color-scheme="black-green"] .logo,
+[data-color-scheme="black-green"] .hero-title,
+[data-color-scheme="black-green"] .product-title,
+[data-color-scheme="black-green"] .section-title,
+[data-color-scheme="black-green"] .water-info h2,
+[data-color-scheme="black-green"] h1,
+[data-color-scheme="black-green"] h2,
+[data-color-scheme="black-green"] h3,
+[data-color-scheme="black-green"] h4 {
+    color: #00ff00 !important;
+}
+
+[data-color-scheme="black-green"] .hero-subtitle,
+[data-color-scheme="black-green"] .water-description,
+[data-color-scheme="black-green"] .idea-question,
+[data-color-scheme="black-green"] .idea-answer,
+[data-color-scheme="black-green"] .idea-conclusion,
+[data-color-scheme="black-green"] .performance-text p,
+[data-color-scheme="black-green"] .clean-text p,
+[data-color-scheme="black-green"] .eco-text p,
+[data-color-scheme="black-green"] .vision-text p,
+[data-color-scheme="black-green"] .author,
+[data-color-scheme="black-green"] .footer-section p,
+[data-color-scheme="black-green"] p {
+    color: #00cc00 !important;
+}
+
+[data-color-scheme="black-green"] .btn-primary {
+    background-color: #00ff00 !important;
+    color: #000000 !important;
+    border-color: #00ff00 !important;
+}
+
+[data-color-scheme="black-green"] .btn-outline {
+    background-color: transparent !important;
+    color: #00ff00 !important;
+    border-color: #00ff00 !important;
+}
+
+[data-color-scheme="black-green"] .btn-outline:hover {
+    background-color: #00ff00 !important;
+    color: #000000 !important;
+}
+
+/* Схема 3: Бежевый фон с коричневым текстом */
+[data-color-scheme="beige-brown"] {
+    background-color: #f5f5dc !important;
+    color: #654321 !important;
+}
+
+[data-color-scheme="beige-brown"] * {
+    color: inherit !important;
+    border-color: #d2b48c !important;
+}
+
+[data-color-scheme="beige-brown"] a {
+    color: #8b4513 !important;
+}
+
+[data-color-scheme="beige-brown"] a:hover {
+    color: #a0522d !important;
+}
+
+[data-color-scheme="beige-brown"] .main-header,
+[data-color-scheme="beige-brown"] .hero,
+[data-color-scheme="beige-brown"] .awards,
+[data-color-scheme="beige-brown"] .reviews-products,
+[data-color-scheme="beige-brown"] .water-info,
+[data-color-scheme="beige-brown"] .features,
+[data-color-scheme="beige-brown"] .big-idea,
+[data-color-scheme="beige-brown"] .performance,
+[data-color-scheme="beige-brown"] .super-clean,
+[data-color-scheme="beige-brown"] .eco-optimists,
+[data-color-scheme="beige-brown"] .user-testimonials,
+[data-color-scheme="beige-brown"] .vision,
+[data-color-scheme="beige-brown"] .certificates,
+[data-color-scheme="beige-brown"] .footer,
+[data-color-scheme="beige-brown"] .product-card,
+[data-color-scheme="beige-brown"] .feature-card,
+[data-color-scheme="beige-brown"] .testimonial,
+[data-color-scheme="beige-brown"] .award-item,
+[data-color-scheme="beige-brown"] .value-card,
+[data-color-scheme="beige-brown"] .team-member,
+[data-color-scheme="beige-brown"] .timeline-content {
+    background-color: #f5f5dc !important;
+    color: #654321 !important;
+    border-color: #d2b48c !important;
+}
+
+[data-color-scheme="beige-brown"] .logo,
+[data-color-scheme="beige-brown"] .hero-title,
+[data-color-scheme="beige-brown"] .product-title,
+[data-color-scheme="beige-brown"] .section-title,
+[data-color-scheme="beige-brown"] .water-info h2,
+[data-color-scheme="beige-brown"] h1,
+[data-color-scheme="beige-brown"] h2,
+[data-color-scheme="beige-brown"] h3,
+[data-color-scheme="beige-brown"] h4 {
+    color: #654321 !important;
+}
+
+[data-color-scheme="beige-brown"] .hero-subtitle,
+[data-color-scheme="beige-brown"] .water-description,
+[data-color-scheme="beige-brown"] .idea-question,
+[data-color-scheme="beige-brown"] .idea-answer,
+[data-color-scheme="beige-brown"] .idea-conclusion,
+[data-color-scheme="beige-brown"] .performance-text p,
+[data-color-scheme="beige-brown"] .clean-text p,
+[data-color-scheme="beige-brown"] .eco-text p,
+[data-color-scheme="beige-brown"] .vision-text p,
+[data-color-scheme="beige-brown"] .author,
+[data-color-scheme="beige-brown"] .footer-section p,
+[data-color-scheme="beige-brown"] p {
+    color: #8b4513 !important;
+}
+
+[data-color-scheme="beige-brown"] .btn-primary {
+    background-color: #8b4513 !important;
+    color: #f5f5dc !important;
+    border-color: #8b4513 !important;
+}
+
+[data-color-scheme="beige-brown"] .btn-outline {
+    background-color: transparent !important;
+    color: #8b4513 !important;
+    border-color: #8b4513 !important;
+}
+
+[data-color-scheme="beige-brown"] .btn-outline:hover {
+    background-color: #8b4513 !important;
+    color: #f5f5dc !important;
+}
+
+/* Схема 4: Голубой фон с темно-синим текстом */
+[data-color-scheme="blue-darkblue"] {
+    background-color: #e6f3ff !important;
+    color: #000080 !important;
+}
+
+[data-color-scheme="blue-darkblue"] * {
+    color: inherit !important;
+    border-color: #87ceeb !important;
+}
+
+[data-color-scheme="blue-darkblue"] a {
+    color: #0000ff !important;
+}
+
+[data-color-scheme="blue-darkblue"] a:hover {
+    color: #4169e1 !important;
+}
+
+[data-color-scheme="blue-darkblue"] .main-header,
+[data-color-scheme="blue-darkblue"] .hero,
+[data-color-scheme="blue-darkblue"] .awards,
+[data-color-scheme="blue-darkblue"] .reviews-products,
+[data-color-scheme="blue-darkblue"] .water-info,
+[data-color-scheme="blue-darkblue"] .features,
+[data-color-scheme="blue-darkblue"] .big-idea,
+[data-color-scheme="blue-darkblue"] .performance,
+[data-color-scheme="blue-darkblue"] .super-clean,
+[data-color-scheme="blue-darkblue"] .eco-optimists,
+[data-color-scheme="blue-darkblue"] .user-testimonials,
+[data-color-scheme="blue-darkblue"] .vision,
+[data-color-scheme="blue-darkblue"] .certificates,
+[data-color-scheme="blue-darkblue"] .footer,
+[data-color-scheme="blue-darkblue"] .product-card,
+[data-color-scheme="blue-darkblue"] .feature-card,
+[data-color-scheme="blue-darkblue"] .testimonial,
+[data-color-scheme="blue-darkblue"] .award-item,
+[data-color-scheme="blue-darkblue"] .value-card,
+[data-color-scheme="blue-darkblue"] .team-member,
+[data-color-scheme="blue-darkblue"] .timeline-content {
+    background-color: #e6f3ff !important;
+    color: #000080 !important;
+    border-color: #87ceeb !important;
+}
+
+[data-color-scheme="blue-darkblue"] .logo,
+[data-color-scheme="blue-darkblue"] .hero-title,
+[data-color-scheme="blue-darkblue"] .product-title,
+[data-color-scheme="blue-darkblue"] .section-title,
+[data-color-scheme="blue-darkblue"] .water-info h2,
+[data-color-scheme="blue-darkblue"] h1,
+[data-color-scheme="blue-darkblue"] h2,
+[data-color-scheme="blue-darkblue"] h3,
+[data-color-scheme="blue-darkblue"] h4 {
+    color: #000080 !important;
+}
+
+[data-color-scheme="blue-darkblue"] .hero-subtitle,
+[data-color-scheme="blue-darkblue"] .water-description,
+[data-color-scheme="blue-darkblue"] .idea-question,
+[data-color-scheme="blue-darkblue"] .idea-answer,
+[data-color-scheme="blue-darkblue"] .idea-conclusion,
+[data-color-scheme="blue-darkblue"] .performance-text p,
+[data-color-scheme="blue-darkblue"] .clean-text p,
+[data-color-scheme="blue-darkblue"] .eco-text p,
+[data-color-scheme="blue-darkblue"] .vision-text p,
+[data-color-scheme="blue-darkblue"] .author,
+[data-color-scheme="blue-darkblue"] .footer-section p,
+[data-color-scheme="blue-darkblue"] p {
+    color: #0000ff !important;
+}
+
+[data-color-scheme="blue-darkblue"] .btn-primary {
+    background-color: #0000ff !important;
+    color: #e6f3ff !important;
+    border-color: #0000ff !important;
+}
+
+[data-color-scheme="blue-darkblue"] .btn-outline {
+    background-color: transparent !important;
+    color: #0000ff !important;
+    border-color: #0000ff !important;
+}
+
+[data-color-scheme="blue-darkblue"] .btn-outline:hover {
+    background-color: #0000ff !important;
+    color: #e6f3ff !important;
+}
+
+/* Схема 0: Белый фон с черным текстом (стандартная) */
+[data-color-scheme="white-black"] {
+    /* Эта схема использует стандартные цвета, поэтому стили могут быть минимальными */
+    background-color: #ffffff !important;
+    color: #000000 !important;
+}
+
+[data-color-scheme="white-black"] * {
+    color: inherit !important;
+}
+
+/* ===== СТИЛИ ДЛЯ ОТКЛЮЧЕНИЯ ИЗОБРАЖЕНИЙ ===== */
+
+/* Основной класс для скрытия изображений */
+.images-disabled img {
+    display: none !important;
+    visibility: hidden !important;
+}
+
+/* Замена для изображений продуктов */
+.images-disabled .product-image {
+    background-color: #f0f0f0 !important;
+    min-height: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+.images-disabled .product-image::before {
+    content: "🖼️ Изображение отключено";
+    color: #666;
+    font-size: 14px;
+    text-align: center;
+    padding: 20px;
+}
+
+/* Замена для изображений в секциях */
+.images-disabled .water-info-image,
+.images-disabled .idea-image,
+.images-disabled .performance-image,
+.images-disabled .eco-image,
+.images-disabled .vision-image,
+.images-disabled .mission-image,
+.images-disabled .member-photo {
+    background-color: #f0f0f0 !important;
+    min-height: 300px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+.images-disabled .water-info-image::before,
+.images-disabled .idea-image::before,
+.images-disabled .performance-image::before,
+.images-disabled .eco-image::before,
+.images-disabled .vision-image::before,
+.images-disabled .mission-image::before {
+    content: "🌿 Изображение отключено";
+    color: #666;
+    font-size: 16px;
+    text-align: center;
+    padding: 30px;
+}
+
+.images-disabled .member-photo::before {
+    content: "👤 Фото отключено";
+    color: #666;
+    font-size: 14px;
+    text-align: center;
+    padding: 20px;
+}
+
+/* Иконки в слайдерах и сертификатах */
+.images-disabled .swiper-slide img,
+.images-disabled .award-item img,
+.images-disabled .certificate-item img {
+    display: none !important;
+}
+
+.images-disabled .swiper-slide,
+.images-disabled .award-item,
+.images-disabled .certificate-item {
+    background-color: #f5f5f5 !important;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 150px;
+}
+
+.images-disabled .swiper-slide::before,
+.images-disabled .award-item::before,
+.images-disabled .certificate-item::before {
+    content: "🏆 Иконка отключена";
+    color: #666;
+    font-size: 14px;
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+/* Логотипы и иконки соцсетей */
+.images-disabled .logo,
+.images-disabled .social-icons img,
+.images-disabled .user-icon,
+.images-disabled .cart-icon {
+    /* Не скрываем функциональные иконки */
+}
+
+.images-disabled .value-icon {
+    font-size: 40px;
+    background-color: #f0f0f0;
+    border-radius: 50%;
+    width: 80px;
+    height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 20px;
+}
+
+/* ===== СТИЛИ ДЛЯ КНОПОК ЦВЕТОВЫХ СХЕМ ===== */
+
+/* Кнопка цветовых схем */
+.color-scheme-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 6px;
+    border: 1px solid #d0d0d0;
+    background: white;
+    color: #333;
+    font-family: 'Roboto', sans-serif;
+    font-size: 18px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    padding: 0;
+}
+
+.color-scheme-btn:hover {
+    background: #f5f5f5;
+    border-color: #1a5d4f;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Кнопка отключения изображений */
+.image-toggle-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 6px;
+    border: 1px solid #d0d0d0;
+    background: white;
+    color: #333;
+    font-family: 'Roboto', sans-serif;
+    font-size: 18px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    padding: 0;
+}
+
+.image-toggle-btn:hover {
+    background: #f5f5f5;
+    border-color: #1a5d4f;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.image-toggle-btn.active {
+    background: #1a5d4f;
+    color: white;
+    border-color: #1a5d4f;
+}
+
+.image-toggle-btn.active:hover {
+    background: #164b3f;
+}
+
+/* ===== ТЕМНАЯ ТЕМА ДЛЯ НОВЫХ КНОПОК ===== */
+
+[data-theme="dark"] .color-scheme-btn,
+[data-theme="dark"] .image-toggle-btn {
+    background: #2a2a2a !important;
+    color: #e0e0e0 !important;
+    border: 1px solid #444 !important;
+}
+
+[data-theme="dark"] .color-scheme-btn:hover,
+[data-theme="dark"] .image-toggle-btn:hover {
+    background: #333 !important;
+    border-color: #1a5d4f !important;
+}
+
+[data-theme="dark"] .image-toggle-btn.active {
+    background: #1a5d4f !important;
+    color: white !important;
+    border-color: #1a5d4f !important;
+}
+
+/* ===== АДАПТИВНОСТЬ ДЛЯ НОВЫХ КНОПОК ===== */
+
+@media (max-width: 768px) {
+    .color-scheme-btn,
+    .image-toggle-btn {
+        width: 36px;
+        height: 36px;
+        font-size: 16px;
+    }
+}
+
+/* ===== ВЗАИМОДЕЙСТВИЕ ЦВЕТОВЫХ СХЕМ И ТЕМНОЙ ТЕМЫ ===== */
+
+/* Если включена темная тема И цветовая схема, приоритет у цветовой схемы */
+[data-theme="dark"][data-color-scheme] {
+    /* Цветовые схемы переопределяют темную тему */
+}
+
+/* Если включена цветовая схема, но пользователь переключил на темную тему,
+   цветовая схема должна сохраняться, поэтому специфичность селекторов
+   [data-color-scheme] выше, чем [data-theme="dark"] */
+   

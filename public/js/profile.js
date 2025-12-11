@@ -976,24 +976,96 @@ function deleteAccount() {
         if (confirm('Для подтверждения введите "DELETE" в поле ниже:')) {
             const input = prompt('Введите DELETE для подтверждения удаления:');
             if (input === 'DELETE') {
-                // Локальное удаление
-                localStorage.removeItem('everist_currentUser');
-                fetch('http://localhost:3000/users/', {
-                 method: 'DELETE',
-                  })
-                  .then(response => {
-                  if (response.ok) {
-                  console.log('Данные успешно удалены');
-                     } else {
-                   console.log('Ошибка при удалении');
-                  }
-                     })
-.catch(error => console.error('Произошла ошибка:', error));
-                showNotification('Аккаунт удален локально. Перенаправляем на главную...', 'info');
-                setTimeout(() => {
-                    window.location.href = '../index.html';
-                }, 1500);
+                // Получаем ID текущего пользователя
+                const userId = currentUser?.id || JSON.parse(localStorage.getItem('everist_currentUser'))?.id;
+                
+                if (!userId) {
+                    showNotification('Ошибка: не найден ID пользователя', 'error');
+                    return;
+                }
+                
+                // 1. Удаляем пользователя с сервера
+                fetch(`http://localhost:3000/users/${userId}`, {
+                    method: 'DELETE',
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    console.log('✅ Пользователь удален с сервера');
+                    
+                    // 2. Удаляем корзину пользователя с сервера
+                    return fetch(`http://localhost:3000/cart?userId=${userId}`);
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then(cartItems => {
+                    // Удаляем все товары из корзины пользователя
+                    const deletePromises = cartItems.map(item => 
+                        fetch(`http://localhost:3000/cart/${item.id}`, {
+                            method: 'DELETE',
+                        })
+                    );
+                    return Promise.all(deletePromises);
+                })
+                .then(() => {
+                    console.log('✅ Корзина пользователя удалена с сервера');
+                    
+                    // 3. Удаляем заказы пользователя с сервера
+                    return fetch(`http://localhost:3000/orders?userId=${userId}`);
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then(orders => {
+                    // Удаляем все заказы пользователя
+                    const deletePromises = orders.map(order => 
+                        fetch(`http://localhost:3000/orders/${order.id}`, {
+                            method: 'DELETE',
+                        })
+                    );
+                    return Promise.all(deletePromises);
+                })
+                .then(() => {
+                    console.log('✅ Заказы пользователя удалены с сервера');
+                    
+                    // 4. Очищаем локальное хранилище
+                    localStorage.removeItem('everist_currentUser');
+                    localStorage.removeItem('token');
+                    localStorage.removeItem(`everist_cart_${userId}`);
+                    localStorage.removeItem(`everist_orders_${userId}`);
+                    
+                    // 5. Сбрасываем глобальные переменные
+                    currentUser = null;
+                    if (window.dataService) {
+                        window.dataService.currentUser = null;
+                        window.dataService.cart = [];
+                        window.dataService.orders = [];
+                    }
+                    
+                    showNotification('Аккаунт и все данные успешно удалены. Перенаправляем на главную...', 'success');
+                    
+                    // 6. Перенаправляем на главную с небольшим таймаутом
+                    setTimeout(() => {
+                        window.location.href = '../index.html';
+                    }, 1500);
+                })
+                .catch(error => {
+                    console.error('❌ Ошибка при удалении аккаунта:', error);
+                    showNotification('Произошла ошибка при удалении аккаунта: ' + error.message, 'error');
+                });
+            } else {
+                showNotification('Удаление отменено. Неправильное подтверждение.', 'info');
             }
+        } else {
+            showNotification('Удаление отменено', 'info');
         }
     }
 }

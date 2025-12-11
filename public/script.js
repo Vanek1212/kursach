@@ -1,4 +1,4 @@
-// ===== КОНСТАНТЫ И НАСТРОЙКИ =====
+/* ===== КОНСТАНТЫ И НАСТРОЙКИ =====*/
 const API_BASE_URL = 'http://localhost:3000';
 
 // Глобальный объект для состояния приложения
@@ -54,7 +54,70 @@ function initPreloader() {
         return;
     }
     
-    preloader.style.display = 'flex';
+    // Принудительно задаем стили, которые игнорируют цветовые схемы
+    preloader.style.cssText = `
+        position: fixed !important;
+        top: 0 !important;
+        left: 0 !important;
+        width: 100% !important;
+        height: 100% !important;
+        background: #ffffff !important;
+        z-index: 9999 !important;
+        display: flex !important;
+        flex-direction: column !important;
+        justify-content: center !important;
+        align-items: center !important;
+        transition: opacity 0.5s ease !important;
+    `;
+    
+    // Защищаем внутренние элементы от цветовых схем
+    const preloaderContent = preloader.querySelector('.preloader-content');
+    if (preloaderContent) {
+        preloaderContent.style.cssText = `
+            text-align: center !important;
+            color: #333333 !important;
+        `;
+    }
+    
+    const loadingText = document.getElementById('loadingText');
+    if (loadingText) {
+        loadingText.style.cssText = `
+            color: #333333 !important;
+            margin-bottom: 20px !important;
+            font-size: 18px !important;
+        `;
+    }
+    
+    const progressBarContainer = document.getElementById('progressBarContainer');
+    if (progressBarContainer) {
+        progressBarContainer.style.cssText = `
+            width: 200px !important;
+            height: 4px !important;
+            background: #e0e0e0 !important;
+            border-radius: 2px !important;
+            overflow: hidden !important;
+            margin-bottom: 10px !important;
+        `;
+    }
+    
+    const progressBar = document.getElementById('progressBar');
+    if (progressBar) {
+        progressBar.style.cssText = `
+            height: 100% !important;
+            background: #1a5d4f !important;
+            width: 0% !important;
+            transition: width 0.3s ease !important;
+        `;
+    }
+    
+    const progressCounter = document.getElementById('progressCounter');
+    if (progressCounter) {
+        progressCounter.style.cssText = `
+            color: #333333 !important;
+            font-size: 14px !important;
+        `;
+    }
+    
     preloader.classList.remove('hidden');
     
     const loadingMessages = [
@@ -66,7 +129,6 @@ function initPreloader() {
     ];
     
     const randomMessage = loadingMessages[Math.floor(Math.random() * loadingMessages.length)];
-    const loadingText = document.getElementById('loadingText');
     if (loadingText) {
         loadingText.textContent = randomMessage;
     }
@@ -117,7 +179,7 @@ function hidePreloader() {
     const preloader = document.getElementById('preloader');
     if (!preloader) return;
     
-    preloader.classList.add('fade-out');
+    preloader.style.opacity = '0';
     
     setTimeout(() => {
         preloader.classList.add('hidden');
@@ -128,6 +190,7 @@ function hidePreloader() {
         showWelcomeMessage();
     }, 500);
 }
+
 
 // ===== АВТОРИЗАЦИЯ И ПОЛЬЗОВАТЕЛИ =====
 async function loginUser(email, password) {
@@ -842,38 +905,260 @@ notificationStyles.textContent = `
 document.head.appendChild(notificationStyles);
 
 // ===== ФУНКЦИИ ДОСТУПНОСТИ =====
-function initAccessibility() {
-    console.log('♿ Инициализация панели доступности...');
-    loadAccessibilitySettings();
+
+// Глобальные экземпляры менеджеров
+let colorSchemeManager = null;
+let imageManager = null;
+let isAccessibilityInitialized = false;
+
+// Класс для управления цветовыми схемами
+class ColorSchemeManager {
+    constructor() {
+        this.schemes = [
+            'white-black',    // Стандартная
+            'black-white',    // Черный фон, белый текст
+            'black-green',    // Черный фон, зеленый текст
+            'beige-brown',    // Бежевый фон, коричневый текст
+            'blue-darkblue'   // Голубой фон, темно-синий текст
+        ];
+        this.currentSchemeIndex = 0;
+        this.button = document.getElementById('colorSchemeToggle');
+        this.init();
+    }
     
-    const fontSizeButtons = document.querySelectorAll('.accessibility-btn[data-size]');
-    fontSizeButtons.forEach(button => {
-        button.addEventListener('click', (e) => {
-            const size = e.currentTarget.dataset.size;
-            setFontSize(size);
+    init() {
+        // Загружаем сохраненную схему из localStorage
+        const savedScheme = localStorage.getItem('colorScheme');
+        if (savedScheme) {
+            this.currentSchemeIndex = this.schemes.indexOf(savedScheme);
+            if (this.currentSchemeIndex === -1) this.currentSchemeIndex = 0;
+            this.applyScheme(this.currentSchemeIndex, false);
+        }
+        
+        // Назначаем обработчик события
+        if (this.button) {
+            this.button.addEventListener('click', () => {
+                this.nextScheme();
+            });
+        }
+    }
+    
+    nextScheme() {
+        this.currentSchemeIndex = (this.currentSchemeIndex + 1) % this.schemes.length;
+        this.applyScheme(this.currentSchemeIndex);
+    }
+    
+    applyScheme(index, showNotification = true) {
+        // Удаляем все атрибуты цветовых схем
+        this.schemes.forEach(scheme => {
+            document.documentElement.removeAttribute(`data-color-scheme-${scheme}`);
         });
-    });
+        document.documentElement.removeAttribute('data-color-scheme');
+        
+        // Устанавливаем новую схему
+        const scheme = this.schemes[index];
+        document.documentElement.setAttribute('data-color-scheme', scheme);
+        
+        // Сохраняем в localStorage
+        localStorage.setItem('colorScheme', scheme);
+        
+        // Обновляем иконку
+        this.updateIcon(scheme);
+        
+        if (showNotification) {
+            this.showNotification(this.getSchemeName(scheme));
+        }
+        
+        console.log(`🎨 Цветовая схема установлена: ${scheme}`);
+    }
     
-    const themeToggle = document.getElementById('themeToggle');
-    if (themeToggle) themeToggle.addEventListener('click', toggleTheme);
+    getSchemeName(scheme) {
+        const names = {
+            'white-black': 'Белый фон / Черный текст',
+            'black-white': 'Черный фон / Белый текст',
+            'black-green': 'Черный фон / Зеленый текст',
+            'beige-brown': 'Бежевый фон / Коричневый текст',
+            'blue-darkblue': 'Голубой фон / Темно-синий текст'
+        };
+        return names[scheme] || scheme;
+    }
     
-    const langToggle = document.getElementById('langToggle');
-    if (langToggle) langToggle.addEventListener('click', toggleLanguage);
+    updateIcon(scheme) {
+        if (!this.button) return;
+        
+        const icon = this.button.querySelector('.color-scheme-icon');
+        if (!icon) return;
+        
+        const icons = {
+            'white-black': '⚫',
+            'black-white': '⚪',
+            'black-green': '🟢',
+            'beige-brown': '🟤',
+            'blue-darkblue': '🔵'
+        };
+        
+        icon.textContent = icons[scheme] || '🎨';
+    }
     
-    const resetBtn = document.getElementById('resetSettings');
-    if (resetBtn) resetBtn.addEventListener('click', resetAccessibilitySettings);
+    showNotification(message) {
+        showAccessibilityNotification(`Цветовая схема: ${message}`);
+    }
     
-    setupScrollBehavior();
+    reset() {
+        this.currentSchemeIndex = 0;
+        this.applyScheme(0, false);
+    }
+}
+
+// Класс для управления изображениями
+class ImageManager {
+    constructor() {
+        this.isImagesDisabled = false;
+        this.button = document.getElementById('imageToggle');
+        this.icon = this.button ? this.button.querySelector('.image-icon') : null;
+        this.init();
+    }
+    
+    init() {
+        // Загружаем сохраненное состояние из localStorage
+        const savedState = localStorage.getItem('imagesDisabled');
+        this.isImagesDisabled = savedState === 'true';
+        
+        // Применяем начальное состояние
+        this.applyState(false);
+        
+        // Назначаем обработчик события
+        if (this.button) {
+            this.button.addEventListener('click', () => {
+                this.toggle();
+            });
+        }
+    }
+    
+    toggle() {
+        this.isImagesDisabled = !this.isImagesDisabled;
+        this.applyState();
+        
+        // Сохраняем в localStorage
+        localStorage.setItem('imagesDisabled', this.isImagesDisabled);
+        
+        console.log(`🖼️ Изображения: ${this.isImagesDisabled ? 'отключены' : 'включены'}`);
+    }
+    
+    applyState(showNotification = true) {
+        if (this.isImagesDisabled) {
+            document.body.classList.add('images-disabled');
+            if (this.button) this.button.classList.add('active');
+            if (this.icon) this.icon.textContent = '🚫';
+            if (this.button) this.button.title = 'Включить изображения';
+            
+            if (showNotification) {
+                showAccessibilityNotification('Изображения отключены');
+            }
+        } else {
+            document.body.classList.remove('images-disabled');
+            if (this.button) this.button.classList.remove('active');
+            if (this.icon) this.icon.textContent = '🖼️';
+            if (this.button) this.button.title = 'Отключить изображения';
+            
+            if (showNotification) {
+                showAccessibilityNotification('Изображения включены');
+            }
+        }
+    }
+    
+    reset() {
+        this.isImagesDisabled = false;
+        this.applyState(false);
+        localStorage.removeItem('imagesDisabled');
+    }
+}
+
+function initAccessibility() {
+    // Защита от повторной инициализации
+    if (isAccessibilityInitialized) {
+        console.log('♿ Панель доступности уже инициализирована');
+        return;
+    }
+    
+    console.log('♿ Инициализация панели доступности...');
+    
+    try {
+        // Инициализируем менеджеры
+        colorSchemeManager = new ColorSchemeManager();
+        imageManager = new ImageManager();
+        
+        // Загружаем настройки
+        loadAccessibilitySettings();
+        
+        // Назначаем обработчики для кнопок размера шрифта
+        const fontSizeButtons = document.querySelectorAll('.accessibility-btn[data-size]');
+        fontSizeButtons.forEach(button => {
+            button.addEventListener('click', (e) => {
+                const size = e.currentTarget.dataset.size;
+                setFontSize(size);
+            });
+        });
+        
+        // Назначаем обработчики для других кнопок
+        const themeToggle = document.getElementById('themeToggle');
+        if (themeToggle) {
+            themeToggle.addEventListener('click', toggleTheme);
+            updateThemeIcons();
+        }
+        
+        const langToggle = document.getElementById('langToggle');
+        if (langToggle) langToggle.addEventListener('click', toggleLanguage);
+        
+        const resetBtn = document.getElementById('resetSettings');
+        if (resetBtn) resetBtn.addEventListener('click', resetAccessibilitySettings);
+        
+        // Настраиваем поведение при скролле
+        setupScrollBehavior();
+        
+        isAccessibilityInitialized = true;
+        console.log('✅ Панель доступности инициализирована');
+    } catch (error) {
+        console.error('❌ Ошибка инициализации доступности:', error);
+    }
 }
 
 function setFontSize(size, showNotification = true) {
-    document.body.classList.remove('font-small', 'font-medium', 'font-large', 'font-xlarge');
-    document.body.classList.add('font-' + size);
-    
-    localStorage.setItem('everist_font_size', size);
-    
-    if (showNotification) {
-        showAccessibilityNotification(`Размер шрифта: ${getFontSizeLabel(size)}`);
+    try {
+        // Удаляем все классы размеров
+        document.body.classList.remove('font-small', 'font-medium', 'font-large', 'font-xlarge');
+        
+        // Добавляем нужный класс
+        document.body.classList.add(`font-${size}`);
+        
+        // Сохраняем в localStorage
+        localStorage.setItem('fontSize', size);
+        
+        // Обновляем активные кнопки
+        updateFontSizeButtons(size);
+        
+        if (showNotification) {
+            showAccessibilityNotification(`Размер шрифта: ${getFontSizeLabel(size)}`);
+        }
+        
+        console.log(`📏 Размер шрифта установлен: ${size}`);
+    } catch (error) {
+        console.error('❌ Ошибка установки размера шрифта:', error);
+    }
+}
+
+function updateFontSizeButtons(activeSize) {
+    try {
+        const buttons = document.querySelectorAll('.accessibility-btn[data-size]');
+        buttons.forEach(button => {
+            if (button.dataset.size === activeSize) {
+                button.classList.add('active');
+            } else {
+                button.classList.remove('active');
+            }
+        });
+    } catch (error) {
+        console.error('❌ Ошибка обновления кнопок шрифта:', error);
     }
 }
 
@@ -888,108 +1173,201 @@ function getFontSizeLabel(size) {
 }
 
 function toggleTheme() {
-    const currentTheme = document.documentElement.getAttribute('data-theme') || 'light';
-    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-    
-    document.documentElement.setAttribute('data-theme', newTheme);
-    localStorage.setItem('theme', newTheme);
-    updateThemeIconSimple(newTheme);
-    showAccessibilityNotification(`Тема: ${newTheme === 'dark' ? 'Темная' : 'Светлая'}`);
+    try {
+        const currentTheme = document.documentElement.getAttribute('data-theme') || 'light';
+        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+        
+        document.documentElement.setAttribute('data-theme', newTheme);
+        localStorage.setItem('theme', newTheme);
+        
+        updateThemeIcons();
+        showAccessibilityNotification(`Тема: ${newTheme === 'dark' ? 'Тёмная' : 'Светлая'}`);
+        
+        console.log(`🌓 Тема изменена: ${newTheme}`);
+    } catch (error) {
+        console.error('❌ Ошибка переключения темы:', error);
+    }
 }
 
-function updateThemeIconSimple(theme) {
-    const button = document.getElementById('themeToggle');
-    if (!button) return;
-    
-    const icon = button.querySelector('.theme-icon:first-child');
-    if (!icon) return;
-    
-    icon.textContent = theme === 'dark' ? '☀️' : '🌙';
-    icon.title = theme === 'dark' ? 'Переключить на светлую тему' : 'Переключить на темную тему';
+function updateThemeIcons() {
+    try {
+        const themeToggle = document.getElementById('themeToggle');
+        if (!themeToggle) return;
+        
+        const currentTheme = document.documentElement.getAttribute('data-theme') || 'light';
+        const sunIcon = themeToggle.querySelector('.theme-icon.sun');
+        const moonIcon = themeToggle.querySelector('.theme-icon.moon');
+        
+        if (sunIcon && moonIcon) {
+            if (currentTheme === 'dark') {
+                sunIcon.style.display = 'inline';
+                moonIcon.style.display = 'none';
+            } else {
+                sunIcon.style.display = 'none';
+                moonIcon.style.display = 'inline';
+            }
+        }
+    } catch (error) {
+        console.error('❌ Ошибка обновления иконок темы:', error);
+    }
 }
 
 function loadAccessibilitySettings() {
-    const savedTheme = localStorage.getItem('theme') || 'light';
-    document.documentElement.setAttribute('data-theme', savedTheme);
-    updateThemeIconSimple(savedTheme);
-    
-    const savedFontSize = localStorage.getItem('everist_font_size') || 'medium';
-    setFontSize(savedFontSize, false);
-    
-    const savedLang = localStorage.getItem('language') || 'ru';
-    updateLangButton(savedLang);
+    try {
+        // Загружаем тему
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        document.documentElement.setAttribute('data-theme', savedTheme);
+        
+        // Загружаем размер шрифта
+        const savedFontSize = localStorage.getItem('fontSize') || 'medium';
+        setFontSize(savedFontSize, false);
+        
+        // Загружаем язык
+        const savedLang = localStorage.getItem('language') || 'ru';
+        updateLangButton(savedLang);
+        
+        // Обновляем иконки темы
+        updateThemeIcons();
+    } catch (error) {
+        console.error('❌ Ошибка загрузки настроек доступности:', error);
+    }
 }
 
 function toggleLanguage() {
-    const currentLang = document.documentElement.getAttribute('lang') || 'ru';
-    const newLang = currentLang === 'ru' ? 'en' : 'ru';
-    
-    document.documentElement.setAttribute('lang', newLang);
-    localStorage.setItem('language', newLang);
-    updateLangButton(newLang);
-    showAccessibilityNotification(`Язык: ${newLang === 'ru' ? 'Русский' : 'English'}`);
+    try {
+        const currentLang = localStorage.getItem('language') || 'ru';
+        const newLang = currentLang === 'ru' ? 'en' : 'ru';
+        
+        document.documentElement.setAttribute('lang', newLang);
+        localStorage.setItem('language', newLang);
+        
+        updateLangButton(newLang);
+        showAccessibilityNotification(`Язык: ${newLang === 'ru' ? 'Русский' : 'English'}`);
+        
+        console.log(`🌐 Язык изменен: ${newLang}`);
+    } catch (error) {
+        console.error('❌ Ошибка переключения языка:', error);
+    }
 }
 
 function updateLangButton(lang) {
-    const button = document.getElementById('langToggle');
-    if (!button) return;
-    
-    const icon = button.querySelector('.lang-icon');
-    if (!icon) return;
-    
-    icon.textContent = lang === 'ru' ? 'EN' : 'RU';
+    try {
+        const button = document.getElementById('langToggle');
+        if (!button) return;
+        
+        const icon = button.querySelector('.lang-icon');
+        if (!icon) return;
+        
+        icon.textContent = lang === 'ru' ? 'EN' : 'RU';
+    } catch (error) {
+        console.error('❌ Ошибка обновления кнопки языка:', error);
+    }
 }
 
 function initLanguage() {
-    const savedLang = localStorage.getItem('language') || 'ru';
-    document.documentElement.setAttribute('lang', savedLang);
-    updateLangButton(savedLang);
-    console.log(`🌐 Язык установлен: ${savedLang === 'ru' ? 'Русский' : 'English'}`);
+    try {
+        const savedLang = localStorage.getItem('language') || 'ru';
+        document.documentElement.setAttribute('lang', savedLang);
+        updateLangButton(savedLang);
+        console.log(`🌐 Язык установлен: ${savedLang === 'ru' ? 'Русский' : 'English'}`);
+    } catch (error) {
+        console.error('❌ Ошибка инициализации языка:', error);
+    }
 }
 
 function resetAccessibilitySettings() {
-    if (confirm('Сбросить все настройки доступности?')) {
-        localStorage.removeItem('everist_font_size');
-        localStorage.removeItem('theme');
-        localStorage.removeItem('language');
-        
-        setFontSize('medium', false);
-        document.documentElement.setAttribute('data-theme', 'light');
-        updateThemeIconSimple('light');
-        document.documentElement.setAttribute('lang', 'ru');
-        updateLangButton('ru');
-        
-        showAccessibilityNotification('Настройки сброшены');
+    try {
+        if (confirm('Сбросить все настройки доступности?')) {
+            // Сброс размера шрифта
+            localStorage.removeItem('fontSize');
+            setFontSize('medium', false);
+            
+            // Сброс темы
+            localStorage.removeItem('theme');
+            document.documentElement.removeAttribute('data-theme');
+            updateThemeIcons();
+            
+            // Сброс цветовой схемы
+            if (colorSchemeManager) {
+                colorSchemeManager.reset();
+            }
+            
+            // Сброс изображений
+            if (imageManager) {
+                imageManager.reset();
+            }
+            
+            // Сброс языка
+            localStorage.removeItem('language');
+            document.documentElement.setAttribute('lang', 'ru');
+            updateLangButton('ru');
+            
+            showAccessibilityNotification('Все настройки сброшены');
+            console.log('🔄 Все настройки доступности сброшены');
+        }
+    } catch (error) {
+        console.error('❌ Ошибка сброса настроек доступности:', error);
     }
 }
 
 function setupScrollBehavior() {
-    const panel = document.querySelector('.accessibility-panel');
-    if (!panel) return;
-    
-    let lastScrollY = window.scrollY;
-    let scrollTimeout;
-    
-    window.addEventListener('scroll', () => {
-        clearTimeout(scrollTimeout);
-        
-        const currentScrollY = window.scrollY;
-        const isScrollingDown = currentScrollY > lastScrollY;
-        
-        if (isScrollingDown && currentScrollY > 100) {
-            panel.classList.add('hidden');
-        } else if (!isScrollingDown || currentScrollY < 50) {
-            panel.classList.remove('hidden');
+    try {
+        const panel = document.querySelector('.accessibility-panel');
+        if (!panel) {
+            console.warn('⚠️ Панель доступности не найдена для настройки скролла');
+            return;
         }
         
-        lastScrollY = currentScrollY;
+        let lastScrollY = window.scrollY;
+        let scrollTimeout;
         
-        scrollTimeout = setTimeout(() => {
+        const handleScroll = () => {
+            // Отменяем предыдущий таймаут
+            clearTimeout(scrollTimeout);
+            
+            const currentScrollY = window.pageYOffset || document.documentElement.scrollTop;
+            const isScrollingDown = currentScrollY > lastScrollY;
+            
+            // Если скроллим вниз и проскроллили больше 100px - скрываем
+            if (isScrollingDown && currentScrollY > 100) {
+                panel.classList.add('hidden');
+            } 
+            // Если скроллим вверх или в начале страницы - показываем
+            else if (!isScrollingDown || currentScrollY < 50) {
+                panel.classList.remove('hidden');
+            }
+            
+            lastScrollY = currentScrollY;
+            
+            // Показываем панель через 1.5 секунды после остановки скролла
+            scrollTimeout = setTimeout(() => {
+                panel.classList.remove('hidden');
+            }, 1500);
+        };
+        
+        window.addEventListener('scroll', handleScroll);
+        
+        // Показываем панель при наведении мыши
+        panel.addEventListener('mouseenter', () => {
             panel.classList.remove('hidden');
-        }, 1500);
-    });
+            clearTimeout(scrollTimeout);
+        });
+        
+        // Показываем панель при клике на нее
+        panel.addEventListener('click', () => {
+            panel.classList.remove('hidden');
+            clearTimeout(scrollTimeout);
+        });
+        
+        console.log('✅ Поведение при скролле настроено');
+    } catch (error) {
+        console.error('❌ Ошибка настройки скролла:', error);
+    }
 }
 
+// Удалите эти строки из вашего скрипта:
+// - Удалите строки с 860 по 877 (весь блок с document.addEventListener)
+// - Удалите строки 882-883 (повторный вызов document.head.appendChild)
 // ===== БУРГЕР-МЕНЮ =====
 function initBurgerMenu() {
     console.log('🍔 Инициализация бургер-меню...');

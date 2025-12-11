@@ -153,34 +153,6 @@
       "birthDate": "07.12.2009",
       "acceptedTerms": true,
       "isActive": true
-    },
-    {
-      "id": "12",
-      "email": "uhusudbsbsd@gmail.com",
-      "password": "KNKj26xG#@#*",
-      "name": "qqqqqqqqqqqqqq qqqqqqqqqqqq qqqqqqqqqq",
-      "avatar": "https://i.pravatar.cc/150?img=1",
-      "phone": "+375 22 222 22 22",
-      "address": "",
-      "registrationDate": "2025-12-11",
-      "username": "fast_bear246",
-      "birthDate": "11.12.2009",
-      "acceptedTerms": true,
-      "isActive": true
-    },
-    {
-      "id": 13,
-      "email": "dd222d@gmail.com",
-      "password": "^9g#@CzFZaHt",
-      "name": "лалалалалалал ИВае assassa",
-      "avatar": "https://i.pravatar.cc/150?img=40",
-      "phone": "+375 11 111 11 11",
-      "address": "",
-      "registrationDate": "2025-12-11",
-      "username": "wise_phoenix939",
-      "birthDate": "03.12.2009",
-      "acceptedTerms": true,
-      "isActive": true
     }
   ],
   "products": [
