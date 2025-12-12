@@ -800,22 +800,6 @@
         "Ароматерапия",
         "Антистатик"
       ]
-    },
-    {
-      "id": "31",
-      "name": "ггггггг",
-      "price": 100,
-      "category": "face",
-      "image": "https://images.unsplash.com/photo-1556228578-9c360e2d0b4a?w=400",
-      "reviews": 0,
-      "description": "Новый товар",
-      "volume": "100ml",
-      "ingredients": [
-        "Natural Ingredients"
-      ],
-      "features": [
-        "Эко-продукт"
-      ]
     }
   ],
   "cart": [

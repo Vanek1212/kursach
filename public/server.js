@@ -14,7 +14,18 @@ server.listen(3000, () => {
 // Настройка порта
 const PORT = process.env.PORT || 3000;
 const dbPath = path.join(__dirname, 'db.json');
+self.addEventListener('install', event => {
+    console.log('Service Worker установлен');
+});
 
+self.addEventListener('activate', event => {
+    console.log('Service Worker активирован');
+});
+
+self.addEventListener('fetch', event => {
+    // Просто пропускаем все запросы
+    return;
+});
 // ==================== ИНИЦИАЛИЗАЦИЯ БАЗЫ ДАННЫХ ====================
 
 function initDatabase() {

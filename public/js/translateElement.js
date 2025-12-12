@@ -4,6 +4,8 @@ const translations = {
             'SHOP': 'МАГАЗИН',
             'OUR STORY': 'О НАС',
             'CONTACT': 'КОНТАКТЫ',
+            'BLOG':'БЛОГ',
+            'FAQ':'FAQ',
             
             
             // Hero section - полный текст заголовка
@@ -843,6 +845,8 @@ const translations = {
             'МАГАЗИН': 'SHOP',
             'КОНТАКТЫ': 'CONTACT',
             'О НАС': 'OUR STORY',
+            'БЛОГ':'BLOG',
+            'FAQ':'FAQ',
             
             
             'Найдите свой уход (& Получите Подарок!)': 'Find Your Shower Routine (& Receive a Free Gift!)',
