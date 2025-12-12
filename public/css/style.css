@@ -1721,3 +1721,15 @@ img {
         flex-direction: column;
     }
 }
+/* В основной CSS файл */
+.user-logged-in .login-link {
+    display: none !important;
+}
+
+.admin-logged-in .admin-only {
+    display: block !important;
+}
+
+.admin-only {
+    display: none;
+}
