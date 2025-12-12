@@ -190,9 +190,9 @@ function renderProfileHeader() {
             <a href="cart.html" class="btn btn-outline">
                 <i class="fas fa-shopping-cart"></i> Корзина
             </a>
-            <button class="btn btn-outline" onclick="editProfile()">
-                <i class="fas fa-edit"></i> Редактировать
-            </button>
+            <a href="edit-profile.html" class="btn btn-outline">
+    <i class="fas fa-edit"></i> Изменить данные
+</a>
         </div>
     `;
 }
