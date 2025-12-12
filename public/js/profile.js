@@ -183,16 +183,6 @@ function renderProfileHeader() {
                 <span><i class="fas fa-id-badge"></i> ID: ${currentUser.id}</span>
             </div>
         </div>
-        <div class="profile-actions">
-            <a href="shop.html" class="btn btn-primary">
-                <i class="fas fa-shopping-bag"></i> Магазин
-            </a>
-            <a href="cart.html" class="btn btn-outline">
-                <i class="fas fa-shopping-cart"></i> Корзина
-            </a>
-            <a href="edit-profile.html" class="btn btn-outline">
-    <i class="fas fa-edit"></i> Изменить данные
-</a>
         </div>
     `;
 }

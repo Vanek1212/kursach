@@ -1,4 +1,4 @@
-// edit-profile.js - Полная реализация редактирования профиля с валидацией и проверкой email
+// edit-profile.js - Полная реализация редактирования профиля с валидацией
 
 class EditProfileManager {
     constructor() {
@@ -9,9 +9,6 @@ class EditProfileManager {
     
     async init() {
         console.log('📝 Инициализация редактирования профиля...');
-        
-        // Скрываем прелоадер
-        this.hidePreloader();
         
         try {
             // Проверяем авторизацию
@@ -27,14 +24,34 @@ class EditProfileManager {
             this.setupPhoneMask();
             
             console.log('✅ Редактирование профиля инициализировано');
-            
         } catch (error) {
             console.error('❌ Ошибка инициализации:', error);
             this.showError('Ошибка загрузки данных. Пожалуйста, войдите снова.');
             setTimeout(() => window.location.href = 'login.html', 3000);
+        }finally {
+            // Гарантируем скрытие прелоадера
+            this.hidePreloader();
         }
     }
-    
+     hidePreloader() {
+        const preloader = document.getElementById('preloader');
+        if (preloader) {
+            preloader.style.opacity = '0';
+            preloader.style.visibility = 'hidden';
+            
+            setTimeout(() => {
+                preloader.style.display = 'none';
+            }, 500);
+        }
+    }
+    showPreloader() {
+        const preloader = document.getElementById('preloader');
+        if (preloader) {
+            preloader.style.display = 'flex';
+            preloader.style.opacity = '1';
+            preloader.style.visibility = 'visible';
+        }
+    }
     async checkAuthentication() {
         const savedUser = localStorage.getItem('everist_currentUser');
         if (!savedUser) {
@@ -85,11 +102,12 @@ class EditProfileManager {
         
         // Преобразуем дату рождения из dd.mm.yyyy в формат для flatpickr
         if (this.currentUser.birthDate) {
-            document.getElementById('birthDate').value = this.currentUser.birthDate;
+            const parts = this.currentUser.birthDate.split('.');
+            if (parts.length === 3) {
+                const date = new Date(parts[2], parts[1] - 1, parts[0]);
+                document.getElementById('birthDate').value = this.currentUser.birthDate;
+            }
         }
-        
-        // Устанавливаем начальный статус для email
-        this.updateEmailStatus(this.currentUser.email, true, 'Ваш текущий email');
     }
     
     parseFullName() {
@@ -128,23 +146,13 @@ class EditProfileManager {
         document.getElementById('toggleConfirmPassword')?.addEventListener('click', () => 
             this.togglePasswordVisibility('confirmPassword'));
         
-        // Проверка уникальности email при изменении
+        // Проверка уникальности email
         const emailInput = document.getElementById('email');
         if (emailInput) {
             emailInput.addEventListener('blur', () => {
                 const email = emailInput.value.trim();
                 if (email && email !== this.currentUser.email) {
                     this.checkEmailExists(email);
-                }
-            });
-            
-            // Сброс статуса при начале редактирования
-            emailInput.addEventListener('input', () => {
-                const email = emailInput.value.trim();
-                if (email === this.currentUser.email) {
-                    this.updateEmailStatus(email, true, 'Ваш текущий email');
-                } else {
-                    this.updateEmailStatus(email, null, 'Проверка...');
                 }
             });
         }
@@ -174,10 +182,7 @@ class EditProfileManager {
         // Email
         const emailInput = document.getElementById('email');
         if (emailInput) {
-            emailInput.addEventListener('input', () => {
-                const email = emailInput.value.trim();
-                this.validateEmail(email);
-            });
+            emailInput.addEventListener('input', () => this.validateEmail(emailInput.value));
         }
         
         // Телефон
@@ -261,7 +266,7 @@ class EditProfileManager {
     async submitForm(e) {
         e.preventDefault();
         
-        if (!(await this.validateAll())) {
+        if (!this.validateAll()) {
             return;
         }
         
@@ -273,25 +278,6 @@ class EditProfileManager {
         try {
             // Подготавливаем данные для отправки
             const updates = this.prepareUpdateData();
-            
-            // Проверяем, изменился ли email
-            const email = document.getElementById('email').value.trim();
-            if (email !== this.currentUser.email) {
-                // Дополнительная проверка перед отправкой
-                const emailExists = await this.checkEmailExists(email, true);
-                if (emailExists) {
-                    throw new Error('Этот email уже используется другим пользователем');
-                }
-            }
-            
-            // Проверяем, изменился ли username
-            const username = document.getElementById('username').value.trim();
-            if (username !== this.currentUser.username) {
-                const usernameExists = await this.checkUsernameExists(username, true);
-                if (usernameExists) {
-                    throw new Error('Этот username уже используется другим пользователем');
-                }
-            }
             
             // Отправляем PATCH запрос на сервер
             const response = await fetch(`http://localhost:3000/users/${this.currentUser.id}`, {
@@ -321,15 +307,7 @@ class EditProfileManager {
             
         } catch (error) {
             console.error('❌ Ошибка сохранения:', error);
-            
-            let errorMessage = 'Ошибка при сохранении данных. Попробуйте еще раз.';
-            if (error.message.includes('уже используется')) {
-                errorMessage = error.message;
-            } else if (error.message.includes('Failed to fetch')) {
-                errorMessage = 'Сервер недоступен. Проверьте подключение.';
-            }
-            
-            this.showError(errorMessage);
+            this.showError('Ошибка при сохранении данных. Попробуйте еще раз.');
         } finally {
             submitBtn.innerHTML = originalText;
             submitBtn.disabled = false;
@@ -348,7 +326,7 @@ class EditProfileManager {
         if (firstName) fullName += ' ' + firstName;
         if (middleName) fullName += ' ' + middleName;
         
-        if (fullName.trim() !== this.currentUser.name) {
+        if (fullName !== this.currentUser.name) {
             updates.name = fullName.trim();
         }
         
@@ -385,14 +363,14 @@ class EditProfileManager {
         
         // Пароль (только если введен новый)
         const password = document.getElementById('password').value;
-        if (password && password.length > 0) {
+        if (password) {
             updates.password = password;
         }
         
         return updates;
     }
     
-    async validateAll() {
+    validateAll() {
         const errors = [];
         
         // Проверка имени
@@ -408,17 +386,6 @@ class EditProfileManager {
         const email = document.getElementById('email').value.trim();
         if (!this.isValidEmail(email)) {
             errors.push('Введите корректный email');
-        } else if (email !== this.currentUser.email) {
-            // Проверяем уникальность только если email изменился
-            try {
-                const emailExists = await this.checkEmailExists(email, false);
-                if (emailExists) {
-                    errors.push('Этот email уже используется другим пользователем');
-                }
-            } catch (error) {
-                console.error('Ошибка проверки email:', error);
-                errors.push('Не удалось проверить email. Попробуйте еще раз.');
-            }
         }
         
         // Проверка телефона
@@ -431,17 +398,6 @@ class EditProfileManager {
         const username = document.getElementById('username').value.trim();
         if (!this.validateUsername(username)) {
             errors.push('Имя пользователя должно содержать только буквы, цифры и _ (минимум 3 символа)');
-        } else if (username !== this.currentUser.username) {
-            // Проверяем уникальность только если username изменился
-            try {
-                const usernameExists = await this.checkUsernameExists(username, false);
-                if (usernameExists) {
-                    errors.push('Этот username уже используется другим пользователем');
-                }
-            } catch (error) {
-                console.error('Ошибка проверки username:', error);
-                errors.push('Не удалось проверить username. Попробуйте еще раз.');
-            }
         }
         
         // Проверка даты рождения
@@ -471,7 +427,7 @@ class EditProfileManager {
         return true;
     }
     
-    // Валидационные методы
+    // Валидационные методы (аналогичные registr.js)
     validateName(input) {
         if (!input) return false;
         
@@ -490,97 +446,58 @@ class EditProfileManager {
         if (input) {
             this.toggleFieldValidation(input, isValid, 
                 isValid ? 'Email корректный' : 'Введите корректный email');
-            
-            // Если email изменился, сбрасываем статус
-            if (email !== this.currentUser.email) {
-                this.updateEmailStatus(email, null, 'Проверка уникальности...');
-            } else {
-                this.updateEmailStatus(email, true, 'Ваш текущий email');
-            }
         }
         return isValid;
     }
     
-    async checkEmailExists(email, showError = false) {
+    async checkEmailExists(email) {
         try {
             const response = await fetch(`http://localhost:3000/users?email=${encodeURIComponent(email)}`);
-            if (!response.ok) {
-                throw new Error('Ошибка сервера');
-            }
+            if (!response.ok) return false;
             
             const users = await response.json();
             const exists = users.length > 0 && users[0].id !== this.currentUser.id;
             
-            this.updateEmailStatus(email, !exists, exists ? 'Этот email уже занят' : 'Email доступен');
-            
-            if (showError && exists) {
-                return true;
+            const statusElement = document.getElementById('emailStatus');
+            if (statusElement) {
+                if (exists) {
+                    statusElement.textContent = 'Этот email уже занят';
+                    statusElement.style.color = '#e74c3c';
+                } else {
+                    statusElement.textContent = 'Email доступен';
+                    statusElement.style.color = '#27ae60';
+                }
             }
             
             return exists;
         } catch (error) {
             console.error('Ошибка проверки email:', error);
-            this.updateEmailStatus(email, false, 'Ошибка проверки');
             return false;
         }
     }
     
-    updateEmailStatus(email, isValid, message) {
-        const statusElement = document.getElementById('emailStatus');
-        const emailInput = document.getElementById('email');
-        
-        if (statusElement && emailInput.value.trim() === email) {
-            statusElement.textContent = message;
-            
-            if (isValid === true) {
-                statusElement.style.color = '#27ae60';
-                emailInput.classList.remove('error');
-                emailInput.classList.add('success');
-            } else if (isValid === false) {
-                statusElement.style.color = '#e74c3c';
-                emailInput.classList.remove('success');
-                emailInput.classList.add('error');
-            } else {
-                statusElement.style.color = '#3498db';
-                emailInput.classList.remove('error', 'success');
-            }
-        }
-    }
-    
-    async checkUsernameExists(username, showError = false) {
+    async checkUsernameExists(username) {
         try {
             const response = await fetch(`http://localhost:3000/users?username=${username}`);
-            if (!response.ok) {
-                throw new Error('Ошибка сервера');
-            }
+            if (!response.ok) return false;
             
             const users = await response.json();
             const exists = users.length > 0 && users[0].id !== this.currentUser.id;
             
             const statusElement = document.getElementById('usernameStatus');
-            const usernameInput = document.getElementById('username');
-            
-            if (statusElement && usernameInput.value.trim() === username) {
+            if (statusElement) {
                 if (exists) {
-                    statusElement.textContent = 'Этот username уже занят';
+                    statusElement.textContent = 'Этот никнейм уже занят';
                     statusElement.style.color = '#e74c3c';
-                    usernameInput.classList.remove('success');
-                    usernameInput.classList.add('error');
                 } else {
-                    statusElement.textContent = 'Username доступен';
+                    statusElement.textContent = 'Никнейм доступен';
                     statusElement.style.color = '#27ae60';
-                    usernameInput.classList.remove('error');
-                    usernameInput.classList.add('success');
                 }
-            }
-            
-            if (showError && exists) {
-                return true;
             }
             
             return exists;
         } catch (error) {
-            console.error('Ошибка проверки username:', error);
+            console.error('Ошибка проверки никнейма:', error);
             return false;
         }
     }
@@ -644,17 +561,12 @@ class EditProfileManager {
             if (!password) {
                 hint.textContent = 'Оставьте пустым, если не меняете пароль';
                 hint.style.color = '#666';
-                input.classList.remove('error', 'success');
             } else if (isValid) {
                 hint.textContent = 'Пароли совпадают';
                 hint.style.color = '#27ae60';
-                input.classList.remove('error');
-                input.classList.add('success');
             } else {
                 hint.textContent = 'Пароли не совпадают';
                 hint.style.color = '#e74c3c';
-                input.classList.remove('success');
-                input.classList.add('error');
             }
         }
         
@@ -811,20 +723,6 @@ class EditProfileManager {
         }
     }
     
-    hidePreloader() {
-        const preloader = document.getElementById('preloader');
-        if (preloader) {
-            setTimeout(() => {
-                preloader.style.opacity = '0';
-                preloader.style.visibility = 'hidden';
-                
-                setTimeout(() => {
-                    preloader.style.display = 'none';
-                }, 500);
-            }, 300);
-        }
-    }
-    
     getTop100Passwords() {
         return [
             'password', '123456', '12345678', '123456789', '12345',
@@ -889,11 +787,3 @@ class EditProfileManager {
 document.addEventListener('DOMContentLoaded', () => {
     window.editProfileManager = new EditProfileManager();
 });
-
-// На случай, если DOM уже загружен
-if (document.readyState === 'complete') {
-    const preloader = document.getElementById('preloader');
-    if (preloader) {
-        preloader.style.display = 'none';
-    }
-}
